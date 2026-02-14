@@ -10,7 +10,7 @@ export function QuickReplies({ replies, onSelect }: QuickRepliesProps) {
 
   return (
     <div className="px-5 py-4 animate-fade-in-up">
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 quick-reply-gap">
         {replies.map((reply, index) => (
           <button
             key={`${reply.value}-${index}`}
