@@ -17,28 +17,28 @@ export function CustomerCard({ data }: CustomerCardProps) {
   const priorityLabels = { high: '高优先', medium: '中优先', low: '低优先' };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="p-3">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-sm">
+    <div className="bg-white rounded-[18px] border border-gray-100/80 shadow-lg shadow-gray-200/70 overflow-hidden">
+      <div className="p-4">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary via-primary-dark to-secondary flex items-center justify-center text-white font-bold text-sm shadow-md shadow-primary/20">
             {customer.avatar}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm">{customer.name}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${priorityColors[customer.priority]}`}>
+              <span className="font-semibold text-[15px]">{customer.name}</span>
+              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityColors[customer.priority]}`}>
                 {priorityLabels[customer.priority]}
               </span>
             </div>
-            <p className="text-xs text-text-secondary">
+            <p className="text-xs text-text-secondary mt-0.5">
               {customer.age}岁 · {customer.occupation} · 年收入{customer.annualIncome}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-1 mb-2">
+        <div className="flex flex-wrap gap-1.5 mb-2">
           {customer.tags.map((tag) => (
-            <span key={tag} className="text-xs bg-primary-50 text-primary px-2 py-0.5 rounded-full">
+            <span key={tag} className="text-xs bg-primary-50 text-primary px-2.5 py-1 rounded-full font-medium">
               {tag}
             </span>
           ))}
@@ -65,7 +65,7 @@ export function CustomerCard({ data }: CustomerCardProps) {
         )}
 
         {customer.notes && (
-          <div className="mt-2 p-2 bg-indigo-50 rounded-lg text-xs text-indigo-700">
+          <div className="mt-2 p-2.5 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl text-xs text-indigo-700 font-medium">
             💡 {customer.notes}
           </div>
         )}

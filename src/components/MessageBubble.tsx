@@ -132,25 +132,42 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
     }
   };
 
+  // User message - right aligned with avatar
   if (!isAi) {
     return (
-      <div className="flex justify-end message-spacing animate-fade-in-up px-5">
-        <div className="max-w-[78%] bg-gradient-to-br from-primary to-primary-dark text-white rounded-2xl rounded-tr-md px-4 py-3 shadow-md shadow-primary/15">
-          <p className="text-[14px] leading-relaxed">{message.content}</p>
+      <div className="flex justify-end gap-2.5 message-spacing animate-fade-in-up px-5">
+        <div className="max-w-[75%] bg-gradient-to-br from-primary via-primary-dark to-secondary text-white rounded-[20px] rounded-tr-md px-4 py-3.5 shadow-lg shadow-primary/20">
+          <p className="text-[14.5px] leading-relaxed">{message.content}</p>
+        </div>
+        {/* User avatar */}
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex-shrink-0 flex items-center justify-center shadow-sm">
+          <svg className="w-4.5 h-4.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
         </div>
       </div>
     );
   }
 
+  // AI message - left aligned with avatar
   return (
-    <div className="message-spacing animate-slide-in-left px-5">
-      {message.type === 'text' ? (
-        <div className="max-w-[85%] bg-white rounded-2xl rounded-tl-md px-4 py-3 shadow-sm border border-gray-100">
-          {renderContent()}
-        </div>
-      ) : (
-        <div className="max-w-[85%]">{renderContent()}</div>
-      )}
+    <div className="flex gap-2.5 message-spacing animate-slide-in-left px-5">
+      {/* AI avatar */}
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex-shrink-0 flex items-center justify-center shadow-md shadow-primary/25">
+        <svg className="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+        </svg>
+      </div>
+
+      <div className="flex-1 max-w-[82%]">
+        {message.type === 'text' ? (
+          <div className="bg-white rounded-[20px] rounded-tl-md px-4 py-3.5 shadow-lg shadow-gray-200/60 border border-gray-100/50">
+            {renderContent()}
+          </div>
+        ) : (
+          <div>{renderContent()}</div>
+        )}
+      </div>
     </div>
   );
 }
