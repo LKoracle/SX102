@@ -3,6 +3,20 @@ import type { TeamMember } from '../types';
 export const teamMembers: TeamMember[] = [
   {
     id: 't1',
+    name: '李明',
+    avatar: '李',
+    level: '业务员',
+    monthlyTarget: 35000,
+    monthlyAchieved: 15000,
+    weeklyVisits: 3,
+    weeklyTarget: 15,
+    newCustomers: 2,
+    conversionRate: 0.12,
+    status: 'needs-attention',
+    issues: ['面访完成率低于20%', '邀约转化率偏低', '在"异议处理"和"促成动作"上存在短板'],
+  },
+  {
+    id: 't2',
     name: '小林',
     avatar: '林',
     level: '高级业务经理',
@@ -15,7 +29,7 @@ export const teamMembers: TeamMember[] = [
     status: 'good',
   },
   {
-    id: 't2',
+    id: 't3',
     name: '小周',
     avatar: '周',
     level: '业务经理',
@@ -29,7 +43,7 @@ export const teamMembers: TeamMember[] = [
     issues: ['拜访量不足', '客户跟进不及时', '产品知识薄弱'],
   },
   {
-    id: 't3',
+    id: 't4',
     name: '小吴',
     avatar: '吴',
     level: '高级业务经理',
@@ -42,7 +56,7 @@ export const teamMembers: TeamMember[] = [
     status: 'excellent',
   },
   {
-    id: 't4',
+    id: 't5',
     name: '小黄',
     avatar: '黄',
     level: '业务经理',
@@ -55,7 +69,7 @@ export const teamMembers: TeamMember[] = [
     status: 'good',
   },
   {
-    id: 't5',
+    id: 't6',
     name: '小杨',
     avatar: '杨',
     level: '见习业务员',

@@ -150,10 +150,8 @@ html, body, #root {
   font-size: 13px;
   font-weight: 600;
   color: #334155;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
 
 .sidebar-item-active .sidebar-item-name {

@@ -3,6 +3,23 @@ import type { Customer } from '../types';
 export const customers: Customer[] = [
   {
     id: 'c1',
+    name: '李平安',
+    avatar: '李',
+    age: 45,
+    gender: '男',
+    phone: '138****5678',
+    occupation: '公司合伙人',
+    annualIncome: '120万',
+    familyStatus: '已婚，太太主要负责家庭理财和孩子教育支出',
+    existingPolicies: [],
+    tags: ['社会中坚客群', '高净值', '保财富', '保养老'],
+    lastContact: '上周',
+    priority: 'high',
+    address: '深圳福田区香蜜湖',
+    notes: '关注子女教育金和养老规划。名下一套房产（香蜜湖）、两辆车（宝马、特斯拉）。生日：9月12日。',
+  },
+  {
+    id: 'c2',
     name: '王建国',
     avatar: '王',
     age: 42,
@@ -27,7 +44,7 @@ export const customers: Customer[] = [
     notes: '上次沟通时表示对子女教育金感兴趣，妻子目前无保障',
   },
   {
-    id: 'c2',
+    id: 'c3',
     name: '李美琳',
     avatar: '李',
     age: 35,
@@ -52,7 +69,7 @@ export const customers: Customer[] = [
     notes: '本身是医生，非常了解重疾风险，但自身重疾保障不足',
   },
   {
-    id: 'c3',
+    id: 'c4',
     name: '张伟',
     avatar: '张',
     age: 38,
@@ -69,7 +86,7 @@ export const customers: Customer[] = [
     notes: '朋友转介绍，初次见面印象不错，对保险有一定抵触',
   },
   {
-    id: 'c4',
+    id: 'c5',
     name: '陈晓雯',
     avatar: '陈',
     age: 29,
@@ -94,7 +111,7 @@ export const customers: Customer[] = [
     notes: '对养老年金和理财型保险感兴趣',
   },
   {
-    id: 'c5',
+    id: 'c6',
     name: '刘大明',
     avatar: '刘',
     age: 55,
@@ -127,22 +144,21 @@ export const customers: Customer[] = [
   },
 ];
 
-export const nearbyCustomers: Customer[] = [
+export const nearbyCustomers = [
   {
-    id: 'nc1',
-    name: '赵明辉',
-    avatar: '赵',
-    age: 45,
-    gender: '男',
-    phone: '133****5678',
-    occupation: '企业主',
-    annualIncome: '100万+',
-    familyStatus: '已婚，育有二子',
-    existingPolicies: [],
-    tags: ['高净值', '企业主', '距离800m'],
+    name: '李四',
+    distance: '500m',
+    address: '同小区',
+    tag: '中温客户·关注子女教育金',
     lastContact: '2周前',
-    priority: 'high',
-    address: '深圳市南山区科兴科学园',
-    notes: '曾在线上咨询过企业团险，有较大保障需求',
+    note: '中温客户，关注子女教育金',
+  },
+  {
+    name: '王五',
+    distance: '1.2km',
+    address: '同商圈',
+    tag: '高意向客户',
+    lastContact: '1周前',
+    note: '高意向客户，已预约下次面谈',
   },
 ];
