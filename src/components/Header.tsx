@@ -12,7 +12,7 @@ export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
         <div>
-          <h1 className="text-base font-semibold leading-tight">AI智能助理</h1>
+          <h1 className="text-base font-semibold leading-tight">万能营销</h1>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></span>
             <span className="text-xs text-white/70">在线</span>
