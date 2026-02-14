@@ -3,9 +3,9 @@ import type { Scenario } from '../types';
 export const scenarios: Scenario[] = [
   {
     id: 'monthly-planning',
-    name: '月度经营计划',
+    name: '制定经营计划及指引',
     icon: '📋',
-    description: '制定本月经营计划，回顾客户资源',
+    description: '每月初/每周初',
     steps: [
       {
         aiMessages: [
@@ -180,7 +180,7 @@ export const scenarios: Scenario[] = [
     id: 'sales-conversion',
     name: '销售转化促成',
     icon: '💰',
-    description: '客户需求分析、产品推荐、话术辅助',
+    description: '每天·拜访前',
     steps: [
       {
         aiMessages: [
@@ -299,9 +299,9 @@ export const scenarios: Scenario[] = [
   },
   {
     id: 'customer-visit',
-    name: '客户拜访助手',
+    name: '1V1拜访客户',
     icon: '🤝',
-    description: '拜访记录、总结生成、附近客户推荐',
+    description: '每天·拜访后',
     steps: [
       {
         aiMessages: [
@@ -422,9 +422,9 @@ export const scenarios: Scenario[] = [
   },
   {
     id: 'team-management',
-    name: '团队经营分析',
+    name: '团队经营分析辅导',
     icon: '👥',
-    description: '团队业绩追踪、成员辅导',
+    description: '每天·晚上',
     steps: [
       {
         aiMessages: [
@@ -507,9 +507,9 @@ export const scenarios: Scenario[] = [
   },
   {
     id: 'personal-summary',
-    name: '个人工作总结',
+    name: '个人活动量管理和工作总结',
     icon: '📊',
-    description: '活动量管理、工作复盘、学习提升',
+    description: '每周末/每月末',
     steps: [
       {
         aiMessages: [

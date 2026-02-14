@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { Header } from './components/Header';
 import { MessageBubble } from './components/MessageBubble';
 import { InputBar } from './components/InputBar';
@@ -8,11 +8,50 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios } from './data/scenarios';
 
+const modulesMeta = [
+  {
+    id: 'monthly-planning',
+    name: '制定经营计划及指引',
+    timing: '每月初 / 每周初',
+    icon: '📋',
+    color: '#4F6BF6',
+  },
+  {
+    id: 'sales-conversion',
+    name: '销售转化促成',
+    timing: '每天 · 拜访前',
+    icon: '💰',
+    color: '#F59E0B',
+  },
+  {
+    id: 'customer-visit',
+    name: '1V1拜访客户',
+    timing: '每天 · 拜访后',
+    icon: '🤝',
+    color: '#22C55E',
+  },
+  {
+    id: 'team-management',
+    name: '团队经营分析辅导',
+    timing: '每天 · 晚上',
+    icon: '👥',
+    color: '#7C3AED',
+  },
+  {
+    id: 'personal-summary',
+    name: '个人活动量管理和工作总结',
+    timing: '每周末 / 每月末',
+    icon: '📊',
+    color: '#EF4444',
+  },
+];
+
 function App() {
   const chat = useChat();
   const speech = useSpeech();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [activeModule, setActiveModule] = useState<string | null>(null);
 
   useEffect(() => {
     chat.initChat();
@@ -37,13 +76,21 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speech.isListening]);
 
+  const handleModuleClick = useCallback(
+    (moduleId: string) => {
+      setActiveModule(moduleId);
+      chat.resetAndStartScenario(moduleId);
+    },
+    [chat]
+  );
+
   const handleQuickReply = useCallback(
     (reply: { label: string; value: string }) => {
-      // Check if the value matches a scenario id
       const scenario = scenarios.find((s) => s.id === reply.value);
       if (scenario) {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
         chat.startScenario(scenario.id);
+        setActiveModule(scenario.id);
       } else {
         chat.handleQuickReply(reply);
       }
@@ -63,41 +110,91 @@ function App() {
   );
 
   return (
-    <div className="h-full flex flex-col max-w-lg mx-auto shadow-2xl relative overflow-hidden">
-      <Header
-        isSpeaking={speech.isSpeaking}
-        onStopSpeaking={speech.stopSpeaking}
-      />
+    <div className="h-full flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-purple-50">
+      {/* Left Sidebar Navigation */}
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <div className="sidebar-logo">AI</div>
+          <div>
+            <h2 className="sidebar-title">万能营销助手</h2>
+            <p className="sidebar-subtitle">智能保险销售平台</p>
+          </div>
+        </div>
 
-      {/* Chat messages area */}
-      <div
-        ref={chatContainerRef}
-        className="flex-1 overflow-y-auto header-spacing pb-4"
-        style={{ WebkitOverflowScrolling: 'touch' }}
-      >
-        {chat.messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
-        ))}
+        <div className="sidebar-label">业务场景模块</div>
 
-        {chat.isTyping && <TypingIndicator />}
+        <nav className="sidebar-nav">
+          {modulesMeta.map((mod) => (
+            <button
+              key={mod.id}
+              className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
+              onClick={() => handleModuleClick(mod.id)}
+            >
+              <span
+                className="sidebar-icon"
+                style={{
+                  background: activeModule === mod.id ? mod.color : undefined,
+                }}
+              >
+                {mod.icon}
+              </span>
+              <div className="sidebar-item-text">
+                <span className="sidebar-item-name">{mod.name}</span>
+                <span className="sidebar-item-timing">{mod.timing}</span>
+              </div>
+              {activeModule === mod.id && (
+                <span className="sidebar-active-dot" style={{ background: mod.color }} />
+              )}
+            </button>
+          ))}
+        </nav>
 
-        {/* Quick replies */}
-        {chat.quickReplies.length > 0 && !chat.isTyping && (
-          <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
-        )}
-
-        <div ref={messagesEndRef} />
+        <div className="sidebar-footer">
+          <p>Demo 演示模式</p>
+          <p>点击左侧模块切换场景</p>
+        </div>
       </div>
 
-      {/* Input area */}
-      <InputBar
-        onSend={chat.handleUserMessage}
-        onVoiceStart={speech.startListening}
-        onVoiceStop={speech.stopListening}
-        isListening={speech.isListening}
-        transcript={speech.transcript}
-        disabled={chat.isTyping}
-      />
+      {/* Phone Mockup - Centered */}
+      <div className="phone-frame">
+        <div className="phone-notch" />
+        <div className="phone-screen">
+          <Header
+            isSpeaking={speech.isSpeaking}
+            onStopSpeaking={speech.stopSpeaking}
+          />
+
+          {/* Chat messages area */}
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto header-spacing pb-4"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {chat.messages.map((msg) => (
+              <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
+            ))}
+
+            {chat.isTyping && <TypingIndicator />}
+
+            {/* Quick replies */}
+            {chat.quickReplies.length > 0 && !chat.isTyping && (
+              <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input area */}
+          <InputBar
+            onSend={chat.handleUserMessage}
+            onVoiceStart={speech.startListening}
+            onVoiceStop={speech.stopListening}
+            isListening={speech.isListening}
+            transcript={speech.transcript}
+            disabled={chat.isTyping}
+          />
+        </div>
+      </div>
     </div>
   );
 }

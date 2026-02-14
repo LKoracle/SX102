@@ -221,13 +221,34 @@ export function useChat() {
     [state, addMessage, setQuickReplies, setTyping, startScenario, playScenarioStep]
   );
 
+  const resetAndStartScenario = useCallback(
+    (scenarioId: string) => {
+      clearTimeouts();
+      setState({
+        messages: [],
+        isTyping: false,
+        currentScenario: null,
+        currentStep: 0,
+        quickReplies: [],
+        isListening: false,
+        isSpeaking: false,
+      });
+      // Use setTimeout to ensure state is reset before starting
+      const t = window.setTimeout(() => {
+        playScenarioStep(scenarioId, 0);
+      }, 100);
+      timeoutRefs.current.push(t);
+    },
+    [clearTimeouts, playScenarioStep]
+  );
+
   const initChat = useCallback(() => {
     const welcomeMsg: Message = {
       id: generateId(),
       role: 'ai',
       type: 'text',
       content:
-        '您好，张经理！我是您的AI智能助理 🤖\n\n今天是2025年2月14日，我已经为您准备好了今天的工作安排。\n\n📌 今日待办：\n• 10:00 拜访王建国（教育金方案）\n• 14:00 团队周例会\n• 16:00 电话跟进李美琳\n\n请选择您需要的服务：',
+        '您好，张经理！我是您的AI智能助理\n\n今天是2025年2月14日，我已经为您准备好了今天的工作安排。\n\n📌 今日待办：\n• 10:00 拜访王建国（教育金方案）\n• 14:00 团队周例会\n• 16:00 电话跟进李美琳\n\n请选择您需要的服务：',
       timestamp: Date.now(),
     };
 
@@ -247,6 +268,7 @@ export function useChat() {
     handleQuickReply,
     handleUserMessage,
     startScenario,
+    resetAndStartScenario,
     initChat,
   };
 }
