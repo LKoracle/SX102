@@ -11,11 +11,11 @@ export function ProductCard({ data }: ProductCardProps) {
   const reason = data.reason as string | undefined;
 
   const typeColors: Record<string, string> = {
-    '终身寿险': 'from-blue-500 to-blue-600',
-    '重疾险': 'from-red-500 to-red-600',
-    '年金险': 'from-amber-500 to-amber-600',
-    '医疗险': 'from-green-500 to-green-600',
-    '万能险': 'from-purple-500 to-purple-600',
+    '终身寿险': 'from-blue-500 to-indigo-600',
+    '重疾险': 'from-violet-500 to-purple-600',
+    '年金险': 'from-indigo-500 to-blue-600',
+    '医疗险': 'from-blue-400 to-indigo-500',
+    '万能险': 'from-purple-500 to-violet-600',
   };
 
   return (

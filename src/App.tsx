@@ -21,14 +21,14 @@ const modulesMeta = [
     name: '每周初，提醒本周经营计划',
     timing: '每周初',
     icon: '📅',
-    color: '#F59E0B',
+    color: '#6366F1',
   },
   {
     id: 'pre-visit',
     name: '某天，客户拜访前',
     timing: '拜访前',
     icon: '💼',
-    color: '#22C55E',
+    color: '#818CF8',
   },
   {
     id: 'post-visit',
@@ -42,7 +42,7 @@ const modulesMeta = [
     name: '某天晚上：辅导下属',
     timing: '晚上',
     icon: '👥',
-    color: '#EF4444',
+    color: '#A78BFA',
   },
 ];
 
@@ -110,7 +110,7 @@ function App() {
   );
 
   return (
-    <div className="h-full flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-purple-50">
+    <div className="h-full flex items-center justify-center bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50">
       {/* Left Sidebar Navigation */}
       <div className="sidebar">
         <div className="sidebar-header">

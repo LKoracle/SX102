@@ -24,13 +24,13 @@ export function IncomeCard({ data }: IncomeCardProps) {
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3">
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-3">
         <p className="text-white/80 text-xs">{period}</p>
         <div className="flex items-end gap-2 mt-1">
           <span className="text-white text-2xl font-bold">
             ¥{total.toLocaleString()}
           </span>
-          <span className="text-green-200 text-sm font-medium mb-0.5">
+          <span className="text-blue-200 text-sm font-medium mb-0.5">
             {comparison} 环比上月
           </span>
         </div>

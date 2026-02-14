@@ -28,7 +28,7 @@ export function WorkSummaryCard({ data }: WorkSummaryCardProps) {
             return (
               <div key={i} className="text-center bg-gray-50 rounded-lg p-2">
                 <p className="text-xs text-text-secondary">{metric.label}</p>
-                <p className={`text-lg font-bold ${rate >= 80 ? 'text-green-600' : 'text-red-500'}`}>
+                <p className={`text-lg font-bold ${rate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
                   {metric.label === '保费收入'
                     ? `${(metric.actual / 10000).toFixed(1)}万`
                     : metric.actual}
@@ -48,7 +48,7 @@ export function WorkSummaryCard({ data }: WorkSummaryCardProps) {
             return (
               <div key={i} className="bg-gray-50 rounded-lg p-2 flex items-center justify-between">
                 <span className="text-xs text-text-secondary">{metric.label}</span>
-                <span className={`text-sm font-bold ${rate >= 80 ? 'text-green-600' : 'text-red-500'}`}>
+                <span className={`text-sm font-bold ${rate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
                   {metric.label === '保费收入'
                     ? `${(metric.actual / 10000).toFixed(1)}万`
                     : metric.actual}/{metric.label === '保费收入' ? `${(metric.target / 10000).toFixed(1)}万` : metric.target}
@@ -60,7 +60,7 @@ export function WorkSummaryCard({ data }: WorkSummaryCardProps) {
 
         {/* Highlights */}
         <div>
-          <p className="text-xs font-medium text-green-700 mb-1">✅ 本周亮点：</p>
+          <p className="text-xs font-medium text-blue-700 mb-1">✅ 本周亮点：</p>
           {highlights.map((h, i) => (
             <p key={i} className="text-xs text-text-secondary ml-2 mb-0.5">• {h}</p>
           ))}
@@ -68,7 +68,7 @@ export function WorkSummaryCard({ data }: WorkSummaryCardProps) {
 
         {/* Improvements */}
         <div>
-          <p className="text-xs font-medium text-yellow-700 mb-1">⚠️ 待改进：</p>
+          <p className="text-xs font-medium text-violet-700 mb-1">⚠️ 待改进：</p>
           {improvements.map((imp, i) => (
             <p key={i} className="text-xs text-text-secondary ml-2 mb-0.5">• {imp}</p>
           ))}

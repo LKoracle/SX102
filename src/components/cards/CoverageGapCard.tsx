@@ -17,7 +17,7 @@ export function CoverageGapCard({ data }: CoverageGapCardProps) {
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2.5">
+      <div className="bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-2.5">
         <h3 className="text-white font-semibold text-sm">📊 {customerName} - 保障缺口分析</h3>
       </div>
       <div className="p-3 space-y-2">
@@ -25,10 +25,10 @@ export function CoverageGapCard({ data }: CoverageGapCardProps) {
           const percentage = item.recommended > 0 ? Math.min((item.current / item.recommended) * 100, 100) : 0;
           const barColor =
             item.status === 'missing'
-              ? 'bg-red-400'
+              ? 'bg-purple-400'
               : item.status === 'gap'
-              ? 'bg-yellow-400'
-              : 'bg-green-400';
+              ? 'bg-indigo-400'
+              : 'bg-blue-400';
 
           return (
             <div key={index}>
@@ -45,14 +45,14 @@ export function CoverageGapCard({ data }: CoverageGapCardProps) {
                 />
               </div>
               {item.status === 'missing' && (
-                <p className="text-xs text-red-500 mt-0.5">⚠️ 完全缺失</p>
+                <p className="text-xs text-purple-500 mt-0.5">⚠️ 完全缺失</p>
               )}
             </div>
           );
         })}
 
         {summary && (
-          <div className="mt-2 p-2 bg-red-50 rounded-lg text-xs text-red-700">
+          <div className="mt-2 p-2 bg-purple-50 rounded-lg text-xs text-purple-700">
             📌 {summary}
           </div>
         )}

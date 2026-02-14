@@ -23,15 +23,15 @@ export function ScheduleCard({ data }: ScheduleCardProps) {
   };
 
   const typeColors: Record<string, string> = {
-    visit: 'border-l-green-400 bg-green-50',
-    call: 'border-l-blue-400 bg-blue-50',
-    prepare: 'border-l-yellow-400 bg-yellow-50',
+    visit: 'border-l-blue-400 bg-blue-50',
+    call: 'border-l-indigo-400 bg-indigo-50',
+    prepare: 'border-l-violet-400 bg-violet-50',
     meeting: 'border-l-purple-400 bg-purple-50',
   };
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-2.5">
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2.5">
         <h3 className="text-white font-semibold text-sm">📅 {title}</h3>
       </div>
       <div className="p-2 space-y-2">

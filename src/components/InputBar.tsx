@@ -136,7 +136,7 @@ export function InputBar({
             <div className="relative">
               <button
                 onClick={handleVoiceToggle}
-                className="relative w-[72px] h-[72px] rounded-full bg-white text-danger flex items-center justify-center shadow-xl animate-pulse-glow mic-ripple"
+                className="relative w-[72px] h-[72px] rounded-full bg-white text-secondary flex items-center justify-center shadow-xl animate-pulse-glow mic-ripple"
               >
                 <svg className="w-7 h-7 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M6 6h12v12H6z" />

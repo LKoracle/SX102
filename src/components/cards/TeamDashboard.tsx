@@ -2,9 +2,9 @@ import { teamMembers } from '../../data/team';
 
 export function TeamDashboard() {
   const statusColors = {
-    excellent: 'border-green-400 bg-green-50',
-    good: 'border-blue-400 bg-blue-50',
-    'needs-attention': 'border-red-400 bg-red-50',
+    excellent: 'border-blue-400 bg-blue-50',
+    good: 'border-indigo-400 bg-indigo-50',
+    'needs-attention': 'border-purple-400 bg-purple-50',
   };
 
   const statusLabels = {
@@ -44,13 +44,13 @@ export function TeamDashboard() {
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div>
                   <p className="text-xs text-text-secondary">目标达成</p>
-                  <p className={`text-sm font-bold ${achieveRate >= 80 ? 'text-green-600' : 'text-red-500'}`}>
+                  <p className={`text-sm font-bold ${achieveRate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
                     {achieveRate}%
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-text-secondary">周拜访量</p>
-                  <p className={`text-sm font-bold ${visitRate >= 80 ? 'text-green-600' : 'text-red-500'}`}>
+                  <p className={`text-sm font-bold ${visitRate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
                     {member.weeklyVisits}/{member.weeklyTarget}
                   </p>
                 </div>
