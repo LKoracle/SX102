@@ -5,11 +5,11 @@ interface HeaderProps {
 
 export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
   return (
-    <header className="bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-3 flex items-center justify-between shadow-lg relative z-10">
+    <header className="glass border-b border-white/20 px-4 py-3 flex items-center justify-between relative z-10">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+        <div className="w-9 h-9 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-md shadow-primary/20">
           <svg
-            className="w-5 h-5"
+            className="w-5 h-5 text-white"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -17,10 +17,10 @@ export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
           </svg>
         </div>
         <div>
-          <h1 className="text-base font-semibold leading-tight">AI智能助理</h1>
+          <h1 className="text-[15px] font-semibold leading-tight text-text">AI智能助理</h1>
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></span>
-            <span className="text-xs text-white/80">在线</span>
+            <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
+            <span className="text-xs text-text-secondary">在线</span>
           </div>
         </div>
       </div>
@@ -29,13 +29,13 @@ export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
         {isSpeaking && (
           <button
             onClick={onStopSpeaking}
-            className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs"
+            className="flex items-center gap-1.5 bg-primary/10 rounded-full px-3 py-1.5 text-xs text-primary font-medium"
           >
             <span className="flex items-center gap-0.5">
               {[1, 2, 3, 4].map((i) => (
                 <span
                   key={i}
-                  className="w-0.5 bg-white rounded-full"
+                  className="w-0.5 bg-primary rounded-full"
                   style={{
                     height: '12px',
                     animation: `voice-wave 0.6s ease-in-out infinite ${i * 0.1}s`,
@@ -46,7 +46,7 @@ export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
             停止
           </button>
         )}
-        <button className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+        <button className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-text-secondary">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
           </svg>

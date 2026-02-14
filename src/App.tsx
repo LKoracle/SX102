@@ -63,7 +63,7 @@ function App() {
   );
 
   return (
-    <div className="h-full flex flex-col bg-bg max-w-lg mx-auto shadow-2xl">
+    <div className="h-full flex flex-col max-w-lg mx-auto shadow-2xl relative overflow-hidden">
       <Header
         isSpeaking={speech.isSpeaking}
         onStopSpeaking={speech.stopSpeaking}

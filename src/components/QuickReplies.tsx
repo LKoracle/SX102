@@ -15,7 +15,7 @@ export function QuickReplies({ replies, onSelect }: QuickRepliesProps) {
           <button
             key={`${reply.value}-${index}`}
             onClick={() => onSelect(reply)}
-            className="inline-flex items-center px-4 py-2 bg-white border border-primary/30 text-primary rounded-full text-sm font-medium hover:bg-primary-50 active:bg-primary active:text-white transition-all shadow-sm"
+            className="inline-flex items-center px-4 py-2 glass border border-primary/20 text-primary rounded-full text-sm font-medium hover:bg-primary-50 active:bg-primary active:text-white transition-all shadow-sm"
           >
             {reply.label}
           </button>

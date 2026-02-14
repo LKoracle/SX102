@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #E85D04;
-  --color-primary-dark: #D14800;
-  --color-primary-light: #FF8C42;
-  --color-primary-50: #FFF3E8;
-  --color-primary-100: #FFE0C2;
-  --color-secondary: #1A365D;
-  --color-secondary-light: #2A4A7F;
-  --color-success: #38A169;
-  --color-warning: #ECC94B;
-  --color-danger: #E53E3E;
-  --color-bg: #F0F2F5;
+  --color-primary: #4F6BF6;
+  --color-primary-dark: #3B50D4;
+  --color-primary-light: #7B8FF8;
+  --color-primary-50: #EEF0FE;
+  --color-primary-100: #D9DFFE;
+  --color-secondary: #6366F1;
+  --color-secondary-light: #818CF8;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-bg: #F5F7FB;
   --color-card: #FFFFFF;
-  --color-text: #1A202C;
-  --color-text-secondary: #718096;
+  --color-text: #1E293B;
+  --color-text-secondary: #94A3B8;
   --color-border: #E2E8F0;
 }
 
@@ -32,8 +32,8 @@ html, body, #root {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
-  background-color: var(--color-bg);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'SF Pro Display', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(180deg, #EEF2FF 0%, #F5F7FB 50%, #F0F0FF 100%);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -94,12 +94,39 @@ body {
   animation: slideInLeft 0.3s ease-out forwards;
 }
 
-/* Pulse glow */
+/* Pulse glow for mic */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 93, 4, 0.4); }
-  50% { box-shadow: 0 0 0 8px rgba(232, 93, 4, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79, 107, 246, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(79, 107, 246, 0); }
 }
 
 .animate-pulse-glow {
   animation: pulse-glow 2s infinite;
+}
+
+/* Mic ripple effect */
+@keyframes mic-ripple {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.mic-ripple::before,
+.mic-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(79, 107, 246, 0.4);
+  animation: mic-ripple 2s infinite;
+}
+
+.mic-ripple::after {
+  animation-delay: 1s;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
