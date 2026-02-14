@@ -72,7 +72,7 @@ function App() {
       {/* Chat messages area */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto py-4"
+        className="flex-1 overflow-y-auto py-5"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {chat.messages.map((msg) => (
