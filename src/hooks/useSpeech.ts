@@ -19,6 +19,46 @@ const getSpeechRecognition = (): (new () => any) | null => {
   return win.SpeechRecognition || win.webkitSpeechRecognition || null;
 };
 
+/**
+ * Pick the most natural-sounding Chinese voice available.
+ * Prefer voices whose name contains keywords like "Natural", "Premium",
+ * "Xiaoxiao", "Yunxi" (Azure neural voices that Chrome/Edge expose),
+ * then fall back to any zh voice.
+ */
+function pickBestZhVoice(): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices();
+  const zhVoices = voices.filter((v) => v.lang.startsWith('zh'));
+  if (zhVoices.length === 0) return null;
+
+  // Rank by quality keywords (order matters – first match wins)
+  const qualityKeywords = ['Natural', 'Premium', 'Enhanced', 'Neural', 'Xiaoxiao', 'Yunxi', 'Female'];
+  for (const kw of qualityKeywords) {
+    const match = zhVoices.find((v) => v.name.includes(kw));
+    if (match) return match;
+  }
+  // Prefer non-local (network) voices – they tend to sound better
+  const remote = zhVoices.find((v) => !v.localService);
+  if (remote) return remote;
+
+  return zhVoices[0];
+}
+
+/**
+ * Split text into sentence-sized chunks so the synthesiser can add
+ * natural pauses between them, which sounds much more human.
+ */
+function splitIntoSentences(text: string): string[] {
+  // Clean markdown / emoji cruft first
+  const clean = text
+    .replace(/[#*_~`|>\-]/g, '')
+    .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
+    .trim();
+
+  // Split on Chinese and Latin sentence-ending punctuation
+  const parts = clean.split(/(?<=[。！？；\n])/);
+  return parts.map((s) => s.trim()).filter(Boolean);
+}
+
 export function useSpeech(): UseSpeechReturn {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -71,28 +111,33 @@ export function useSpeech(): UseSpeechReturn {
 
     window.speechSynthesis.cancel();
 
-    const cleanText = text
-      .replace(/[#*_~`|>\-]/g, '')
-      .replace(/\n{2,}/g, '。')
-      .replace(/\n/g, '，')
-      .replace(/[\u{1F300}-\u{1F9FF}]/gu, '');
+    const voice = pickBestZhVoice();
+    const sentences = splitIntoSentences(text);
+    if (sentences.length === 0) return;
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 1.1;
-    utterance.pitch = 1.0;
+    setIsSpeaking(true);
 
-    const voices = window.speechSynthesis.getVoices();
-    const zhVoice =
-      voices.find((v) => v.lang.startsWith('zh') && v.name.includes('Female')) ||
-      voices.find((v) => v.lang.startsWith('zh'));
-    if (zhVoice) utterance.voice = zhVoice;
+    // Queue each sentence as a separate utterance – the browser plays
+    // them sequentially with natural micro-pauses in between.
+    sentences.forEach((sentence, idx) => {
+      const utterance = new SpeechSynthesisUtterance(sentence);
+      utterance.lang = 'zh-CN';
+      // Slightly slower than default → more natural cadence
+      utterance.rate = 0.95;
+      // Gentle pitch for a warm tone
+      utterance.pitch = 1.05;
+      utterance.volume = 1.0;
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+      if (voice) utterance.voice = voice;
 
-    window.speechSynthesis.speak(utterance);
+      // Only the last sentence triggers the "done" callback
+      if (idx === sentences.length - 1) {
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+      }
+
+      window.speechSynthesis.speak(utterance);
+    });
   }, []);
 
   const stopSpeaking = useCallback(() => {
