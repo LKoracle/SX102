@@ -145,7 +145,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   }
 
   return (
-    <div className="mb-[400px] animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <div className="mb-[4px] animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {message.type === 'text' ? (
         <div className="max-w-[85%] bg-white rounded-[18px] px-5 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
           {renderContent()}
