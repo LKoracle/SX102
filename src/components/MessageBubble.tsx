@@ -131,7 +131,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
 
   if (!isAi) {
     return (
-      <div className="flex justify-end px-4 mb-4 animate-fade-in-up">
+      <div className="flex justify-end mb-4 animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
         <div
           className="max-w-[85%] px-4 py-3 rounded-[18px] text-white"
           style={{
@@ -145,7 +145,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   }
 
   return (
-    <div className="px-4 mb-4 animate-slide-in-left">
+    <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {message.type === 'text' ? (
         <div className="max-w-[85%] bg-white rounded-[18px] px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
           {renderContent()}
