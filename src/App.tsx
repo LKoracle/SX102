@@ -110,7 +110,7 @@ function App() {
   );
 
   return (
-    <div className="h-full flex items-center justify-center bg-[#f5f7fb]">
+    <div className="h-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' }}>
       {/* Left Sidebar Navigation */}
       <div className="sidebar">
         <div className="sidebar-header">

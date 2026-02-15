@@ -133,7 +133,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
     return (
       <div className="flex justify-end mb-3 animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
         <div
-          className="max-w-[85%] px-3 py-2 rounded-[16px] text-white"
+          className="max-w-[85%] px-4 py-2.5 rounded-[18px] text-white"
           style={{
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           }}
@@ -147,12 +147,11 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   return (
     <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {message.type === 'text' ? (
-        <div className="max-w-[85%] bg-white rounded-[16px] px-3 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div className="max-w-[85%] bg-white rounded-[18px] px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
           {renderContent()}
         </div>
       ) : (
-        /* 卡片类型消息：紧凑间距 */
-        <div className="max-w-[92%] flex flex-col gap-2">
+        <div className="max-w-[92%] flex flex-col gap-3">
           {renderContent()}
         </div>
       )}

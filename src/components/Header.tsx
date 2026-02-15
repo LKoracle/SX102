@@ -5,7 +5,7 @@ interface HeaderProps {
 
 export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
   return (
-    <header className="bg-gradient-to-r from-[#667eea] to-[#764ba2] pt-3 pb-3 px-4 relative z-10 shadow-lg">
+    <header className="bg-gradient-to-r from-[#667eea] to-[#764ba2] pt-10 pb-4 px-5 relative z-10 shadow-lg">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
