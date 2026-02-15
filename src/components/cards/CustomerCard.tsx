@@ -1,68 +1,81 @@
-import { customers } from '../../data/customers';
+/* CustomerCard.tsx */
+import React from 'react';
 
-interface CustomerCardProps {
-  data: Record<string, unknown>;
+// 定义接口（根据你现有的数据结构调整）
+interface CustomerProps {
+  name: string;
+  age: number;
+  job: string;
+  tag: string; // 例如 "高优先"
+  tagType: 'hot' | 'warm' | 'normal'; // 用来控制标签颜色
+  reason: string; // 推荐理由
 }
 
-const priorityColors = {
-  high: 'bg-purple-100 text-purple-700',
-  medium: 'bg-indigo-100 text-indigo-700',
-  low: 'bg-blue-100 text-blue-700',
-};
+const CustomerCard: React.FC<CustomerProps> = ({ name, age, job, tag, tagType, reason }) => {
+  
+  // 1. 定义颜色映射（模仿图2的配色）
+  const styles = {
+    hot: {
+      avatarBg: 'bg-red-100',
+      avatarIcon: 'text-red-500',
+      tagBg: 'bg-red-400', // 红色标签背景
+      tagText: 'text-white',
+    },
+    warm: {
+      avatarBg: 'bg-orange-100',
+      avatarIcon: 'text-orange-500',
+      tagBg: 'bg-orange-400', // 橙色标签背景
+      tagText: 'text-white',
+    },
+    normal: {
+      avatarBg: 'bg-blue-100',
+      avatarIcon: 'text-blue-500',
+      tagBg: 'bg-blue-400', // 蓝色标签背景
+      tagText: 'text-white',
+    }
+  };
 
-const priorityLabels = { high: '高优先', medium: '中优先', low: '低优先' };
-
-export function CustomerCard({ data }: CustomerCardProps) {
-  const customer = customers.find((c) => c.id === data.customerId);
-  if (!customer) return null;
+  const currentStyle = styles[tagType] || styles.normal;
 
   return (
-    // 第一层：负责卡片的外形
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden w-full">
-
-      {/* 第二层：关键！负责所有内容的内缩边距，建议改为 p-4 (16px) 或 p-5 */}
-      <div className="p-4 flex flex-col gap-3">
-
-        {/* 顶部个人信息：使用 gap 控制头像和文字的距离 */}
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 font-bold text-sm">
-            {customer.avatar}
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-gray-800">{customer.name}</span>
-              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${priorityColors[customer.priority]}`}>
-                {priorityLabels[customer.priority]}
-              </span>
-            </div>
-            <p className="text-xs text-gray-500 mt-1">
-              {customer.age}岁 · {customer.occupation}
-            </p>
-          </div>
+    <div className="bg-white rounded-2xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-100 mb-4 hover:shadow-md transition-shadow cursor-pointer">
+      
+      {/* 头部：头像 + 姓名 + 标签 */}
+      <div className="flex items-center gap-4 mb-3">
+        {/* 头像区域 - 使用柔和的浅色背景 */}
+        <div className={`w-12 h-12 rounded-full ${currentStyle.avatarBg} flex items-center justify-center flex-shrink-0`}>
+          {/* 这里可以用图标，也可以用名字的首字 */}
+           <span className={`font-bold text-lg ${currentStyle.avatarIcon}`}>
+             {name[0]}
+           </span>
         </div>
 
-        {/* 标签区域：确保有足够的垂直间距 */}
-        <div className="flex flex-wrap gap-1.5">
-          {customer.tags.map((tag) => (
-            <span key={tag} className="text-[11px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded border border-gray-100">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-gray-800 text-lg">{name}</h3>
+            {/* 标签 - 药丸形状 */}
+            <span className={`text-[10px] px-2 py-0.5 rounded-full ${currentStyle.tagBg} ${currentStyle.tagText} font-medium`}>
               {tag}
             </span>
-          ))}
-        </div>
-
-        {/* 💡 重点：黄色备注栏重构 */}
-        {customer.notes && (
-          // 使用 border-l-4 增加视觉缩进感
-          <div className="bg-[#FFF9E7] rounded-lg p-3 border-l-4 border-orange-300">
-            <div className="flex gap-1.5 items-start">
-              <span className="text-xs flex-shrink-0">💡</span>
-              <p className="text-xs text-orange-800 leading-relaxed break-words">
-                {customer.notes}
-              </p>
-            </div>
           </div>
-        )}
+          <p className="text-gray-400 text-xs mt-0.5">
+            {age}岁 · {job}
+          </p>
+        </div>
       </div>
+
+      {/* 核心差异点：推荐理由的黄色盒子 */}
+      {/* bg-orange-50: 极淡的橙/黄色背景 */}
+      {/* border-l-4: 左侧加粗边框 */}
+      <div className="bg-orange-50 rounded-lg p-3 border-l-4 border-orange-300 flex items-start gap-2">
+        <span className="text-orange-400 text-sm mt-0.5">💡</span>
+        <p className="text-sm text-gray-600 leading-relaxed text-justify">
+          {reason}
+        </p>
+      </div>
+
     </div>
   );
-}
+};
+
+export default CustomerCard;
