@@ -151,7 +151,10 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
           {renderContent()}
         </div>
       ) : (
-        <div className="max-w-[85%]">{renderContent()}</div>
+        /* 修改点：提升宽度到 92% 并增加卡片间的垂直间距 gap-3 */
+        <div className="max-w-[92%] flex flex-col gap-3">
+          {renderContent()}
+        </div>
       )}
     </div>
   );
