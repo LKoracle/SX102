@@ -145,16 +145,14 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   }
 
   return (
-    <div className="flex gap-0 px-4 mb-4 animate-slide-in-left">
-      <div className="flex-1 max-w-[85%]">
-        {message.type === 'text' ? (
-          <div className="bg-white rounded-[18px] px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            {renderContent()}
-          </div>
-        ) : (
-          <div>{renderContent()}</div>
-        )}
-      </div>
+    <div className="px-4 mb-4 animate-slide-in-left">
+      {message.type === 'text' ? (
+        <div className="max-w-[85%] bg-white rounded-[18px] px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+          {renderContent()}
+        </div>
+      ) : (
+        <div className="max-w-[85%]">{renderContent()}</div>
+      )}
     </div>
   );
 }
