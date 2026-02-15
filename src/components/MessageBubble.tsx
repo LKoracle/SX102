@@ -131,28 +131,28 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
 
   if (!isAi) {
     return (
-      <div className="flex justify-end mb-[160px] animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+      <div className="flex justify-end mb-3 animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
         <div
-          className="max-w-[85%] px-5 py-4 rounded-[18px] text-white"
+          className="max-w-[85%] px-3 py-2 rounded-[16px] text-white"
           style={{
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           }}
         >
-          <p className="text-[14px] leading-[1.6]">{message.content}</p>
+          <p className="text-[14px] leading-[1.5]">{message.content}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mb-[4px] animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {message.type === 'text' ? (
-        <div className="max-w-[85%] bg-white rounded-[18px] px-5 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div className="max-w-[85%] bg-white rounded-[16px] px-3 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
           {renderContent()}
         </div>
       ) : (
-        /* 卡片类型消息：使用超大间距 */
-        <div className="max-w-[92%] flex flex-col gap-3">
+        /* 卡片类型消息：紧凑间距 */
+        <div className="max-w-[92%] flex flex-col gap-2">
           {renderContent()}
         </div>
       )}

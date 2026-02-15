@@ -24,22 +24,22 @@
 
 /* 页面背景与基础重置 */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    min-height: 100vh;
-    color: #333;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: #f5f7fb;
+  min-height: 100vh;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html, #root {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* ===== 2. 卡片样式 ===== */
@@ -69,12 +69,12 @@ html, #root {
   height: 90vh;
   max-height: 740px;
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-  margin-right: 40px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  margin-right: 24px;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
+  padding: 20px 12px;
   flex-shrink: 0;
 }
 
@@ -112,20 +112,24 @@ html, #root {
 .phone-frame {
   width: 375px;
   height: 812px;
-  background: #1a1a2e;
-  border-radius: 40px;
-  padding: 8px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  background: white;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   position: relative;
   flex-shrink: 0;
+}
+
+.phone-notch {
+  display: none;
 }
 
 .phone-screen {
   width: 100%;
   height: 100%;
-  border-radius: 36px;
+  border-radius: 0;
   overflow: hidden;
-  background: var(--gradient-bg);
+  background: #f8f9ff;
   display: flex;
   flex-direction: column;
 }

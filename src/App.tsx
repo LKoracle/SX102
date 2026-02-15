@@ -110,7 +110,7 @@ function App() {
   );
 
   return (
-    <div className="h-full flex items-center justify-center bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50">
+    <div className="h-full flex items-center justify-center bg-[#f5f7fb]">
       {/* Left Sidebar Navigation */}
       <div className="sidebar">
         <div className="sidebar-header">
