@@ -19,7 +19,7 @@ export function ProductCard({ data }: ProductCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
       <div className={`bg-gradient-to-r ${typeColors[product.type] || 'from-gray-500 to-gray-600'} px-4 py-2`}>
         <div className="flex items-center justify-between">
           <h3 className="text-white font-semibold text-sm">{product.name}</h3>

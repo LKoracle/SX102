@@ -11,7 +11,7 @@ export function MemberCard({ data }: MemberCardProps) {
   const achieveRate = Math.round((member.monthlyAchieved / member.monthlyTarget) * 100);
 
   return (
-    <div className="bg-white rounded-xl border border-purple-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[20px] border border-purple-200 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-purple-500 to-violet-400 px-4 py-2">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-sm">
