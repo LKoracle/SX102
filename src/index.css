@@ -66,8 +66,7 @@ html, #root {
 /* ===== Sidebar ===== */
 .sidebar {
   width: 280px;
-  height: 90vh;
-  max-height: 740px;
+  height: 100%;
   background: white;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
@@ -111,8 +110,7 @@ html, #root {
 /* ===== 移动端框架 ===== */
 .phone-frame {
   width: 375px;
-  height: 90vh;
-  max-height: 780px;
+  height: 100%;
   background: white;
   border-radius: 40px;
   padding: 0;
