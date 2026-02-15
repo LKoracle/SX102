@@ -5,27 +5,26 @@ interface HeaderProps {
 
 export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
   return (
-    <header className="bg-white pt-10 pb-3 px-4 relative z-10">
-      {/* Top row */}
+    <header className="bg-gradient-to-r from-[#667eea] to-[#764ba2] pt-12 pb-5 px-5 relative z-10 shadow-lg">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <svg className="w-5 h-5 text-text" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-          <h1 className="text-[17px] font-semibold text-text">万能营销</h1>
+          <h1 className="text-[18px] font-semibold text-white">万能营销</h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {isSpeaking && (
             <button
               onClick={onStopSpeaking}
-              className="flex items-center gap-1 bg-primary/10 rounded-full px-2.5 py-1 text-xs text-primary font-medium"
+              className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs text-white font-medium transition-all hover:bg-white/30"
             >
               <span className="flex items-center gap-0.5">
                 {[1, 2, 3].map((i) => (
                   <span
                     key={i}
-                    className="w-0.5 bg-primary rounded-full"
+                    className="w-0.5 bg-white rounded-full"
                     style={{
                       height: '10px',
                       animation: `voice-wave 0.5s ease-in-out infinite ${i * 0.1}s`,
@@ -37,24 +36,11 @@ export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
             </button>
           )}
 
-          {/* Avatar group */}
-          <div className="flex items-center">
-            <div className="flex -space-x-1.5">
-              {['#4B7BF5', '#6366F1', '#818CF8'].map((color, i) => (
-                <div
-                  key={i}
-                  className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center text-white text-[9px] font-bold"
-                  style={{ background: color, zIndex: 3 - i }}
-                />
-              ))}
-            </div>
-            <span className="text-[11px] text-text-secondary ml-1.5">等12人</span>
-          </div>
-
-          {/* Menu icon */}
-          <button className="w-8 h-8 flex items-center justify-center text-text-secondary">
-            <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-              <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
+          <button className="w-6 h-6 flex items-center justify-center text-white transition-transform active:scale-90">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+              <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+              <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
             </svg>
           </button>
         </div>
