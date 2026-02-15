@@ -62,7 +62,7 @@ export function InputBar({
   // Voice mode - large button with pulse animation
   if (mode === 'voice' && !isListening) {
     return (
-      <div className="bg-white border-t border-[#f0f0f0] px-6 pt-5 pb-6">
+      <div className="bg-white border-t border-[#f0f0f0] px-6 pt-5 pb-10">
         <div className="flex items-center justify-center relative">
           <button
             onClick={handleVoiceToggle}
@@ -105,7 +105,7 @@ export function InputBar({
   // Listening mode
   if (isListening) {
     return (
-      <div className="bg-white border-t border-[#f0f0f0] px-6 pt-4 pb-6">
+      <div className="bg-white border-t border-[#f0f0f0] px-6 pt-4 pb-10">
         {text && (
           <div className="mb-3 px-3.5 py-2 bg-[#f8f9ff] rounded-2xl text-[13px] text-[#333]">
             {text}
