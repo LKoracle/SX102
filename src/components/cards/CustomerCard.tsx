@@ -1,3 +1,17 @@
+import { customers } from '../../data/customers';
+
+interface CustomerCardProps {
+  data: Record<string, unknown>;
+}
+
+const priorityColors = {
+  high: 'bg-purple-100 text-purple-700',
+  medium: 'bg-indigo-100 text-indigo-700',
+  low: 'bg-blue-100 text-blue-700',
+};
+
+const priorityLabels = { high: '高优先', medium: '中优先', low: '低优先' };
+
 export function CustomerCard({ data }: CustomerCardProps) {
   const customer = customers.find((c) => c.id === data.customerId);
   if (!customer) return null;
@@ -5,10 +19,10 @@ export function CustomerCard({ data }: CustomerCardProps) {
   return (
     // 第一层：负责卡片的外形
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden w-full">
-      
+
       {/* 第二层：关键！负责所有内容的内缩边距，建议改为 p-4 (16px) 或 p-5 */}
       <div className="p-4 flex flex-col gap-3">
-        
+
         {/* 顶部个人信息：使用 gap 控制头像和文字的距离 */}
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 font-bold text-sm">
