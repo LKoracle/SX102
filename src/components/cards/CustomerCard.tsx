@@ -78,4 +78,6 @@ const CustomerCard: React.FC<CustomerProps> = ({ name, age, job, tag, tagType, r
   );
 };
 
-export default CustomerCard;
+// 删掉 export default CustomerCard;
+// 改为直接在声明时导出，或者在底部这样写：
+export { CustomerCard };
