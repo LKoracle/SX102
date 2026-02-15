@@ -111,13 +111,15 @@ html, #root {
 /* ===== 移动端框架 ===== */
 .phone-frame {
   width: 375px;
-  height: 812px;
+  height: 90vh;
+  max-height: 780px;
   background: white;
-  border-radius: 0;
+  border-radius: 16px;
   padding: 0;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   position: relative;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .phone-notch {
@@ -127,7 +129,7 @@ html, #root {
 .phone-screen {
   width: 100%;
   height: 100%;
-  border-radius: 0;
+  border-radius: 16px;
   overflow: hidden;
   background: #f8f9ff;
   display: flex;
