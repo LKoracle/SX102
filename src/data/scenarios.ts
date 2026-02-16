@@ -360,14 +360,6 @@ export const scenarios: Scenario[] = [
             },
             delay: 500,
           },
-          {
-            type: 'text',
-            content:
-              '根据客户需求及保险缺口，建议三套方案，优先推荐【平安添盈·臻享家医】产品方案，年交保费10万，3年交。预估客户60岁时财富保障可达80万。同时可享臻享家医服务，守护家人身体健康',
-            speechText:
-              '推荐平安添盈臻享家医方案，年交10万，3年交，分析完成',
-            delay: 600,
-          },
         ],
         quickReplies: [
           { label: '查看方案详情', value: 'sales-benefit' },
