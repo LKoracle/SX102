@@ -17,7 +17,8 @@ export type MessageContentType =
   | 'auto-step-progress'
   | 'customer-profile-grid'
   | 'coverage-analysis'
-  | 'product-plans';
+  | 'product-plans'
+  | 'collapsible-step';
 
 export interface Message {
   id: string;

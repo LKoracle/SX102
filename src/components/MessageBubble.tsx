@@ -17,6 +17,7 @@ import { AutoStepProgress } from './cards/AutoStepProgress';
 import { CustomerProfileGrid } from './cards/CustomerProfileGrid';
 import { CoverageAnalysisCard } from './cards/CoverageAnalysisCard';
 import { ProductPlansCard } from './cards/ProductPlansCard';
+import { CollapsibleStepCard } from './cards/CollapsibleStepCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -145,6 +146,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <CoverageAnalysisCard data={message.data as Record<string, unknown>} />;
       case 'product-plans':
         return <ProductPlansCard data={message.data as Record<string, unknown>} />;
+      case 'collapsible-step':
+        return <CollapsibleStepCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

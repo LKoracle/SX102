@@ -282,103 +282,87 @@ export const scenarios: Scenario[] = [
           { label: '稍后再说', value: 'back-to-menu' },
         ],
       },
-      // Step 1: 自动化分析流程（需求分析 → 保障检视 → 方案推荐）
+      // Step 1: 自动化分析流程（需求分析 → 保障检视 → 方案推荐，自动折叠）
       {
         aiMessages: [
-          // Step 1: 需求分析开始
+          // 需求分析（自动展开 → 折叠）
           {
-            type: 'auto-step-progress',
+            type: 'collapsible-step',
             content: '',
-            data: { currentStep: 0, steps: ['需求分析', '保障检视', '方案推荐'] },
+            data: {
+              title: '需求分析',
+              stepIcon: '🔍',
+              autoCollapse: true,
+              collapseDelay: 2500,
+              summary: '李平安，45岁，社会中坚客群 | 重点需求：保财富、保养老',
+              items: [
+                {
+                  type: 'customer-card',
+                  data: { customerId: 'c1', detailed: true },
+                },
+                {
+                  type: 'customer-profile-grid',
+                  data: {
+                    customerName: '李平安',
+                    highlightRow: 3,
+                    highlightCol: 2,
+                    segment: '社会中坚客群',
+                    painPoints: ['子女优质教育费用高', '父母健康养老焦虑'],
+                    description: '处于社会中坚客群，子女教育占家庭收入35%',
+                  },
+                },
+                {
+                  type: 'text',
+                  content:
+                    '📊 李平安，45岁，属于社会中坚客群，面临资产贬值、养老储备不足的风险，重点需求是保财富、保养老',
+                },
+              ],
+            },
             delay: 0,
           },
+
+          // 保障检视（自动展开 → 折叠）
           {
-            type: 'text',
-            content: '🔍 正在调取李平安的客户信息...',
-            speechText: '正在调取客户信息',
-            delay: 500,
-          },
-          {
-            type: 'customer-card',
-            content: '',
-            data: { customerId: 'c1', detailed: true },
-            delay: 600,
-          },
-          {
-            type: 'customer-profile-grid',
+            type: 'collapsible-step',
             content: '',
             data: {
-              customerName: '李平安',
-              highlightRow: 3,
-              highlightCol: 2,
-              segment: '社会中坚客群',
-              painPoints: ['子女优质教育费用高', '父母健康养老焦虑'],
-              description: '处于社会中坚客群，子女教育占家庭收入35%',
+              title: '保障检视',
+              stepIcon: '📊',
+              autoCollapse: true,
+              collapseDelay: 2500,
+              summary: '财富缺口80万，养老缺口180万（含中银保信同业数据）',
+              items: [
+                {
+                  type: 'coverage-analysis',
+                  data: { customerName: '李平安' },
+                },
+                {
+                  type: 'text',
+                  content:
+                    '📈 结合客户内外部保险数据分析，李平安存在财富缺口80万，养老缺口180万',
+                },
+              ],
             },
-            delay: 800,
-          },
-          {
-            type: 'text',
-            content: '📊 李平安，45岁，属于社会中坚客群，面临资产贬值、养老储备不足的风险，重点需求是保财富、保养老',
-            speechText: '李平安45岁，重点需求是保财富和保养老',
-            delay: 700,
+            delay: 2500,
           },
 
-          // Step 2: 保障检视
-          {
-            type: 'auto-step-progress',
-            content: '',
-            data: { currentStep: 1, steps: ['需求分析', '保障检视', '方案推荐'] },
-            delay: 800,
-          },
-          {
-            type: 'text',
-            content: '🔍 正在分析保障缺口，对比同业保障数据...',
-            speechText: '正在分析保障缺口',
-            delay: 500,
-          },
-          {
-            type: 'coverage-analysis',
-            content: '',
-            data: {
-              customerName: '李平安',
-            },
-            delay: 900,
-          },
-          {
-            type: 'text',
-            content: '📈 结合客户内外部保险数据分析，李平安存在财富缺口80万，养老缺口180万',
-            speechText: '分析结果显示，财富缺口80万，养老缺口180万',
-            delay: 700,
-          },
-
-          // Step 3: 方案推荐
-          {
-            type: 'auto-step-progress',
-            content: '',
-            data: { currentStep: 2, steps: ['需求分析', '保障检视', '方案推荐'] },
-            delay: 800,
-          },
-          {
-            type: 'text',
-            content: '🔍 正在匹配产品方案...',
-            speechText: '正在匹配产品方案',
-            delay: 500,
-          },
+          // 方案推荐（保持展开）
           {
             type: 'product-plans',
             content: '',
             data: {
-              needsSummary: '根据客户需求及保险缺口，智能匹配以下产品方案：',
+              needsSummary:
+                '根据客户需求及保险缺口，智能匹配以下产品方案：',
             },
-            delay: 900,
+            delay: 2500,
           },
           {
             type: 'text',
             content:
-              '💡 根据客户需求及保险缺口，建议三套方案，优先推荐【平安添盈·臻享家医】产品方案，年交保费10万，3年交。预估客户60岁时财富保障可达80万。同时可享臻享家医服务，守护家人身体健康。\n\n✅ 分析完成！点击下方查看详细方案。',
-            speechText: '推荐平安添盈臻享家医方案，年交10万，3年交，分析完成',
-            delay: 800,
+              '根据客户需求及保险缺口，建议三套方案，优先推荐【平安添盈·臻享家医】产品方案，年交保费10万，3年交。预估客户60岁时财富保障可达80万。同时可享臻享家医服务，守护家人身体健康',
+            speechText:
+              '推荐平安添盈臻享家医方案，年交10万，3年交，分析完成',
+            delay: 600,
           },
         ],
         quickReplies: [
