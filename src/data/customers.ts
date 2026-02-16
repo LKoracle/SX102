@@ -16,7 +16,7 @@ export const customers: Customer[] = [
     lastContact: '上周',
     priority: 'high',
     address: '深圳福田区香蜜湖',
-    notes: '关注子女教育金和养老规划。名下一套房产（香蜜湖）、两辆车（宝马、特斯拉）。生日：9月12日。',
+    notes: '关注子女教育金和养老规划。',
   },
   {
     id: 'c2',
