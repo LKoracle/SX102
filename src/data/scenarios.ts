@@ -285,7 +285,7 @@ export const scenarios: Scenario[] = [
       // Step 1: 自动化分析流程（需求分析 → 保障检视 → 方案推荐，自动折叠）
       {
         aiMessages: [
-          // 需求分析（自动展开 → 折叠）
+          // 需求分析（逐项展示 → 自动折叠）
           {
             type: 'collapsible-step',
             content: '',
@@ -293,7 +293,9 @@ export const scenarios: Scenario[] = [
               title: '需求分析',
               stepIcon: '🔍',
               autoCollapse: true,
-              collapseDelay: 2500,
+              collapseDelay: 1500,
+              itemRevealDelay: 800,
+              firstItemDelay: 400,
               summary: '李平安，45岁，社会中坚客群 | 重点需求：保财富、保养老',
               items: [
                 {
@@ -318,10 +320,10 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 0,
+            delay: 4500,
           },
 
-          // 保障检视（自动展开 → 折叠）
+          // 保障检视（逐项展示 → 自动折叠）
           {
             type: 'collapsible-step',
             content: '',
@@ -329,7 +331,9 @@ export const scenarios: Scenario[] = [
               title: '保障检视',
               stepIcon: '📊',
               autoCollapse: true,
-              collapseDelay: 2500,
+              collapseDelay: 1500,
+              itemRevealDelay: 800,
+              firstItemDelay: 400,
               summary: '财富缺口80万，养老缺口180万（含中银保信同业数据）',
               items: [
                 {
@@ -343,7 +347,7 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 2500,
+            delay: 3500,
           },
 
           // 方案推荐（保持展开）
@@ -354,7 +358,7 @@ export const scenarios: Scenario[] = [
               needsSummary:
                 '根据客户需求及保险缺口，智能匹配以下产品方案：',
             },
-            delay: 2500,
+            delay: 500,
           },
           {
             type: 'text',

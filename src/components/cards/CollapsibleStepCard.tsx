@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { CustomerCard } from './CustomerCard';
 import { CustomerProfileGrid } from './CustomerProfileGrid';
 import { CoverageAnalysisCard } from './CoverageAnalysisCard';
@@ -17,31 +17,55 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
   const title = (data.title as string) ?? '';
   const stepIcon = (data.stepIcon as string) ?? '🔍';
   const autoCollapse = (data.autoCollapse as boolean) ?? true;
-  const collapseDelay = (data.collapseDelay as number) ?? 2500;
+  const collapseDelay = (data.collapseDelay as number) ?? 1500;
   const summary = (data.summary as string) ?? '';
   const items = (data.items as StepItem[]) ?? [];
+  const itemRevealDelay = (data.itemRevealDelay as number) ?? 800;
+  const firstItemDelay = (data.firstItemDelay as number) ?? 400;
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
 
-  // Measure content height after mount
+  const allItemsVisible = visibleCount >= items.length;
+
+  // Progressive item reveal: items appear one by one
   useEffect(() => {
+    if (visibleCount >= items.length) return;
+
+    const delay = visibleCount === 0 ? firstItemDelay : itemRevealDelay;
+    const timer = window.setTimeout(() => {
+      setVisibleCount((prev) => prev + 1);
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [visibleCount, items.length, itemRevealDelay, firstItemDelay]);
+
+  // Re-measure content height as items are progressively revealed
+  const measureHeight = useCallback(() => {
     if (contentRef.current) {
       setContentHeight(contentRef.current.scrollHeight);
     }
-  }, [items]);
+  }, []);
 
-  // Auto-collapse after delay
   useEffect(() => {
-    if (!autoCollapse) return;
+    measureHeight();
+    // Also measure after a brief delay for images/cards that render async
+    const t = window.setTimeout(measureHeight, 100);
+    return () => window.clearTimeout(t);
+  }, [visibleCount, measureHeight]);
+
+  // Auto-collapse AFTER all items are visible + collapseDelay
+  useEffect(() => {
+    if (!autoCollapse || !allItemsVisible) return;
+
     const timer = window.setTimeout(() => {
       setIsCompleted(true);
       setIsCollapsed(true);
     }, collapseDelay);
     return () => window.clearTimeout(timer);
-  }, [autoCollapse, collapseDelay]);
+  }, [autoCollapse, collapseDelay, allItemsVisible]);
 
   const toggle = () => setIsCollapsed((prev) => !prev);
 
@@ -88,8 +112,10 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
             </div>
           )}
           <span className="text-[14px] font-semibold text-gray-800">{stepIcon} {title}</span>
-          {isCompleted && (
+          {isCompleted ? (
             <span className="text-[11px] text-green-600 font-medium ml-1">已完成</span>
+          ) : (
+            <span className="text-[11px] text-blue-500 font-medium ml-1 animate-pulse">分析中...</span>
           )}
         </div>
         <svg
@@ -114,7 +140,25 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
         }}
       >
         <div className="p-3 space-y-3 bg-gray-50/30 border-t border-gray-100">
-          {items.map((item, index) => renderItem(item, index))}
+          {items.map((item, index) => {
+            if (index >= visibleCount) return null;
+            return (
+              <div key={index} className="animate-step-item-reveal">
+                {renderItem(item, index)}
+              </div>
+            );
+          })}
+          {/* Thinking dots when items are still being revealed */}
+          {!allItemsVisible && visibleCount > 0 && (
+            <div className="flex items-center gap-1.5 px-2 py-1 animate-step-item-reveal">
+              <div className="flex gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+              <span className="text-[11px] text-blue-400 ml-1">思考中...</span>
+            </div>
+          )}
         </div>
       </div>
 
