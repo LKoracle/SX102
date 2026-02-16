@@ -17,16 +17,17 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
   const title = (data.title as string) ?? '';
   const stepIcon = (data.stepIcon as string) ?? '🔍';
   const autoCollapse = (data.autoCollapse as boolean) ?? true;
-  const collapseDelay = (data.collapseDelay as number) ?? 1500;
+  const collapseDelay = (data.collapseDelay as number) ?? 3000;
   const summary = (data.summary as string) ?? '';
   const items = (data.items as StepItem[]) ?? [];
-  const itemRevealDelay = (data.itemRevealDelay as number) ?? 800;
-  const firstItemDelay = (data.firstItemDelay as number) ?? 400;
+  const itemRevealDelay = (data.itemRevealDelay as number) ?? 1500;
+  const firstItemDelay = (data.firstItemDelay as number) ?? 800;
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const scrollAnchorRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
 
   const allItemsVisible = visibleCount >= items.length;
@@ -55,6 +56,16 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
     const t = window.setTimeout(measureHeight, 100);
     return () => window.clearTimeout(t);
   }, [visibleCount, measureHeight]);
+
+  // Auto-scroll to keep newly revealed items visible
+  useEffect(() => {
+    if (visibleCount > 0 && scrollAnchorRef.current) {
+      const t = window.setTimeout(() => {
+        scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 150);
+      return () => window.clearTimeout(t);
+    }
+  }, [visibleCount]);
 
   // Auto-collapse AFTER all items are visible + collapseDelay
   useEffect(() => {
@@ -159,6 +170,8 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
               <span className="text-[11px] text-blue-400 ml-1">思考中...</span>
             </div>
           )}
+          {/* Scroll anchor for auto-scroll during item reveal */}
+          <div ref={scrollAnchorRef} />
         </div>
       </div>
 

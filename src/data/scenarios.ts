@@ -293,9 +293,9 @@ export const scenarios: Scenario[] = [
               title: '需求分析',
               stepIcon: '🔍',
               autoCollapse: true,
-              collapseDelay: 1500,
-              itemRevealDelay: 800,
-              firstItemDelay: 400,
+              collapseDelay: 3000,
+              itemRevealDelay: 1500,
+              firstItemDelay: 800,
               summary: '李平安，45岁，社会中坚客群 | 重点需求：保财富、保养老',
               items: [
                 {
@@ -320,7 +320,7 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 4500,
+            delay: 7500,
           },
 
           // 保障检视（逐项展示 → 自动折叠）
@@ -331,9 +331,9 @@ export const scenarios: Scenario[] = [
               title: '保障检视',
               stepIcon: '📊',
               autoCollapse: true,
-              collapseDelay: 1500,
-              itemRevealDelay: 800,
-              firstItemDelay: 400,
+              collapseDelay: 3000,
+              itemRevealDelay: 1500,
+              firstItemDelay: 800,
               summary: '财富缺口80万，养老缺口180万（含中银保信同业数据）',
               items: [
                 {
@@ -347,7 +347,7 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 3500,
+            delay: 6000,
           },
 
           // 方案推荐（保持展开）
