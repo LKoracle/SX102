@@ -113,7 +113,7 @@ export const scenarios: Scenario[] = [
                   action: '面访沟通养老规划方案',
                   actionIcon: '🤝',
                   tags: ['高净值', '保养老'],
-                  lastContact: '上周',
+                  lastContact: '本月',
                 },
                 {
                   name: '王建国',
@@ -122,7 +122,7 @@ export const scenarios: Scenario[] = [
                   action: '面访讲解子女教育金',
                   actionIcon: '🤝',
                   tags: ['加保意向', '子女教育'],
-                  lastContact: '2周前',
+                  lastContact: '本月',
                 },
                 {
                   name: '李美琳',
@@ -131,7 +131,7 @@ export const scenarios: Scenario[] = [
                   action: '电话沟通重疾保障方案',
                   actionIcon: '📱',
                   tags: ['保障意识强', '重疾缺口'],
-                  lastContact: '1个月前',
+                  lastContact: '本月',
                 },
                 {
                   name: '张伟',
@@ -140,7 +140,7 @@ export const scenarios: Scenario[] = [
                   action: '发送保障科普素材',
                   actionIcon: '📩',
                   tags: ['首次接触', '高收入'],
-                  lastContact: '3天前',
+                  lastContact: '本月',
                 },
                 {
                   name: '陈晓雯',
@@ -149,7 +149,7 @@ export const scenarios: Scenario[] = [
                   action: '推送养老年金产品资料',
                   actionIcon: '📩',
                   tags: ['理财需求', '养老规划'],
-                  lastContact: '1周前',
+                  lastContact: '本月',
                 },
                 {
                   name: '刘大明',
@@ -158,7 +158,7 @@ export const scenarios: Scenario[] = [
                   action: '节日问候维护关系',
                   actionIcon: '📱',
                   tags: ['老客户', '传承需求'],
-                  lastContact: '5天前',
+                  lastContact: '本月',
                 },
               ],
               summary: '建议优先跟进高温高价值客户赵高、王建国，本月面访目标15次，当前已完成0次',
