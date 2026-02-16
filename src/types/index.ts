@@ -10,7 +10,9 @@ export type MessageContentType =
   | 'work-summary'
   | 'schedule-card'
   | 'income-card'
-  | 'nearby-customers';
+  | 'nearby-customers'
+  | 'monthly-plan'
+  | 'customer-grid';
 
 export interface Message {
   id: string;

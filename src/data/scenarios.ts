@@ -45,19 +45,46 @@ export const scenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '已为您完成全部推荐客户的盘点。',
+            content: '已为您完成全部推荐客户的盘点。根据您盘点的客户，为您生成当月经营计划，请查收。',
             speechText: '盘点完成了，经营计划也生成好了，请过目。',
           },
           {
-            type: 'text',
-            content: '根据您盘点的客户，为您生成当月经营计划，请查收。',
+            type: 'monthly-plan',
+            content: '',
+            data: {
+              plans: [
+                { label: '触客计划', icon: '📱', target: 50, completed: 0, unit: '次', color: '#667eea' },
+                { label: '面访计划', icon: '🤝', target: 15, completed: 0, unit: '次', color: '#764ba2' },
+                { label: '邀约计划', icon: '📩', target: 8, completed: 0, unit: '次', color: '#6366f1' },
+              ],
+              upgradeTarget: '5位中温客户提升至高温',
+            },
             delay: 500,
           },
           {
-            type: 'text',
-            content:
-              '📊 **本月经营计划总览**\n\n触客计划：50次（已完成0次）\n面访计划：15次（已完成0次）\n邀约计划：8次（已完成0次）\n\n客户升温目标：5位中温客户提升至高温\n\n**客户经营九宫格**\n高价值客户分布：\n• 高温高价值：3位\n• 中温高价值：5位\n• 低温高价值：8位\n\n💡 建议优先经营中温高价值客户，提升成交概率',
-            delay: 600,
+            type: 'customer-grid',
+            content: '',
+            data: {
+              grid: [
+                [
+                  { label: '高温高价值', count: 3 },
+                  { label: '高温中价值', count: 2 },
+                  { label: '高温低价值', count: 1 },
+                ],
+                [
+                  { label: '中温高价值', count: 5 },
+                  { label: '中温中价值', count: 4 },
+                  { label: '中温低价值', count: 2 },
+                ],
+                [
+                  { label: '低温高价值', count: 8 },
+                  { label: '低温中价值', count: 6 },
+                  { label: '低温低价值', count: 3 },
+                ],
+              ],
+              tip: '建议优先经营中温高价值客户，提升成交概率',
+            },
+            delay: 400,
           },
         ],
         quickReplies: [
