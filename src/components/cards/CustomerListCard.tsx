@@ -15,7 +15,7 @@ interface CustomerListItem {
 export function CustomerListCard({ data }: CustomerListCardProps) {
   const customers = data.customers as CustomerListItem[];
   const summary = data.summary as string | undefined;
-  const totalCount = customers.length;
+  const totalCount = (data.totalCount as number) ?? customers.length;
   const displayCount = 3;
   const displayCustomers = customers.slice(0, displayCount);
 

@@ -104,6 +104,7 @@ export const scenarios: Scenario[] = [
             type: 'customer-list',
             content: '',
             data: {
+              totalCount: 34,
               customers: [
                 {
                   name: '李平安',
