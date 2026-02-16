@@ -13,7 +13,7 @@ export const scenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '新的一个月开始啦，记得完成客户盘点哦。同时，我已自动为您推荐了精选客户名单，并附上清晰的推荐理由。',
+            content: '新的一个月开始啦，记得完成客户盘点哦。这是为您推荐的精选客户名单。',
             speechText: '张经理，新的一月开始啦！我帮您挑了几位重点客户，一起看看吧。',
           },
           {
@@ -36,7 +36,7 @@ export const scenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '帮我盘点全部推荐客户', value: 'review-all' },
+          { label: '帮我盘点本月客户', value: 'review-all' },
           { label: '查看精选客户名单', value: 'view-list' },
         ],
       },
@@ -45,7 +45,7 @@ export const scenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '已为您完成全部推荐客户的盘点。根据您盘点的客户，为您生成当月经营计划，请查收。',
+            content: '已为您完成本月全部客户的盘点。根据盘点的客户，为您生成当月经营计划，请查收。',
             speechText: '盘点完成了，经营计划也生成好了，请过目。',
           },
           {
@@ -410,8 +410,8 @@ export const scenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '下午好！看到您刚完成对客户李平安的拜访，需要帮您记录拜访信息并生成总结吗？',
-            speechText: '下午好！拜访结束了，需要帮您记录和总结吗？',
+            content: '下午好！看到您刚完成对客户李平安的拜访，沟通情况如何？告诉我，我可以帮您记录',
+            speechText: '下午好！拜访结束了，情况如何？我来帮您记录',
           },
         ],
         quickReplies: [{ label: '开始智能记录', value: 'start-record' }],
