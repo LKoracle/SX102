@@ -12,7 +12,8 @@ export type MessageContentType =
   | 'income-card'
   | 'nearby-customers'
   | 'monthly-plan'
-  | 'customer-grid';
+  | 'customer-grid'
+  | 'customer-list';
 
 export interface Message {
   id: string;

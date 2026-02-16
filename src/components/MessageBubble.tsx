@@ -12,6 +12,7 @@ import { IncomeCard } from './cards/IncomeCard';
 import { NearbyCustomersCard } from './cards/NearbyCustomersCard';
 import { MonthlyPlanCard } from './cards/MonthlyPlanCard';
 import { CustomerGridCard } from './cards/CustomerGridCard';
+import { CustomerListCard } from './cards/CustomerListCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -130,6 +131,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <MonthlyPlanCard data={message.data as Record<string, unknown>} />;
       case 'customer-grid':
         return <CustomerGridCard data={message.data as Record<string, unknown>} />;
+      case 'customer-list':
+        return <CustomerListCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }
