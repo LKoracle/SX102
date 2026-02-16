@@ -30,7 +30,7 @@ export function TeamDashboard() {
             >
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white text-[13px] font-bold">
+                  <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-[13px] font-medium">
                     {member.avatar}
                   </div>
                   <div>

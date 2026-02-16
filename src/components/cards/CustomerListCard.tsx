@@ -12,18 +12,6 @@ interface CustomerListItem {
   lastContact: string;
 }
 
-const tempColorMap: Record<string, { bg: string; text: string }> = {
-  '高温': { bg: 'bg-red-50', text: 'text-red-600' },
-  '中温': { bg: 'bg-orange-50', text: 'text-orange-600' },
-  '低温': { bg: 'bg-blue-50', text: 'text-blue-600' },
-};
-
-const valueColorMap: Record<string, { bg: string; text: string }> = {
-  '高价值': { bg: 'bg-purple-50', text: 'text-purple-600' },
-  '中价值': { bg: 'bg-indigo-50', text: 'text-indigo-600' },
-  '低价值': { bg: 'bg-gray-50', text: 'text-gray-500' },
-};
-
 export function CustomerListCard({ data }: CustomerListCardProps) {
   const customers = data.customers as CustomerListItem[];
   const summary = data.summary as string | undefined;
@@ -40,54 +28,53 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
 
       {/* 客户列表 */}
       <div className="p-3 space-y-2">
-        {displayCustomers.map((customer, index) => {
-          const tempColor = tempColorMap[customer.temperature] || tempColorMap['中温'];
-          const valColor = valueColorMap[customer.value] || valueColorMap['中价值'];
-          return (
+        {displayCustomers.map((customer, index) => (
             <div
               key={index}
-              className="bg-white border border-gray-200 rounded-lg p-3 flex items-start gap-3 hover:border-gray-300 transition-colors"
+              className="bg-white border border-gray-200 rounded-lg p-3 hover:border-gray-300 transition-colors"
             >
-              {/* 头像 - 改为浅色背景 */}
-              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-medium text-sm flex-shrink-0">
-                {customer.name.charAt(0)}
+              {/* 上部：头像 + 信息 */}
+              <div className="flex items-start gap-3">
+                {/* 头像 - 统一浅蓝色圆形 */}
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-medium text-sm flex-shrink-0">
+                  {customer.name.charAt(0)}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  {/* 客户名称和最后联系时间 */}
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-medium text-sm text-gray-800">{customer.name}</span>
+                    <span className="text-xs text-gray-400">{customer.lastContact}联系</span>
+                  </div>
+
+                  {/* 标签 - 统一灰色 */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                      {customer.temperature}
+                    </span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                      {customer.value}
+                    </span>
+                    {customer.tags.map((tag, i) => (
+                      <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div className="flex-1 min-w-0">
-                {/* 客户名称和最后联系时间 */}
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-medium text-sm text-gray-800">{customer.name}</span>
-                  <span className="text-xs text-gray-400">{customer.lastContact}联系</span>
-                </div>
-
-                {/* 标签 - 使用描边样式 */}
-                <div className="flex items-center gap-1.5 mb-2 flex-wrap">
-                  <span className={`text-xs px-2 py-0.5 rounded-full border ${tempColor.text} border-current bg-white`}>
-                    {customer.temperature}
-                  </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full border ${valColor.text} border-current bg-white`}>
-                    {customer.value}
-                  </span>
-                  {customer.tags.map((tag, i) => (
-                    <span key={i} className="text-xs px-2 py-0.5 rounded-full border border-gray-300 text-gray-600 bg-white">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* 建议行动和按钮 */}
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">
-                    {customer.actionIcon} {customer.action}
-                  </span>
-                  <button className="text-xs text-blue-600 border border-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors">
-                    去经营
-                  </button>
-                </div>
+              {/* 经营动作 - 文案与头像左对齐，按钮右侧 */}
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+                <span className="text-xs text-gray-500 truncate mr-3">
+                  {customer.actionIcon} {customer.action}
+                </span>
+                <button className="text-xs text-blue-600 border border-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap flex-shrink-0">
+                  去经营
+                </button>
               </div>
             </div>
-          );
-        })}
+          ))}
       </div>
 
       {/* 更多客户按钮 */}

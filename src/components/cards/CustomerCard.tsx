@@ -22,7 +22,7 @@ export function CustomerCard({ data }: CustomerCardProps) {
 
         {/* 顶部个人信息 */}
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 font-bold text-[15px]">
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 font-medium text-[15px]">
             {customer.avatar}
           </div>
           <div className="flex-1">
