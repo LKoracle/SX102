@@ -20,9 +20,9 @@ export function TypingIndicator() {
         </div>
 
         <div className="bg-white rounded-[18px] rounded-tl-[4px] px-4 py-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex items-center gap-2">
-          <span className="text-[13px] text-[#8B8FA7] font-medium">深度思考中</span>
-          <span className="text-[12px] text-[#8B8FA7]/60">&middot;</span>
-          <span className="text-[12px] text-[#4B7BF5] font-medium">{elapsed.toFixed(1)}s</span>
+          <span className="text-[14px] text-[#8B8FA7] font-medium">深度思考中</span>
+          <span className="text-[13px] text-[#8B8FA7]/60">&middot;</span>
+          <span className="text-[13px] text-[#4B7BF5] font-medium">{elapsed.toFixed(1)}s</span>
           <span className="flex items-center gap-0.5 ml-0.5">
             <span className="typing-dot w-1 h-1 bg-[#4B7BF5]/50 rounded-full"></span>
             <span className="typing-dot w-1 h-1 bg-[#4B7BF5]/50 rounded-full"></span>

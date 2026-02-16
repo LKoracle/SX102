@@ -25,12 +25,12 @@ export function IncomeCard({ data }: IncomeCardProps) {
   return (
     <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-3">
-        <p className="text-white/80 text-xs">{period}</p>
+        <p className="text-white/80 text-[13px]">{period}</p>
         <div className="flex items-end gap-2 mt-1">
           <span className="text-white text-2xl font-bold">
             ¥{total.toLocaleString()}
           </span>
-          <span className="text-blue-200 text-sm font-medium mb-0.5">
+          <span className="text-blue-200 text-[15px] font-medium mb-0.5">
             {comparison} 环比上月
           </span>
         </div>
@@ -39,7 +39,7 @@ export function IncomeCard({ data }: IncomeCardProps) {
         {/* Income breakdown */}
         <div className="space-y-1.5">
           {items.map((item, i) => (
-            <div key={i} className="flex items-center justify-between text-sm">
+            <div key={i} className="flex items-center justify-between text-[15px]">
               <span className="text-text-secondary flex items-center gap-1.5">
                 <span>{item.icon}</span>
                 {item.label}
@@ -47,7 +47,7 @@ export function IncomeCard({ data }: IncomeCardProps) {
               <span className="font-medium">¥{item.amount.toLocaleString()}</span>
             </div>
           ))}
-          <div className="border-t border-gray-200 pt-1.5 flex items-center justify-between text-sm font-bold">
+          <div className="border-t border-gray-200 pt-1.5 flex items-center justify-between text-[15px] font-bold">
             <span>合计</span>
             <span className="text-primary">¥{total.toLocaleString()}</span>
           </div>
@@ -55,7 +55,7 @@ export function IncomeCard({ data }: IncomeCardProps) {
 
         {/* Year progress */}
         <div className="bg-gray-50 rounded-lg p-2.5">
-          <div className="flex items-center justify-between text-xs mb-1">
+          <div className="flex items-center justify-between text-[13px] mb-1">
             <span className="text-text-secondary">年度收入进度</span>
             <span className="font-medium">
               {(yearlyTotal / 10000).toFixed(1)}万 / {(yearlyTarget / 10000).toFixed(0)}万
@@ -67,7 +67,7 @@ export function IncomeCard({ data }: IncomeCardProps) {
               style={{ width: `${Math.round((yearlyTotal / yearlyTarget) * 100)}%` }}
             />
           </div>
-          <div className="flex items-center justify-between text-xs mt-1">
+          <div className="flex items-center justify-between text-[13px] mt-1">
             <span className="text-text-secondary">排名：{ranking}</span>
             <span className="text-primary font-medium">
               {Math.round((yearlyTotal / yearlyTarget) * 100)}%
@@ -77,7 +77,7 @@ export function IncomeCard({ data }: IncomeCardProps) {
 
         {/* Bonus alert */}
         {bonusAlert && (
-          <div className="bg-primary-50 rounded-lg p-2 text-xs text-primary-dark font-medium">
+          <div className="bg-primary-50 rounded-lg p-2 text-[13px] text-primary-dark font-medium">
             🔥 {bonusAlert}
           </div>
         )}

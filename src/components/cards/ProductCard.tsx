@@ -22,20 +22,20 @@ export function ProductCard({ data }: ProductCardProps) {
     <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
       <div className={`bg-gradient-to-r ${typeColors[product.type] || 'from-gray-500 to-gray-600'} px-4 py-2`}>
         <div className="flex items-center justify-between">
-          <h3 className="text-white font-semibold text-sm">{product.name}</h3>
-          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full">{product.type}</span>
+          <h3 className="text-white font-semibold text-[15px]">{product.name}</h3>
+          <span className="bg-white/20 text-white text-[13px] px-2 py-0.5 rounded-full">{product.type}</span>
         </div>
       </div>
       <div className="p-3">
         <div className="flex flex-wrap gap-1.5 mb-2">
           {product.features.map((f) => (
-            <span key={f} className="text-xs bg-gray-100 text-text-secondary px-2 py-0.5 rounded-full">
+            <span key={f} className="text-[13px] bg-gray-100 text-text-secondary px-2 py-0.5 rounded-full">
               {f}
             </span>
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-xs mb-2">
+        <div className="grid grid-cols-2 gap-2 text-[13px] mb-2">
           <div className="bg-gray-50 rounded-lg p-2">
             <span className="text-text-secondary">保费</span>
             <p className="font-medium text-text mt-0.5">{product.premium}</p>
@@ -47,7 +47,7 @@ export function ProductCard({ data }: ProductCardProps) {
         </div>
 
         {reason && (
-          <div className="p-2 bg-primary-50 rounded-lg text-xs text-primary-dark">
+          <div className="p-2 bg-primary-50 rounded-lg text-[13px] text-primary-dark">
             💡 推荐理由：{reason}
           </div>
         )}

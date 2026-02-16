@@ -26,7 +26,7 @@ function renderMarkdown(text: string): string {
       (match) => {
         const cells = match.split('|').filter(Boolean);
         if (cells.every((c) => c.trim().match(/^[-:]+$/))) return '';
-        const tds = cells.map((c) => `<td class="px-2 py-1.5 border border-[#e0e4ff]/60 text-[13px]">${c.trim()}</td>`).join('');
+        const tds = cells.map((c) => `<td class="px-2 py-1.5 border border-[#e0e4ff]/60 text-[14px]">${c.trim()}</td>`).join('');
         return `<tr>${tds}</tr>`;
       }
     );
@@ -54,7 +54,7 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
       const headers = tableLines[0]?.split('|').filter(Boolean).map((h) => h.trim()) || [];
       const rows = tableLines.slice(1);
 
-      tableHtml = `<table class="w-full border-collapse my-2 text-[13px]"><thead><tr>${headers
+      tableHtml = `<table class="w-full border-collapse my-2 text-[14px]"><thead><tr>${headers
         .map((h) => `<th class="px-2 py-1.5 bg-[#f8f9ff] border border-[#e0e4ff]/60 text-left font-medium text-[#667eea]">${h}</th>`)
         .join('')}</tr></thead><tbody>${rows
         .map((row) => {
@@ -69,7 +69,7 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
     <div className="relative group">
       {beforeTable && (
         <div
-          className="text-[14px] leading-[1.5] whitespace-pre-wrap text-[#333]"
+          className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#333]"
           dangerouslySetInnerHTML={{ __html: renderMarkdown(beforeTable) }}
         />
       )}
@@ -78,7 +78,7 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
       )}
       {afterTable && (
         <div
-          className="text-[14px] leading-[1.5] whitespace-pre-wrap text-[#333]"
+          className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#333]"
           dangerouslySetInnerHTML={{ __html: renderMarkdown(afterTable) }}
         />
       )}
@@ -138,7 +138,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           }}
         >
-          <p className="text-[14px] leading-[1.5]">{message.content}</p>
+          <p className="text-[15px] leading-[1.5]">{message.content}</p>
         </div>
       </div>
     );

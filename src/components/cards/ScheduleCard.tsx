@@ -32,21 +32,21 @@ export function ScheduleCard({ data }: ScheduleCardProps) {
   return (
     <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2.5">
-        <h3 className="text-white font-semibold text-sm">📅 {title}</h3>
+        <h3 className="text-white font-semibold text-[15px]">📅 {title}</h3>
       </div>
       <div className="p-2 space-y-2">
         {days.map((day, index) => (
           <div key={index}>
-            <p className="text-xs font-semibold text-text mb-1 px-1">{day.day}</p>
+            <p className="text-[13px] font-semibold text-text mb-1 px-1">{day.day}</p>
             <div className="space-y-1">
               {day.items.map((item, i) => (
                 <div
                   key={i}
                   className={`border-l-3 rounded-r-lg px-3 py-1.5 flex items-center gap-2 ${typeColors[item.type] || 'border-l-gray-400 bg-gray-50'}`}
                 >
-                  <span className="text-xs">{typeIcons[item.type] || '📌'}</span>
-                  <span className="text-xs font-medium text-text-secondary w-10">{item.time}</span>
-                  <span className="text-xs text-text flex-1">{item.task}</span>
+                  <span className="text-[13px]">{typeIcons[item.type] || '📌'}</span>
+                  <span className="text-[13px] font-medium text-text-secondary w-10">{item.time}</span>
+                  <span className="text-[13px] text-text flex-1">{item.task}</span>
                 </div>
               ))}
             </div>

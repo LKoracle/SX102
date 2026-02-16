@@ -16,7 +16,7 @@ export function TeamDashboard() {
   return (
     <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-secondary to-secondary-light px-4 py-2.5">
-        <h3 className="text-white font-semibold text-sm">👥 团队成员业绩看板</h3>
+        <h3 className="text-white font-semibold text-[15px]">👥 团队成员业绩看板</h3>
       </div>
       <div className="p-2 space-y-2">
         {teamMembers.map((member) => {
@@ -30,33 +30,33 @@ export function TeamDashboard() {
             >
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white text-xs font-bold">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white text-[13px] font-bold">
                     {member.avatar}
                   </div>
                   <div>
-                    <span className="text-sm font-medium">{member.name}</span>
-                    <span className="text-xs text-text-secondary ml-1">({member.level})</span>
+                    <span className="text-[15px] font-medium">{member.name}</span>
+                    <span className="text-[13px] text-text-secondary ml-1">({member.level})</span>
                   </div>
                 </div>
-                <span className="text-xs">{statusLabels[member.status]}</span>
+                <span className="text-[13px]">{statusLabels[member.status]}</span>
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div>
-                  <p className="text-xs text-text-secondary">目标达成</p>
-                  <p className={`text-sm font-bold ${achieveRate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
+                  <p className="text-[13px] text-text-secondary">目标达成</p>
+                  <p className={`text-[15px] font-bold ${achieveRate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
                     {achieveRate}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-text-secondary">周拜访量</p>
-                  <p className={`text-sm font-bold ${visitRate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
+                  <p className="text-[13px] text-text-secondary">周拜访量</p>
+                  <p className={`text-[15px] font-bold ${visitRate >= 80 ? 'text-blue-600' : 'text-purple-500'}`}>
                     {member.weeklyVisits}/{member.weeklyTarget}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-text-secondary">转化率</p>
-                  <p className="text-sm font-bold text-secondary">
+                  <p className="text-[13px] text-text-secondary">转化率</p>
+                  <p className="text-[15px] font-bold text-secondary">
                     {Math.round(member.conversionRate * 100)}%
                   </p>
                 </div>

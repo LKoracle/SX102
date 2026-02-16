@@ -22,17 +22,17 @@ export function CustomerCard({ data }: CustomerCardProps) {
 
         {/* 顶部个人信息 */}
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 font-bold text-sm">
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex-shrink-0 flex items-center justify-center text-blue-600 font-bold text-[15px]">
             {customer.avatar}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-gray-800">{customer.name}</span>
-              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${priorityColors[customer.priority]}`}>
+              <span className="font-bold text-[15px] text-gray-800">{customer.name}</span>
+              <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${priorityColors[customer.priority]}`}>
                 {priorityLabels[customer.priority]}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-[13px] text-gray-500 mt-0.5">
               {customer.age}岁 · {customer.occupation}
             </p>
           </div>
@@ -41,7 +41,7 @@ export function CustomerCard({ data }: CustomerCardProps) {
         {/* 标签区域 */}
         <div className="flex flex-wrap gap-1.5">
           {customer.tags.map((tag) => (
-            <span key={tag} className="text-[11px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded border border-gray-100">
+            <span key={tag} className="text-[12px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded border border-gray-100">
               {tag}
             </span>
           ))}
@@ -51,8 +51,8 @@ export function CustomerCard({ data }: CustomerCardProps) {
         {customer.notes && (
           <div className="bg-[#FFF9E7] rounded-lg p-3 border-l-4 border-orange-300">
             <div className="flex gap-1.5 items-start">
-              <span className="text-xs flex-shrink-0">💡</span>
-              <p className="text-xs text-orange-800 leading-relaxed break-words">
+              <span className="text-[13px] flex-shrink-0">💡</span>
+              <p className="text-[13px] text-orange-800 leading-relaxed break-words">
                 {customer.notes}
               </p>
             </div>

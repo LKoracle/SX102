@@ -107,7 +107,7 @@ export function InputBar({
     return (
       <div className="bg-white border-t border-[#f0f0f0] px-6 pt-4 pb-7">
         {text && (
-          <div className="mb-3 px-3.5 py-2 bg-[#f8f9ff] rounded-2xl text-[13px] text-[#333]">
+          <div className="mb-3 px-3.5 py-2 bg-[#f8f9ff] rounded-2xl text-[14px] text-[#333]">
             {text}
           </div>
         )}
@@ -170,7 +170,7 @@ export function InputBar({
             </button>
           </div>
 
-          <p className="text-[11px] text-[#667eea] font-medium">正在聆听...</p>
+          <p className="text-[12px] text-[#667eea] font-medium">正在聆听...</p>
         </div>
       </div>
     );
@@ -203,7 +203,7 @@ export function InputBar({
             onKeyDown={handleKeyDown}
             placeholder="输入消息..."
             disabled={disabled}
-            className="w-full bg-[#f8f9ff] rounded-full px-4 py-2 text-[13px] outline-none focus:ring-2 focus:ring-[#667eea]/20 transition-all disabled:opacity-50 placeholder:text-[#999]"
+            className="w-full bg-[#f8f9ff] rounded-full px-4 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#667eea]/20 transition-all disabled:opacity-50 placeholder:text-[#999]"
           />
         </div>
 
