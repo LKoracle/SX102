@@ -13,7 +13,11 @@ export type MessageContentType =
   | 'nearby-customers'
   | 'monthly-plan'
   | 'customer-grid'
-  | 'customer-list';
+  | 'customer-list'
+  | 'auto-step-progress'
+  | 'customer-profile-grid'
+  | 'coverage-analysis'
+  | 'product-plans';
 
 export interface Message {
   id: string;

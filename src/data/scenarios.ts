@@ -282,56 +282,111 @@ export const scenarios: Scenario[] = [
           { label: '稍后再说', value: 'back-to-menu' },
         ],
       },
-      // Step 1: 分析客户需求
+      // Step 1: 自动化分析流程（需求分析 → 保障检视 → 方案推荐）
       {
         aiMessages: [
+          // Step 1: 需求分析开始
+          {
+            type: 'auto-step-progress',
+            content: '',
+            data: { currentStep: 0, steps: ['需求分析', '保障检视', '方案推荐'] },
+            delay: 0,
+          },
+          {
+            type: 'text',
+            content: '🔍 正在调取李平安的客户信息...',
+            speechText: '正在调取客户信息',
+            delay: 500,
+          },
           {
             type: 'customer-card',
             content: '',
             data: { customerId: 'c1', detailed: true },
+            delay: 600,
+          },
+          {
+            type: 'customer-profile-grid',
+            content: '',
+            data: {
+              customerName: '李平安',
+              highlightRow: 3,
+              highlightCol: 2,
+              segment: '社会中坚客群',
+              painPoints: ['子女优质教育费用高', '父母健康养老焦虑'],
+              description: '处于社会中坚客群，子女教育占家庭收入35%',
+            },
+            delay: 800,
           },
           {
             type: 'text',
-            content: '李平安，45岁，属于社会中坚客群，面临资产贬值、养老储备不足的风险，重点需求是保财富、保养老',
-            speechText: '李平安45岁，重点需求是保财富和保养老，我来帮您分析。',
+            content: '📊 李平安，45岁，属于社会中坚客群，面临资产贬值、养老储备不足的风险，重点需求是保财富、保养老',
+            speechText: '李平安45岁，重点需求是保财富和保养老',
+            delay: 700,
+          },
+
+          // Step 2: 保障检视
+          {
+            type: 'auto-step-progress',
+            content: '',
+            data: { currentStep: 1, steps: ['需求分析', '保障检视', '方案推荐'] },
+            delay: 800,
+          },
+          {
+            type: 'text',
+            content: '🔍 正在分析保障缺口，对比同业保障数据...',
+            speechText: '正在分析保障缺口',
             delay: 500,
           },
-        ],
-        quickReplies: [
-          { label: '测算保障缺口', value: 'gap-analysis' },
-          { label: '推荐产品方案', value: 'product-recommend' },
-        ],
-      },
-      // Step 2: 测算保障缺口
-      {
-        aiMessages: [
+          {
+            type: 'coverage-analysis',
+            content: '',
+            data: {
+              customerName: '李平安',
+            },
+            delay: 900,
+          },
           {
             type: 'text',
-            content: '结合客户内外部保险数据分析，李平安存在财富缺口80万，养老缺口180万',
-            speechText: '分析结果显示，财富缺口80万，养老缺口180万。',
+            content: '📈 结合客户内外部保险数据分析，李平安存在财富缺口80万，养老缺口180万',
+            speechText: '分析结果显示，财富缺口80万，养老缺口180万',
+            delay: 700,
           },
-        ],
-        quickReplies: [
-          { label: '推荐产品方案及权益讲解内容', value: 'product-recommend' },
-          { label: '返回', value: 'back-to-menu' },
-        ],
-      },
-      // Step 3: 推荐产品方案
-      {
-        aiMessages: [
+
+          // Step 3: 方案推荐
+          {
+            type: 'auto-step-progress',
+            content: '',
+            data: { currentStep: 2, steps: ['需求分析', '保障检视', '方案推荐'] },
+            delay: 800,
+          },
+          {
+            type: 'text',
+            content: '🔍 正在匹配产品方案...',
+            speechText: '正在匹配产品方案',
+            delay: 500,
+          },
+          {
+            type: 'product-plans',
+            content: '',
+            data: {
+              needsSummary: '根据客户需求及保险缺口，智能匹配以下产品方案：',
+            },
+            delay: 900,
+          },
           {
             type: 'text',
             content:
-              '根据客户需求及保险缺口，建议三套方案，优先推荐【平安添盈·臻享家医】产品方案，年交保费10万，3年交。预估客户60岁时财富保障可达80万。同时可享臻享家医服务，守护家人身体健康\n\n点击方案详情可查看产品亮点介绍和服务权益讲解内容哦~',
-            speechText: '推荐平安添盈臻享家医方案，年交10万，3年交，您看看详情。',
+              '💡 根据客户需求及保险缺口，建议三套方案，优先推荐【平安添盈·臻享家医】产品方案，年交保费10万，3年交。预估客户60岁时财富保障可达80万。同时可享臻享家医服务，守护家人身体健康。\n\n✅ 分析完成！点击下方查看详细方案。',
+            speechText: '推荐平安添盈臻享家医方案，年交10万，3年交，分析完成',
+            delay: 800,
           },
         ],
         quickReplies: [
-          { label: '促成这个方案我的销售利益有多少？', value: 'sales-benefit' },
+          { label: '查看方案详情', value: 'sales-benefit' },
           { label: '查看销售攻略', value: 'sales-strategy' },
         ],
       },
-      // Step 4: 测算销售利益
+      // Step 2: 测算销售利益
       {
         aiMessages: [
           {
@@ -346,7 +401,7 @@ export const scenarios: Scenario[] = [
           { label: '准备出发拜访', value: 'back-to-menu' },
         ],
       },
-      // Step 5: 匹配销售攻略
+      // Step 3: 匹配销售攻略
       {
         aiMessages: [
           {
