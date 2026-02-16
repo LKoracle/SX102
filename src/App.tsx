@@ -177,4 +177,26 @@ function App() {
             {chat.isTyping && <TypingIndicator />}
 
             {/* Quick replies */}
-            {chat.quickReplies.length > 0 && !chat.isTyping
+            {chat.quickReplies.length > 0 && !chat.isTyping && (
+              <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input area */}
+          <InputBar
+            onSend={chat.handleUserMessage}
+            onVoiceStart={speech.startListening}
+            onVoiceStop={speech.stopListening}
+            isListening={speech.isListening}
+            transcript={speech.transcript}
+            disabled={chat.isTyping}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
