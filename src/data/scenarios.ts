@@ -107,7 +107,7 @@ export const scenarios: Scenario[] = [
               totalCount: 34,
               customers: [
                 {
-                  name: '李平安',
+                  name: '赵高',
                   temperature: '高温',
                   value: '高价值',
                   action: '面访沟通养老规划方案',
@@ -161,7 +161,7 @@ export const scenarios: Scenario[] = [
                   lastContact: '5天前',
                 },
               ],
-              summary: '建议优先跟进高温高价值客户李平安、王建国，本月面访目标15次，当前已完成0次',
+              summary: '建议优先跟进高温高价值客户赵高、王建国，本月面访目标15次，当前已完成0次',
             },
             delay: 500,
           },
