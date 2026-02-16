@@ -16,7 +16,7 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
   const customers = data.customers as CustomerListItem[];
   const summary = data.summary as string | undefined;
   const totalCount = customers.length;
-  const displayCount = 6;
+  const displayCount = 3;
   const displayCustomers = customers.slice(0, displayCount);
 
   return (
@@ -47,16 +47,10 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
                     <span className="text-xs text-gray-400">{customer.lastContact}联系</span>
                   </div>
 
-                  {/* 标签 - 统一灰色 */}
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
-                      {customer.temperature}
-                    </span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
-                      {customer.value}
-                    </span>
-                    {customer.tags.map((tag, i) => (
-                      <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-gray-50 text-gray-500 border border-gray-200">
+                  {/* 标签 - 简洁样式，最多3个 */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {[customer.temperature, customer.value, ...customer.tags].slice(0, 3).map((tag, i) => (
+                      <span key={i} className="text-xs text-gray-500">
                         {tag}
                       </span>
                     ))}
@@ -66,7 +60,7 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
 
               {/* 经营动作 - 文案与头像左对齐，按钮右侧 */}
               <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
-                <span className="text-xs text-gray-500 truncate mr-3">
+                <span className="text-xs text-gray-800 truncate mr-3">
                   {customer.actionIcon} {customer.action}
                 </span>
                 <button className="text-xs text-blue-600 border border-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap flex-shrink-0">
@@ -81,7 +75,7 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
       {totalCount > displayCount && (
         <div className="px-3 pb-3">
           <button className="w-full py-2.5 text-sm text-gray-600 hover:text-gray-800 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-1">
-            <span>更多客户</span>
+            <span>查看更多客户</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
