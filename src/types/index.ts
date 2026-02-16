@@ -17,6 +17,7 @@ export interface Message {
   role: 'ai' | 'user';
   type: MessageContentType;
   content: string;
+  speechText?: string;
   data?: Record<string, unknown>;
   timestamp: number;
 }
@@ -31,6 +32,7 @@ export interface ScenarioStep {
   aiMessages: Array<{
     type: MessageContentType;
     content: string;
+    speechText?: string;
     data?: Record<string, unknown>;
     delay?: number;
   }>;

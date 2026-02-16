@@ -1,9 +1,11 @@
 interface HeaderProps {
   isSpeaking: boolean;
   onStopSpeaking: () => void;
+  autoSpeak: boolean;
+  onToggleAutoSpeak: () => void;
 }
 
-export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
+export function Header({ isSpeaking, onStopSpeaking, autoSpeak, onToggleAutoSpeak }: HeaderProps) {
   return (
     <header className="bg-gradient-to-r from-[#667eea] to-[#764ba2] pt-10 pb-4 px-5 relative z-10 shadow-lg">
       <div className="flex items-center justify-between">
@@ -36,12 +38,23 @@ export function Header({ isSpeaking, onStopSpeaking }: HeaderProps) {
             </button>
           )}
 
-          <button className="w-6 h-6 flex items-center justify-center text-white transition-transform active:scale-90">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
-              <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-              <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
-            </svg>
+          <button
+            onClick={onToggleAutoSpeak}
+            className="w-8 h-8 flex items-center justify-center text-white transition-transform active:scale-90 rounded-full"
+            style={{ background: autoSpeak ? 'rgba(255,255,255,0.25)' : 'transparent' }}
+            title={autoSpeak ? '关闭自动语音' : '开启自动语音'}
+          >
+            {autoSpeak ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9M11 5L6 9H2v6h4l5 4V5z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5L6 9H2v6h4l5 4V5z" />
+                <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            )}
           </button>
         </div>
       </div>

@@ -14,6 +14,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '新的一个月开始啦，记得完成客户盘点哦。同时，我已自动为您推荐了精选客户名单，并附上清晰的推荐理由。',
+            speechText: '张经理，新的一月开始啦！我帮您挑了几位重点客户，一起看看吧。',
           },
           {
             type: 'customer-card',
@@ -45,6 +46,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '已为您完成全部推荐客户的盘点。',
+            speechText: '盘点完成了，经营计划也生成好了，请过目。',
           },
           {
             type: 'text',
@@ -70,6 +72,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '已为您整理好本月客户经营清单，并根据每位客户的特点推荐了经营动作，您可以一键转发经营素材和参考话术，高效完成客户经营。',
+            speechText: '清单整理好了，每位客户都有推荐动作，您可以直接操作。',
           },
         ],
         quickReplies: [
@@ -83,6 +86,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '已帮您添加下周一14点拜访李平安的计划',
+            speechText: '好的，已添加拜访计划。',
           },
         ],
         quickReplies: [{ label: '返回主菜单', value: 'back-to-menu' }],
@@ -102,6 +106,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '本周共有7个经营计划需要完成，请查收。后续我会持续提醒您，帮您按时推进。同时，为您推送本周行事历。',
+            speechText: '张经理，本周有7个计划，行事历已推送给您。',
           },
           {
             type: 'schedule-card',
@@ -162,6 +167,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '今日14点要去拜访客户李平安。',
+            speechText: '张经理，今天下午两点要拜访李平安，需要帮您准备方案吗？',
           },
           {
             type: 'text',
@@ -185,6 +191,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '李平安，45岁，属于社会中坚客群，面临资产贬值、养老储备不足的风险，重点需求是保财富、保养老',
+            speechText: '李平安45岁，重点需求是保财富和保养老，我来帮您分析。',
             delay: 500,
           },
         ],
@@ -199,6 +206,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '结合客户内外部保险数据分析，李平安存在财富缺口80万，养老缺口180万',
+            speechText: '分析结果显示，财富缺口80万，养老缺口180万。',
           },
         ],
         quickReplies: [
@@ -213,6 +221,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '根据客户需求及保险缺口，建议三套方案，优先推荐【平安添盈·臻享家医】产品方案，年交保费10万，3年交。预估客户60岁时财富保障可达80万。同时可享臻享家医服务，守护家人身体健康\n\n点击方案详情可查看产品亮点介绍和服务权益讲解内容哦~',
+            speechText: '推荐平安添盈臻享家医方案，年交10万，3年交，您看看详情。',
           },
         ],
         quickReplies: [
@@ -227,6 +236,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '促成以上方案后，您可获得收入7500元（含首佣FYC6000元，销售津贴1500元）还差4500C即可满足晋级P4的累计FYC标准，还差4000C可达标金钻，加油！',
+            speechText: '促成后收入7500元，离晋级和达标都不远了，加油！',
           },
         ],
         quickReplies: [
@@ -240,6 +250,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '为了帮您促成销售，已根据客户画像为您生成适合李平安的个性化经营建议，助您高效沟通、顺利出单。',
+            speechText: '销售攻略已生成，祝您拜访顺利！',
           },
         ],
         quickReplies: [
@@ -263,6 +274,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '下午好！看到您刚完成对客户李平安的拜访，需要帮您记录拜访信息并生成总结吗？',
+            speechText: '下午好！拜访结束了，需要帮您记录和总结吗？',
           },
         ],
         quickReplies: [{ label: '开始智能记录', value: 'start-record' }],
@@ -274,6 +286,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '🎙️ 已识别您的语音记录：\n\n「刚刚拜访完客户李平安，聊得还挺顺利。一开始我们先寒暄了一下，客户说最近在考虑孩子的教育金问题，但又担心年金险太死板，钱放进去就拿不出来，不太灵活。我跟他说年金可以搭配万能账户，灵活性会好一些，他也点了几下头，但还是有点犹豫。后来我进一步介绍了【平安添盈·臻享家医】方案，并结合客户孩子的成长路径做了演示，客户最终决定投保。」\n\n「聊的过程中还了解到，客户目前在香蜜湖有一套房，名下有两辆车，一辆宝马，一辆特斯拉，家庭经济状况比较稳健，年收入120万左右。客户本人是公司合伙人，生日是9月12号，太太主要负责家庭理财和孩子教育支出。」',
+            speechText: '语音已识别，正在生成拜访总结。',
           },
           {
             type: 'text',
@@ -284,6 +297,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '📋 **拜访总结报告**\n\n本次拜访重点沟通保财富和保养老的产品+服务方案。客户关注子女教育金储备，同时对养老规划有一定兴趣。\n\n**【客户关键信息】**\n• 居住地：深圳香蜜湖\n• 年收入：约120万，家庭经济稳健\n• 资产情况：名下一套房产（香蜜湖）、两辆车（宝马、特斯拉）\n• 家庭结构：太太主理家庭理财，客户本人为公司合伙人\n• 关注点：子女教育、养老规划\n• 客户生日：9月12日（建议作为客户关怀节点）\n\n通过方案介绍，成功促成客户投保【平安添盈·臻享家医】方案，建议后续跟进保单进度，并结合生日节点开展客户关怀，增强客户粘性。',
+            speechText: '总结已生成，客户成功投保，建议后续跟进保单进度。',
             delay: 1000,
           },
         ],
@@ -299,6 +313,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '了解到李平安关注资金流动性问题，我为您准备了异议处理建议。\n\n**常见疑虑点：**\n担心年金产品资金锁定时间太长\n\n**对应话术：**\n可以强调"年金类产品可以灵活设置领取年龄、领取期间、领取方式，可以根据孩子成长路径调整领取计划，孩子不用还可以用于自己的养老退休生活，按需灵活选择与变更，因需赋型，以变应变"\n\n**案例参考：**\n已有类似客户通过该方式实现教育金和养老金的双金储备与灵活使用',
+            speechText: '异议处理建议已准备好，重点强调灵活领取。',
           },
         ],
         quickReplies: [
@@ -312,6 +327,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '本次拜访信息及客户情况已整理完毕，是否更新到客户档案？',
+            speechText: '信息整理好了，要更新到档案吗？',
           },
         ],
         quickReplies: [
@@ -325,6 +341,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '已同步更新本次拜访信息及客户情况到李平安的客户档案',
+            speechText: '档案已更新。附近还有两位客户，建议顺路拜访。',
           },
           {
             type: 'text',
@@ -368,6 +385,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '好的，我先帮你分析王五的客户画像和沟通重点，方便您高效推进拜访。',
+            speechText: '好的，正在为您准备王五的资料。',
           },
         ],
         quickReplies: [{ label: '返回主菜单', value: 'back-to-menu' }],
@@ -389,6 +407,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '当前团队整体经营计划完成率50%，其中面访完成率30%，低于预期。有两位组员的面访偏少，建议重点关注。本月团队累计承保FYC2.1万，营业部排第4名。其中，已连钻2个月的李明本月尚未达钻，是否需要为您分析他的具体情况，看看问题出在哪里？',
+            speechText: '张经理，团队完成率50%，李明本月还没达钻，需要看看情况吗？',
           },
           {
             type: 'team-dashboard',
@@ -408,6 +427,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '李明本月面访完成率低于20%，建议加强面访技巧训练。',
+            speechText: '李明面访完成率偏低，面谈方案已为您生成。',
           },
           {
             type: 'member-card',

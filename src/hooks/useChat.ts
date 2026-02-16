@@ -77,6 +77,7 @@ export function useChat() {
                 role: 'ai' as const,
                 type: msg.type,
                 content: msg.content,
+                speechText: msg.speechText,
                 data: msg.data,
                 timestamp: Date.now(),
               },
@@ -148,6 +149,7 @@ export function useChat() {
                 role: 'ai',
                 type: 'text',
                 content: '还有什么我可以帮您的吗？请选择以下场景：',
+                speechText: '还需要什么帮助吗？请选择场景。',
               });
               setState((prev) => ({
                 ...prev,
@@ -207,6 +209,7 @@ export function useChat() {
           type: 'text',
           content:
             '好的，我理解您的需求。请选择以下场景，我可以为您提供更专业的服务：',
+          speechText: '好的，请选择场景，我来帮您。',
         });
         setTyping(false);
         setQuickReplies(
@@ -249,6 +252,7 @@ export function useChat() {
       type: 'text',
       content:
         '您好，张经理！我是您的AI智能助理\n\n今天是2025年2月14日，我已经为您准备好了今天的工作安排。\n\n📌 今日待办：\n• 10:00 拜访王建国（教育金方案）\n• 14:00 团队周例会\n• 16:00 电话跟进李美琳\n\n请选择您需要的服务：',
+      speechText: '张经理您好！今天有三项待办，请选择需要的服务。',
       timestamp: Date.now(),
     };
 
