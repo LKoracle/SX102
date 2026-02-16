@@ -45,6 +45,7 @@ export interface ScenarioStep {
     delay?: number;
   }>;
   quickReplies?: QuickReply[];
+  quickReplyDelay?: number;
 }
 
 export interface Scenario {

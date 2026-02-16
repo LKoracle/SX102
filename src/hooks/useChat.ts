@@ -87,7 +87,7 @@ export function useChat() {
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {
               setQuickReplies(step.quickReplies || []);
-            }, 300);
+            }, step.quickReplyDelay ?? 300);
             timeoutRefs.current.push(qrTimeout);
           }
         }, delay);

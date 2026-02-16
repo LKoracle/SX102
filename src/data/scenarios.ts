@@ -365,6 +365,7 @@ export const scenarios: Scenario[] = [
           { label: '查看方案详情', value: 'sales-benefit' },
           { label: '查看销售攻略', value: 'sales-strategy' },
         ],
+        quickReplyDelay: 2500,
       },
       // Step 2: 测算销售利益
       {
