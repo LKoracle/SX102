@@ -16,7 +16,7 @@ export const customers: Customer[] = [
     lastContact: '上周',
     priority: 'high',
     address: '深圳福田区香蜜湖',
-    notes: '关注子女教育金和养老规划。',
+    notes: '高净值，保障缺口大，关注子女教育金和养老规划。',
   },
   {
     id: 'c2',
