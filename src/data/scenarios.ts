@@ -176,6 +176,20 @@ export const scenarios: Scenario[] = [
             content: '已帮您添加下周一14点拜访李平安的计划',
             speechText: '好的，已添加拜访计划。',
           },
+          {
+            type: 'schedule-card',
+            content: '',
+            data: {
+              title: '李平安经营计划',
+              days: [
+                {
+                  day: '下周一',
+                  items: [{ time: '14:00', task: '面访李平安 - 沟通养老规划方案', type: 'visit' }],
+                },
+              ],
+            },
+            delay: 400,
+          },
         ],
         quickReplies: [],
       },
