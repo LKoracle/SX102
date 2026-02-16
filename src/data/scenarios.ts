@@ -89,7 +89,6 @@ export const scenarios: Scenario[] = [
         ],
         quickReplies: [
           { label: '查看要经营的客户', value: 'view-customers' },
-          { label: '返回主菜单', value: 'back-to-menu' },
         ],
       },
       // Step 2: 查看经营客户列表
@@ -102,10 +101,7 @@ export const scenarios: Scenario[] = [
             speechText: '清单整理好了，每位客户都有推荐动作，您可以直接操作。',
           },
         ],
-        quickReplies: [
-          { label: '加多一条计划，下周一14点拜访李平安', value: 'add-plan' },
-          { label: '返回主菜单', value: 'back-to-menu' },
-        ],
+        quickReplies: [],
       },
       // Step 3: 添加计划
       {
@@ -116,7 +112,7 @@ export const scenarios: Scenario[] = [
             speechText: '好的，已添加拜访计划。',
           },
         ],
-        quickReplies: [{ label: '返回主菜单', value: 'back-to-menu' }],
+        quickReplies: [],
       },
     ],
   },
@@ -282,7 +278,6 @@ export const scenarios: Scenario[] = [
         ],
         quickReplies: [
           { label: '好的，准备出发', value: 'back-to-menu' },
-          { label: '返回主菜单', value: 'back-to-menu' },
         ],
       },
     ],
@@ -403,7 +398,6 @@ export const scenarios: Scenario[] = [
         ],
         quickReplies: [
           { label: '拜访王五', value: 'visit-wangwu' },
-          { label: '返回主菜单', value: 'back-to-menu' },
         ],
       },
       // Step 5: 准备拜访王五
@@ -415,7 +409,7 @@ export const scenarios: Scenario[] = [
             speechText: '好的，正在为您准备王五的资料。',
           },
         ],
-        quickReplies: [{ label: '返回主菜单', value: 'back-to-menu' }],
+        quickReplies: [],
       },
     ],
   },
@@ -481,7 +475,7 @@ export const scenarios: Scenario[] = [
             delay: 600,
           },
         ],
-        quickReplies: [{ label: '返回主菜单', value: 'back-to-menu' }],
+        quickReplies: [],
       },
     ],
   },
