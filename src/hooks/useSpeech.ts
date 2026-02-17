@@ -85,6 +85,8 @@ export function useSpeech(): UseSpeechReturn {
     const SpeechRecognitionCtor = getSpeechRecognition();
     if (!SpeechRecognitionCtor) return;
 
+    setTranscript('');
+
     const recognition = new SpeechRecognitionCtor();
     recognition.lang = 'zh-CN';
     recognition.continuous = true;
