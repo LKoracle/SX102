@@ -11,6 +11,16 @@ interface UseSpeechReturn {
   supported: boolean;
 }
 
+/**
+ * If a finalized speech segment lacks trailing Chinese punctuation, append
+ * a Chinese comma so the full transcript reads naturally.
+ */
+const CHINESE_PUNCT_RE = /[。！？，、；：…]$/;
+function withPunct(text: string): string {
+  if (!text || CHINESE_PUNCT_RE.test(text)) return text;
+  return text + '，';
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSpeechRecognition = (): (new () => any) | null => {
   if (typeof window === 'undefined') return null;
@@ -81,7 +91,7 @@ export function useSpeech(): UseSpeechReturn {
   const recognitionRef = useRef<any>(null);
   const silenceTimerRef = useRef<number | null>(null);
 
-  const SILENCE_TIMEOUT = 1500; // 1.5秒静默后自动发送
+  const SILENCE_TIMEOUT = 1000; // 1秒静默后自动发送
 
   const supported =
     !!getSpeechRecognition() &&
@@ -113,7 +123,10 @@ export function useSpeech(): UseSpeechReturn {
       const results = event.results;
       let text = '';
       for (let i = 0; i < results.length; i++) {
-        text += results[i][0].transcript;
+        const seg = results[i][0].transcript.trim();
+        // isFinal segments are complete utterances – add punctuation if missing.
+        // Interim segments are still being recognised, leave them as-is.
+        text += results[i].isFinal ? withPunct(seg) : seg;
       }
       setTranscript(text);
 
