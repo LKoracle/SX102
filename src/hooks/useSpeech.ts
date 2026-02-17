@@ -44,19 +44,33 @@ function pickBestZhVoice(): SpeechSynthesisVoice | null {
 }
 
 /**
- * Split text into sentence-sized chunks so the synthesiser can add
- * natural pauses between them, which sounds much more human.
+ * Clean and chunk text for speech synthesis.
+ * Keeps chunks large enough to sound fluent while still allowing the
+ * synthesiser to insert micro-pauses at natural boundaries.
  */
-function splitIntoSentences(text: string): string[] {
-  // Clean markdown / emoji cruft first
+function splitIntoChunks(text: string): string[] {
   const clean = text
     .replace(/[#*_~`|>\-]/g, '')
     .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
     .trim();
 
-  // Split on Chinese and Latin sentence-ending punctuation
-  const parts = clean.split(/(?<=[。！？；\n])/);
-  return parts.map((s) => s.trim()).filter(Boolean);
+  // Split on major sentence boundaries only (。！？and newlines).
+  // Semicolons and commas stay inside the chunk so the engine reads
+  // them fluidly instead of inserting awkward pauses.
+  const parts = clean.split(/(?<=[。！？\n])/);
+  const trimmed = parts.map((s) => s.trim()).filter(Boolean);
+
+  // Merge short fragments (< 8 chars) into the previous chunk so the
+  // engine doesn't produce choppy micro-utterances.
+  const merged: string[] = [];
+  for (const seg of trimmed) {
+    if (merged.length > 0 && seg.length < 8) {
+      merged[merged.length - 1] += seg;
+    } else {
+      merged.push(seg);
+    }
+  }
+  return merged;
 }
 
 export function useSpeech(): UseSpeechReturn {
@@ -139,26 +153,21 @@ export function useSpeech(): UseSpeechReturn {
     window.speechSynthesis.cancel();
 
     const voice = pickBestZhVoice();
-    const sentences = splitIntoSentences(text);
-    if (sentences.length === 0) return;
+    const chunks = splitIntoChunks(text);
+    if (chunks.length === 0) return;
 
     setIsSpeaking(true);
 
-    // Queue each sentence as a separate utterance – the browser plays
-    // them sequentially with natural micro-pauses in between.
-    sentences.forEach((sentence, idx) => {
-      const utterance = new SpeechSynthesisUtterance(sentence);
+    chunks.forEach((chunk, idx) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
       utterance.lang = 'zh-CN';
-      // Slightly slower than default → more natural cadence
-      utterance.rate = 0.95;
-      // Gentle pitch for a warm tone
-      utterance.pitch = 1.05;
+      utterance.rate = 1.25;
+      utterance.pitch = 1.0;
       utterance.volume = 1.0;
 
       if (voice) utterance.voice = voice;
 
-      // Only the last sentence triggers the "done" callback
-      if (idx === sentences.length - 1) {
+      if (idx === chunks.length - 1) {
         utterance.onend = () => setIsSpeaking(false);
         utterance.onerror = () => setIsSpeaking(false);
       }
