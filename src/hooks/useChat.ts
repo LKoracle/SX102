@@ -181,20 +181,9 @@ export function useChat() {
       addMessage({ role: 'user', type: 'text', content: text });
       setQuickReplies([]);
 
-      // Check if user text matches a scenario
-      const matchedScenario = scenarios.find(
-        (s) =>
-          text.includes(s.name) ||
-          text.includes(s.description) ||
-          s.name.includes(text)
-      );
-
-      if (matchedScenario) {
-        startScenario(matchedScenario.id);
-        return;
-      }
-
-      // Check if in a scenario, advance to next step
+      // If already inside a scenario, advance to the next step.
+      // Do this BEFORE any scenario-matching so that words like "拜访" typed
+      // during post-visit don't accidentally restart the pre-visit scenario.
       if (state.currentScenario) {
         const scenario = scenarios.find((s) => s.id === state.currentScenario);
         if (scenario) {
@@ -204,6 +193,19 @@ export function useChat() {
             return;
           }
         }
+      }
+
+      // Not in a scenario – check if user text explicitly names one.
+      // Only match when the user's text contains the full scenario name or
+      // description; drop the reverse check (s.name.includes(text)) which
+      // was too broad and caused short words to hijack the active scenario.
+      const matchedScenario = scenarios.find(
+        (s) => text.includes(s.name) || text.includes(s.description)
+      );
+
+      if (matchedScenario) {
+        startScenario(matchedScenario.id);
+        return;
       }
 
       // Default response
