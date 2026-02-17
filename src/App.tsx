@@ -44,6 +44,20 @@ const modulesMeta = [
     icon: '👥',
     color: '#A78BFA',
   },
+  {
+    id: 'weekly-summary',
+    name: '每周末，形成周工作总结',
+    timing: '周末',
+    icon: '📊',
+    color: '#0EA5E9',
+  },
+  {
+    id: 'monthly-retrospective',
+    name: '每月末，形成月度工作复盘',
+    timing: '月末',
+    icon: '📈',
+    color: '#10B981',
+  },
 ];
 
 function App() {

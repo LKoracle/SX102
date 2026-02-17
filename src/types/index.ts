@@ -22,7 +22,8 @@ export type MessageContentType =
   | 'objection-handling'
   | 'visit-strategy'
   | 'ability-analysis'
-  | 'coaching-plan';
+  | 'coaching-plan'
+  | 'learning-plan';
 
 export interface Message {
   id: string;

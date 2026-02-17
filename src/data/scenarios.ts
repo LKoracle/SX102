@@ -703,4 +703,287 @@ export const scenarios: Scenario[] = [
       },
     ],
   },
+
+  // Module 6: 每周末，形成周工作总结
+  {
+    id: 'weekly-summary',
+    name: '每周末，形成周工作总结',
+    icon: '📊',
+    description: '周末',
+    steps: [
+      // Step 0: 提醒做周工作总结
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '本周即将结束，已为您生成本周工作总结，请查收。',
+            speechText: '张经理，本周即将结束，周工作总结已为您生成，请查收。',
+          },
+          {
+            type: 'work-summary',
+            content: '',
+            data: {
+              period: '本周（2025年2月10日 - 2月14日）',
+              metrics: {
+                contact: { label: '触客次数', actual: 20, target: 30 },
+                faceVisit: { label: '面访次数', actual: 6, target: 10 },
+                invitation: { label: '邀约转化率', actual: 30, target: 50 },
+              },
+              highlights: ['本周整体经营节奏稳定，按计划推进客户跟进'],
+              improvements: [
+                '邀约转化率仅30%，低于团队平均水平（45%）',
+                '促成动作和异议处理两个环节相对薄弱',
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [{ label: '查看薄弱环节分析', value: 'weak-areas' }],
+      },
+      // Step 1: 提示薄弱环节
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content:
+              '在本周的客户沟通中，您在"促成动作"和"异议处理"两个环节表现相对薄弱。\n\n例如：在与客户李平安的沟通中，客户表达了对资金流动性的担忧，但您未能有效引导客户理解"年金+万能账户"的灵活性，导致客户仍未明确下单。',
+            speechText: '本周促成动作和异议处理是短板，以李平安为例：客户担心资金流动性，但未成功引导。',
+          },
+          {
+            type: 'ability-analysis',
+            content: '',
+            data: {
+              memberName: '张经理（本周表现）',
+              metrics: [
+                { label: '触客完成率', value: '67%', status: 'warning' },
+                { label: '面访完成率', value: '60%', status: 'warning' },
+                { label: '邀约转化率', value: '30%', status: 'danger' },
+              ],
+              skills: [
+                { label: '需求挖掘', level: 'strong' },
+                { label: '方案呈现', level: 'strong' },
+                { label: '异议处理', level: 'weak' },
+                { label: '促成动作', level: 'weak' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [{ label: '查看学习建议', value: 'learning' }],
+      },
+      // Step 2: 推送学习内容
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '为帮助您提升薄弱环节，我为您推荐以下学习内容与实战演练工具：',
+            speechText: '已为您推荐针对性学习内容，建议本周内完成。',
+          },
+          {
+            type: 'learning-plan',
+            content: '',
+            data: {
+              title: '本周提升学习计划',
+              items: [
+                { type: '课程', title: '《如何高效完成客户面访》' },
+                { type: '课程', title: '《年金险沟通实战技巧》' },
+                { type: '演练', title: '《实战演练：年金险方案客户促成及异议处理》' },
+              ],
+              tip: '点击进入实战演练，系统将根据您本周沟通的客户类型生成个性化实战场景',
+            },
+            delay: 400,
+          },
+        ],
+        quickReplies: [{ label: '查看收入激励提醒', value: 'income' }],
+      },
+      // Step 3: 个人收入考核津贴提醒 + 推荐客户
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content:
+              '同时，我识别到您本月距离销售津贴提档还差 **2000元 FYC**。\n\n若本月新增FYC 2000元，即可多获得销售津贴 **1100元**。建议销售1件保费2万的「金越年金红26」即可达成。\n\n以下3位客户意向较高，建议您下周重点拜访：',
+            speechText: '还差2000元FYC可多获1100元津贴，已为您筛选3位高潜力客户，建议下周重点拜访。',
+          },
+          {
+            type: 'customer-list',
+            content: '',
+            data: {
+              totalCount: 3,
+              customers: [
+                {
+                  name: '张三',
+                  temperature: '高温',
+                  value: '高价值',
+                  action: '推荐金越年金红26 - 教育金方案',
+                  actionIcon: '🤝',
+                  tags: ['鸡娃精英', '子女教育'],
+                  lastContact: '本周',
+                },
+                {
+                  name: '李四',
+                  temperature: '中温',
+                  value: '高价值',
+                  action: '推荐金越年金红26 - 养老储备方案',
+                  actionIcon: '🤝',
+                  tags: ['焦虑中年', '财务安全'],
+                  lastContact: '本周',
+                },
+                {
+                  name: '王五',
+                  temperature: '高温',
+                  value: '中价值',
+                  action: '推荐金越年金红26 - 稳定现金流方案',
+                  actionIcon: '🤝',
+                  tags: ['养老规划', '稳定现金流'],
+                  lastContact: '本周',
+                },
+              ],
+              summary: '是否帮您将这3位客户加入下周的拜访计划？',
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [{ label: '好的，加入计划', value: 'confirm' }],
+      },
+      // Step 4: 确认添加计划
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '已将张三、李四、王五加入您下周的拜访计划，祝拜访顺利！',
+            speechText: '下周拜访计划已更新，加油！',
+          },
+          {
+            type: 'schedule-card',
+            content: '',
+            data: {
+              title: '下周拜访计划',
+              days: [
+                {
+                  day: '下周一',
+                  items: [{ time: '10:00', task: '拜访张三 - 教育金方案', type: 'visit' }],
+                },
+                {
+                  day: '下周三',
+                  items: [{ time: '14:00', task: '拜访李四 - 养老储备方案', type: 'visit' }],
+                },
+                {
+                  day: '下周五',
+                  items: [{ time: '15:00', task: '拜访王五 - 稳定现金流方案', type: 'visit' }],
+                },
+              ],
+            },
+            delay: 400,
+          },
+        ],
+        quickReplies: [{ label: '好的，收到', value: 'back-to-menu' }],
+      },
+    ],
+  },
+
+  // Module 7: 每月末，形成月度工作复盘
+  {
+    id: 'monthly-retrospective',
+    name: '每月末，形成月度工作复盘',
+    icon: '📈',
+    description: '月末',
+    steps: [
+      // Step 0: 月度复盘提醒 + 月度总结数据
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content:
+              '本月即将结束，已为您生成月度工作复盘报告，请查收。\n\n本月累计FYC **20000元**，超额完成目标，表现优秀！整体超过了营业部80%的代理人。',
+            speechText: '张经理，月度复盘报告出炉，本月超额完成目标，表现优秀！',
+          },
+          {
+            type: 'work-summary',
+            content: '',
+            data: {
+              period: '本月（2025年2月）',
+              metrics: {
+                contact: { label: '触客次数', actual: 50, target: 40 },
+                faceVisit: { label: '面访次数', actual: 25, target: 20 },
+                invitation: { label: '邀约次数', actual: 12, target: 10 },
+                fyc: { label: '保费收入', actual: 200000, target: 150000 },
+              },
+              highlights: [
+                '成功签约3位高净值客户，客户画像匹配度高',
+                '面访转化率从上月20%提升至40%',
+                '完成3门推荐课程，参与2次实战演练',
+              ],
+              improvements: [
+                '异议处理：流动性、收益性问题回应不够精准',
+                '促成动作偏弱：客户意向明确时未及时推动决策',
+                '客户升温节奏把握不足，部分客户跟进间隔较长',
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [{ label: '查看需提升技能', value: 'skills' }],
+      },
+      // Step 1: 识别需提升的技能
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '根据本月数据分析，您在以下技能方面仍有提升空间：',
+            speechText: '根据本月数据，以下技能仍有提升空间。',
+          },
+          {
+            type: 'ability-analysis',
+            content: '',
+            data: {
+              memberName: '张经理（本月综合评估）',
+              metrics: [
+                { label: '触客完成率', value: '125%', status: 'good' },
+                { label: '面访完成率', value: '125%', status: 'good' },
+                { label: '邀约转化率', value: '48%', status: 'warning' },
+              ],
+              skills: [
+                { label: '客户开拓', level: 'strong' },
+                { label: '需求挖掘', level: 'strong' },
+                { label: '方案呈现', level: 'strong' },
+                { label: '异议处理', level: 'weak' },
+                { label: '促成动作', level: 'weak' },
+                { label: '客户升温', level: 'weak' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [{ label: '查看下月提升计划', value: 'next-plan' }],
+      },
+      // Step 2: 推送下月提升计划
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '为帮助您在下月进一步提升，已为您生成个性化学习计划：',
+            speechText: '下月提升计划已生成，建议重点攻克异议处理和促成动作。',
+          },
+          {
+            type: 'learning-plan',
+            content: '',
+            data: {
+              title: '下月提升学习计划',
+              items: [
+                { type: '课程', title: '《客户异议处理：流动性与收益性问题应对》' },
+                { type: '课程', title: '《高效促成：把握成交信号与推动决策》' },
+                { type: '课程', title: '《客户升温节奏管理：从中温到高温的经营策略》' },
+                { type: '演练', title: '《实战演练：年金险促成及异议处理全流程》' },
+                { type: '工具', title: '《客户升温追踪表：定期跟进提醒工具》' },
+              ],
+              tip: '系统将根据您本月实际客户沟通记录，生成针对性演练场景，帮助快速突破短板',
+            },
+            delay: 400,
+          },
+        ],
+        quickReplies: [{ label: '好的，收到', value: 'back-to-menu' }],
+      },
+    ],
+  },
 ];

@@ -22,6 +22,7 @@ import { ObjectionHandlingCard } from './cards/ObjectionHandlingCard';
 import { VisitStrategyCard } from './cards/VisitStrategyCard';
 import { AbilityAnalysisCard } from './cards/AbilityAnalysisCard';
 import { CoachingPlanCard } from './cards/CoachingPlanCard';
+import { LearningPlanCard } from './cards/LearningPlanCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -160,6 +161,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <AbilityAnalysisCard data={message.data as Record<string, unknown>} />;
       case 'coaching-plan':
         return <CoachingPlanCard data={message.data as Record<string, unknown>} />;
+      case 'learning-plan':
+        return <LearningPlanCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }
