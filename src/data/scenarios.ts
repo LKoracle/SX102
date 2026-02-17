@@ -460,62 +460,24 @@ export const scenarios: Scenario[] = [
             speechText: '总结已生成，客户成功投保，建议后续跟进保单进度。',
             delay: 1000,
           },
-        ],
-        quickReplies: [
-          { label: '查看异议处理建议', value: 'objection' },
-          { label: '更新客户档案', value: 'update-file' },
-        ],
-      },
-      // Step 2: 异议处理建议
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '了解到李平安关注资金流动性问题，已为您准备异议处理建议：',
-            speechText: '异议处理建议已准备好，重点强调灵活领取。',
-          },
-          {
-            type: 'objection-handling',
-            content: '',
-            data: {
-              customerName: '李平安',
-              objections: [
-                {
-                  concern: '担心年金产品资金锁定时间太长，不够灵活',
-                  response: '年金类产品可以灵活设置领取年龄、领取期间、领取方式，可以根据孩子成长路径调整领取计划，孩子不用还可以用于自己的养老退休生活，按需灵活选择与变更，因需赋型，以变应变',
-                  caseRef: '已有类似客户通过该方式实现教育金和养老金的双金储备与灵活使用',
-                },
-              ],
-            },
-            delay: 400,
-          },
-        ],
-        quickReplies: [
-          { label: '更新客户档案', value: 'update-file' },
-          { label: '推荐拜访附近客户', value: 'nearby' },
-        ],
-      },
-      // Step 3: 更新档案提示
-      {
-        aiMessages: [
           {
             type: 'text',
             content: '本次拜访信息及客户情况已整理完毕，是否更新到客户档案？',
-            speechText: '信息整理好了，要更新到档案吗？',
+            speechText: '本次拜访信息及客户情况已整理完毕，是否更新到客户档案？',
+            delay: 800,
           },
         ],
         quickReplies: [
           { label: '更新', value: 'confirm-update' },
-          { label: '稍后再说', value: 'back-to-menu' },
         ],
       },
-      // Step 4: 确认更新 + 推荐附近客户
+      // Step 2: 确认更新 + 推荐附近客户
       {
         aiMessages: [
           {
             type: 'text',
             content: '已同步更新本次拜访信息及客户情况到李平安的客户档案',
-            speechText: '档案已更新。附近还有两位客户，建议顺路拜访。',
+            speechText: '已同步更新本次拜访信息及客户情况到李平安的客户档案。附近还有两位客户，建议顺路拜访。',
           },
           {
             type: 'text',
@@ -552,7 +514,7 @@ export const scenarios: Scenario[] = [
           { label: '拜访王五', value: 'visit-wangwu' },
         ],
       },
-      // Step 5: 准备拜访王五
+      // Step 3: 准备拜访王五
       {
         aiMessages: [
           {
