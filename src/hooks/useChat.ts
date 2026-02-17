@@ -67,6 +67,18 @@ export function useChat() {
 
       const currentSession = sessionRef.current;
 
+      // Collect all speech texts and speak once upfront so voice starts
+      // immediately as messages begin appearing, instead of each message's
+      // speak() cancelling the previous one (which caused only the last
+      // message's speech to actually play — after all messages had appeared).
+      const allSpeechText = step.aiMessages
+        .map((m) => m.speechText)
+        .filter(Boolean)
+        .join('');
+      if (allSpeechText && speakFnRef.current) {
+        speakFnRef.current(allSpeechText);
+      }
+
       let totalDelay = 600;
       const messageCallbacks: Array<{ delay: number; msg: typeof step.aiMessages[0] }> = [];
 
@@ -95,10 +107,6 @@ export function useChat() {
               },
             ],
           }));
-
-          if (msg.speechText && speakFnRef.current) {
-            speakFnRef.current(msg.speechText);
-          }
 
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {
@@ -246,6 +254,11 @@ export function useChat() {
   const resetAndStartScenario = useCallback(
     (scenarioId: string) => {
       clearTimeouts();
+      // Cancel any ongoing speech immediately so switching modules
+      // doesn't cause overlapping audio during the 100ms state-reset gap.
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
       sessionRef.current += 1;
       setState({
         messages: [],
