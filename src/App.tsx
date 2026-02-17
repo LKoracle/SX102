@@ -4,6 +4,7 @@ import { MessageBubble } from './components/MessageBubble';
 import { InputBar } from './components/InputBar';
 import { QuickReplies } from './components/QuickReplies';
 import { TypingIndicator } from './components/TypingIndicator';
+import { OverviewPage } from './components/OverviewPage';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios } from './data/scenarios';
@@ -67,6 +68,7 @@ function App() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
+  const [showOverview, setShowOverview] = useState(true);
 
   useEffect(() => {
     chat.initChat();
@@ -95,6 +97,13 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speech.isListening]);
+
+  const handleStartDemo = useCallback(() => {
+    setShowOverview(false);
+    const firstModuleId = modulesMeta[0].id;
+    setActiveModule(firstModuleId);
+    chat.resetAndStartScenario(firstModuleId);
+  }, [chat]);
 
   const handleModuleClick = useCallback(
     (moduleId: string) => {
@@ -128,6 +137,10 @@ function App() {
     },
     [speech]
   );
+
+  if (showOverview) {
+    return <OverviewPage onStart={handleStartDemo} />;
+  }
 
   return (
     <div className="h-full flex items-center justify-center py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' }}>
