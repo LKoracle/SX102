@@ -11,16 +11,6 @@ interface UseSpeechReturn {
   supported: boolean;
 }
 
-/**
- * If a finalized speech segment lacks trailing Chinese punctuation, append
- * a Chinese comma so the full transcript reads naturally.
- */
-const CHINESE_PUNCT_RE = /[。！？，、；：…]$/;
-function withPunct(text: string): string {
-  if (!text || CHINESE_PUNCT_RE.test(text)) return text;
-  return text + '，';
-}
-
 function stripPunct(text: string): string {
   return text.replace(/[。！？，、；：…]/g, '');
 }
@@ -129,11 +119,7 @@ export function useSpeech(): UseSpeechReturn {
       for (let i = 0; i < results.length; i++) {
         const seg = results[i][0].transcript.trim();
         if (!seg) continue;
-        if (results[i].isFinal) {
-          text += withPunct(seg);
-        } else {
-          text += stripPunct(seg);
-        }
+        text += stripPunct(seg);
       }
       setTranscript(text);
 
