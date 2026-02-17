@@ -19,6 +19,7 @@ export function useChat() {
   });
 
   const timeoutRefs = useRef<number[]>([]);
+  const sessionRef = useRef(0);
 
   const clearTimeouts = useCallback(() => {
     timeoutRefs.current.forEach((t) => window.clearTimeout(t));
@@ -56,6 +57,8 @@ export function useChat() {
       setQuickReplies([]);
       setTyping(true);
 
+      const currentSession = sessionRef.current;
+
       let totalDelay = 600;
       const messageCallbacks: Array<{ delay: number; msg: typeof step.aiMessages[0] }> = [];
 
@@ -67,6 +70,7 @@ export function useChat() {
 
       messageCallbacks.forEach(({ delay, msg }, index) => {
         const t = window.setTimeout(() => {
+          if (sessionRef.current !== currentSession) return;
           setState((prev) => ({
             ...prev,
             isTyping: index < messageCallbacks.length - 1,
@@ -86,6 +90,7 @@ export function useChat() {
 
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {
+              if (sessionRef.current !== currentSession) return;
               setQuickReplies(step.quickReplies || []);
             }, step.quickReplyDelay ?? 300);
             timeoutRefs.current.push(qrTimeout);
@@ -227,6 +232,7 @@ export function useChat() {
   const resetAndStartScenario = useCallback(
     (scenarioId: string) => {
       clearTimeouts();
+      sessionRef.current += 1;
       setState({
         messages: [],
         isTyping: false,
