@@ -18,6 +18,10 @@ import { CustomerProfileGrid } from './cards/CustomerProfileGrid';
 import { CoverageAnalysisCard } from './cards/CoverageAnalysisCard';
 import { ProductPlansCard } from './cards/ProductPlansCard';
 import { CollapsibleStepCard } from './cards/CollapsibleStepCard';
+import { ObjectionHandlingCard } from './cards/ObjectionHandlingCard';
+import { VisitStrategyCard } from './cards/VisitStrategyCard';
+import { AbilityAnalysisCard } from './cards/AbilityAnalysisCard';
+import { CoachingPlanCard } from './cards/CoachingPlanCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -148,6 +152,14 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <ProductPlansCard data={message.data as Record<string, unknown>} />;
       case 'collapsible-step':
         return <CollapsibleStepCard data={message.data as Record<string, unknown>} />;
+      case 'objection-handling':
+        return <ObjectionHandlingCard data={message.data as Record<string, unknown>} />;
+      case 'visit-strategy':
+        return <VisitStrategyCard data={message.data as Record<string, unknown>} />;
+      case 'ability-analysis':
+        return <AbilityAnalysisCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-plan':
+        return <CoachingPlanCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

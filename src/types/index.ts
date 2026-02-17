@@ -18,7 +18,11 @@ export type MessageContentType =
   | 'customer-profile-grid'
   | 'coverage-analysis'
   | 'product-plans'
-  | 'collapsible-step';
+  | 'collapsible-step'
+  | 'objection-handling'
+  | 'visit-strategy'
+  | 'ability-analysis'
+  | 'coaching-plan';
 
 export interface Message {
   id: string;
