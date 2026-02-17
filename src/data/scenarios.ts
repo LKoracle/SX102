@@ -523,8 +523,24 @@ export const scenarios: Scenario[] = [
             content: '好的，我先帮你分析王五的客户画像和沟通重点，方便您高效推进拜访。',
             speechText: '好的，正在为您准备王五的资料。',
           },
+          {
+            type: 'customer-card',
+            content: '',
+            data: { customerId: 'c7', detailed: true },
+            delay: 800,
+          },
+          {
+            type: 'text',
+            content:
+              '📋 **【王五沟通策略】**\n\n**(1) 客户核心需求：**\n• 子女教育金储备（长子12岁，3年后面临高中及留学规划）\n• 家庭财富稳健增值，抵御通胀风险\n\n**(2) 切入话题建议：**\n• 从孩子教育规划入手，了解留学意向和费用预期\n• 结合企业经营现金流，探讨资产配置方案\n\n**(3) 推荐产品方向：**\n• 教育年金险：锁定未来教育费用\n• 增额终身寿：兼顾财富增值与灵活支取\n\n**(4) 注意事项：**\n• 客户已有医疗险，切勿重复推荐同类产品\n• 上次面谈已建立信任，本次可适当推进促成动作',
+            speechText: '王五的客户画像和沟通策略已准备好，建议从孩子教育规划切入。',
+            delay: 600,
+          },
         ],
-        quickReplies: [],
+        quickReplies: [
+          { label: '帮我定制产品方案', value: 'back-to-menu' },
+          { label: '准备出发拜访', value: 'back-to-menu' },
+        ],
       },
     ],
   },

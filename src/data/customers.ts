@@ -142,6 +142,31 @@ export const customers: Customer[] = [
     address: '深圳市罗湖区',
     notes: '老客户，已缴费多年，近期可能有加保需求，关注财富传承',
   },
+  {
+    id: 'c7',
+    name: '王五',
+    avatar: '王',
+    age: 40,
+    gender: '男',
+    phone: '136****3210',
+    occupation: '私营企业主',
+    annualIncome: '90-110万',
+    familyStatus: '已婚，育有一子（12岁）一女（6岁）',
+    existingPolicies: [
+      {
+        name: '平安e生保',
+        type: '医疗险',
+        premium: '2,000元/年',
+        coverage: '400万',
+        insured: '本人',
+      },
+    ],
+    tags: ['高意向客户', '高净值', '子女教育', '财富增值'],
+    lastContact: '1周前',
+    priority: 'high',
+    address: '深圳市福田区香蜜湖商圈',
+    notes: '高意向客户，已预约下次面谈，关注子女教育金和家庭财富增值',
+  },
 ];
 
 export const nearbyCustomers = [
