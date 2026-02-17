@@ -67,7 +67,7 @@ export function useSpeech(): UseSpeechReturn {
   const recognitionRef = useRef<any>(null);
   const silenceTimerRef = useRef<number | null>(null);
 
-  const SILENCE_TIMEOUT = 2000; // 2秒静默后自动发送
+  const SILENCE_TIMEOUT = 1500; // 1.5秒静默后自动发送
 
   const supported =
     !!getSpeechRecognition() &&
