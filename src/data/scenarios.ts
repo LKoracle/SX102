@@ -289,7 +289,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '正在分析李平安的客户画像。李平安45岁，属于社会中坚客群。',
+            speechText: '正在分析李平安的客户画像',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
