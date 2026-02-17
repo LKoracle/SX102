@@ -124,9 +124,11 @@ export function useSpeech(): UseSpeechReturn {
       let text = '';
       for (let i = 0; i < results.length; i++) {
         const seg = results[i][0].transcript.trim();
-        // isFinal segments are complete utterances – add punctuation if missing.
-        // Interim segments are still being recognised, leave them as-is.
-        text += results[i].isFinal ? withPunct(seg) : seg;
+        if (!seg) continue;
+        // Only skip punctuation for the last actively-being-spoken interim segment.
+        // All prior segments (final or not) already represent complete utterances.
+        const isActiveInterim = !results[i].isFinal && i === results.length - 1;
+        text += isActiveInterim ? seg : withPunct(seg);
       }
       setTranscript(text);
 
