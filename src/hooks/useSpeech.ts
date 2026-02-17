@@ -21,6 +21,10 @@ function withPunct(text: string): string {
   return text + '，';
 }
 
+function stripPunct(text: string): string {
+  return text.replace(/[。！？，、；：…]/g, '');
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSpeechRecognition = (): (new () => any) | null => {
   if (typeof window === 'undefined') return null;
@@ -125,10 +129,11 @@ export function useSpeech(): UseSpeechReturn {
       for (let i = 0; i < results.length; i++) {
         const seg = results[i][0].transcript.trim();
         if (!seg) continue;
-        // Only skip punctuation for the last actively-being-spoken interim segment.
-        // All prior segments (final or not) already represent complete utterances.
-        const isActiveInterim = !results[i].isFinal && i === results.length - 1;
-        text += isActiveInterim ? seg : withPunct(seg);
+        if (results[i].isFinal) {
+          text += withPunct(seg);
+        } else {
+          text += stripPunct(seg);
+        }
       }
       setTranscript(text);
 
