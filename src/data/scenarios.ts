@@ -289,6 +289,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
+            speechText: '正在为您分析李平安的客户画像。李平安45岁，属于社会中坚客群，面临资产贬值和养老储备不足的风险，重点需求是保财富、保养老。',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
@@ -327,6 +328,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
+            speechText: '接下来进行保障检视。结合客户内外部保险数据分析，李平安存在财富缺口80万，养老缺口180万，需要重点补充。',
             data: {
               title: '保障检视',
               stepIcon: '📊',
@@ -354,6 +356,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'product-plans',
             content: '',
+            speechText: '根据需求分析和保障缺口，已为李平安智能匹配产品方案，您可以查看详情或销售攻略。',
             data: {
               needsSummary:
                 '根据客户需求及保险缺口，智能匹配以下产品方案：',
