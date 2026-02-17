@@ -65,11 +65,21 @@ export function useSpeech(): UseSpeechReturn {
   const [transcript, setTranscript] = useState('');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
+  const silenceTimerRef = useRef<number | null>(null);
+
+  const SILENCE_TIMEOUT = 2000; // 2秒静默后自动发送
 
   const supported =
     !!getSpeechRecognition() &&
     typeof window !== 'undefined' &&
     typeof window.speechSynthesis !== 'undefined';
+
+  const clearSilenceTimer = useCallback(() => {
+    if (silenceTimerRef.current !== null) {
+      window.clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+  }, []);
 
   const startListening = useCallback(() => {
     const SpeechRecognitionCtor = getSpeechRecognition();
@@ -77,7 +87,7 @@ export function useSpeech(): UseSpeechReturn {
 
     const recognition = new SpeechRecognitionCtor();
     recognition.lang = 'zh-CN';
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = true;
 
     recognition.onstart = () => setIsListening(true);
@@ -90,21 +100,36 @@ export function useSpeech(): UseSpeechReturn {
         text += results[i][0].transcript;
       }
       setTranscript(text);
+
+      // 每次收到新结果，重置静默计时器
+      clearSilenceTimer();
+      silenceTimerRef.current = window.setTimeout(() => {
+        if (recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
+      }, SILENCE_TIMEOUT);
     };
 
-    recognition.onend = () => setIsListening(false);
-    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => {
+      clearSilenceTimer();
+      setIsListening(false);
+    };
+    recognition.onerror = () => {
+      clearSilenceTimer();
+      setIsListening(false);
+    };
 
     recognitionRef.current = recognition;
     recognition.start();
-  }, []);
+  }, [clearSilenceTimer]);
 
   const stopListening = useCallback(() => {
+    clearSilenceTimer();
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsListening(false);
     }
-  }, []);
+  }, [clearSilenceTimer]);
 
   const speak = useCallback((text: string) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
