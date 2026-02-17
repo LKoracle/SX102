@@ -20,6 +20,11 @@ export function useChat() {
 
   const timeoutRefs = useRef<number[]>([]);
   const sessionRef = useRef(0);
+  const speakFnRef = useRef<((text: string) => void) | null>(null);
+
+  const registerSpeak = useCallback((fn: (text: string) => void) => {
+    speakFnRef.current = fn;
+  }, []);
 
   const clearTimeouts = useCallback(() => {
     timeoutRefs.current.forEach((t) => window.clearTimeout(t));
@@ -36,6 +41,9 @@ export function useChat() {
       ...prev,
       messages: [...prev.messages, newMsg],
     }));
+    if (msg.speechText && speakFnRef.current) {
+      speakFnRef.current(msg.speechText);
+    }
     return newMsg;
   }, []);
 
@@ -87,6 +95,10 @@ export function useChat() {
               },
             ],
           }));
+
+          if (msg.speechText && speakFnRef.current) {
+            speakFnRef.current(msg.speechText);
+          }
 
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {
@@ -272,6 +284,9 @@ export function useChat() {
         value: s.id,
       })),
     }));
+    if (welcomeMsg.speechText && speakFnRef.current) {
+      speakFnRef.current(welcomeMsg.speechText);
+    }
   }, []);
 
   return {
@@ -282,5 +297,6 @@ export function useChat() {
     startScenario,
     resetAndStartScenario,
     initChat,
+    registerSpeak,
   };
 }

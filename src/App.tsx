@@ -67,27 +67,16 @@ function App() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
-  const lastSpokenMsgId = useRef<string | null>(null);
 
   useEffect(() => {
     chat.initChat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-speak: when a new AI message with speechText arrives, speak it
+  // Register speak callback so useChat triggers speech synchronously with messages
   useEffect(() => {
-    if (!autoSpeak || chat.messages.length === 0) return;
-    const lastMsg = chat.messages[chat.messages.length - 1];
-    if (
-      lastMsg.role === 'ai' &&
-      lastMsg.speechText &&
-      lastMsg.id !== lastSpokenMsgId.current
-    ) {
-      lastSpokenMsgId.current = lastMsg.id;
-      speech.speak(lastMsg.speechText);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chat.messages, autoSpeak]);
+    chat.registerSpeak(autoSpeak ? speech.speak : () => {});
+  }, [autoSpeak, speech.speak, chat.registerSpeak]);
 
   // Auto scroll to bottom
   useEffect(() => {
