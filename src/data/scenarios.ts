@@ -19,13 +19,13 @@ export const scenarios: Scenario[] = [
           {
             type: 'customer-card',
             content: '',
-            data: { customerId: 'c1' },
+            data: { customerId: 'c2' },
             delay: 400,
           },
           {
             type: 'customer-card',
             content: '',
-            data: { customerId: 'c2' },
+            data: { customerId: 'c3' },
             delay: 300,
           },
           {
@@ -269,7 +269,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '今日14点要去拜访客户李平安。',
-            speechText: '张经理，今天下午两点要拜访李平安，需要帮您准备方案吗？',
+            speechText: '今天下午两点要拜访李平安，需要帮您准备方案吗？',
           },
           {
             type: 'text',
@@ -289,7 +289,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '正在分析李平安的客户画像',
+            speechText: '正在分析李平安的客户画像，45岁，社会中坚客群',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
@@ -328,7 +328,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '接下来，结合李平安内外部保险数据进行保障检视分析。',
+            speechText: '接下来进行保障检视，结合李平安内部和外部保险数据。',
             data: {
               title: '保障检视',
               stepIcon: '📊',
@@ -356,7 +356,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'product-plans',
             content: '',
-            speechText: '根据需求分析和保障缺口，已为李平安智能匹配产品方案，您可以查看详情或销售攻略。',
+            speechText: '根据需求分析和保障缺口，已为李平安智能匹配产品方案，您可以查看详情。',
             data: {
               needsSummary:
                 '根据客户需求及保险缺口，智能匹配以下产品方案：',
@@ -426,7 +426,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '🎙️ 已识别您的语音记录：\n\n「刚刚拜访完客户李平安，聊得还挺顺利。一开始我们先寒暄了一下，客户说最近在考虑孩子的教育金问题，但又担心年金险太死板，钱放进去就拿不出来，不太灵活。我跟他说年金可以搭配万能账户，灵活性会好一些，他也点了几下头，但还是有点犹豫。后来我进一步介绍了【平安添盈·臻享家医】方案，并结合客户孩子的成长路径做了演示，客户最终决定投保。」\n\n「聊的过程中还了解到，客户目前在香蜜湖有一套房，名下有两辆车，一辆宝马，一辆特斯拉，家庭经济状况比较稳健，年收入120万左右。客户本人是公司合伙人，生日是9月12号，太太主要负责家庭理财和孩子教育支出。」',
-            speechText: '语音已识别，正在生成拜访总结。',
+            speechText: '语音已识别。',
           },
           {
             type: 'text',
@@ -457,13 +457,13 @@ export const scenarios: Scenario[] = [
               sentiment: '积极正面',
               closeProbability: 90,
             },
-            speechText: '总结已生成，客户成功投保，建议后续跟进保单进度。',
-            delay: 1000,
+            speechText: '好的。',
+            delay: 500,
           },
           {
             type: 'text',
             content: '本次拜访信息及客户情况已整理完毕，是否更新到客户档案？',
-            speechText: '本次拜访信息及客户情况已整理完毕，是否更新到客户档案？',
+            speechText: '本次拜访信息已整理完毕，是否更新到客户档案？',
             delay: 800,
           },
         ],
@@ -477,7 +477,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '已同步更新本次拜访信息及客户情况到李平安的客户档案',
-            speechText: '已同步更新本次拜访信息及客户情况到李平安的客户档案。附近还有两位客户，建议顺路拜访。',
+            speechText: '好的，已完成李平安客户档案更新。另外这附近还有两位客户，建议您可以顺路拜访。',
           },
           {
             type: 'text',
@@ -520,7 +520,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '好的，我先帮你分析王五的客户画像和沟通重点，方便您高效推进拜访。',
-            speechText: '好的，正在为您准备王五的资料。',
+            speechText: '好的',
           },
           {
             type: 'customer-card',
@@ -682,7 +682,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '本周即将结束，已为您生成本周工作总结，请查收。',
-            speechText: '张经理，本周即将结束，周工作总结已为您生成，请查收。',
+            speechText: '张经理，已为您生成本周工作总结。是否让我进一步为您分析薄弱环节？',
           },
           {
             type: 'work-summary',
@@ -711,8 +711,8 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content:
-              '在本周的客户沟通中，您在"促成动作"和"异议处理"两个环节表现相对薄弱。\n\n例如：在与客户李平安的沟通中，客户表达了对资金流动性的担忧，但您未能有效引导客户理解"年金+万能账户"的灵活性，导致客户仍未明确下单。',
-            speechText: '本周促成动作和异议处理是短板，以李平安为例：客户担心资金流动性，但未成功引导。',
+              '在本周的客户沟通中，您在"促成动作"和"异议处理"两个环节表现相对薄弱。\n\n例如：在与客户赵高的沟通中，客户表达了对资金流动性的担忧，但您未能有效引导客户理解"年金+万能账户"的灵活性，导致客户仍未明确下单。',
+            speechText: '本周促成动作和异议处理是短板，以赵高为例：客户担心资金流动性，但未成功引导。为帮助您提升薄弱环节，是否看看我为您推荐的学习内容与实战演练工具？',
           },
           {
             type: 'ability-analysis',
@@ -742,7 +742,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '为帮助您提升薄弱环节，我为您推荐以下学习内容与实战演练工具：',
-            speechText: '已为您推荐针对性学习内容，建议本周内完成。',
+            speechText: '已为您推荐针对性学习内容，建议本周内完成。为快速填补业绩差额，是否看看我为你推荐的经营攻略？',
           },
           {
             type: 'learning-plan',
@@ -768,7 +768,7 @@ export const scenarios: Scenario[] = [
             type: 'text',
             content:
               '同时，我识别到您本月距离销售津贴提档还差 **2000元 FYC**。\n\n若本月新增FYC 2000元，即可多获得销售津贴 **1100元**。建议销售1件保费2万的「金越年金红26」即可达成。\n\n以下3位客户意向较高，建议您下周重点拜访：',
-            speechText: '还差2000元FYC可多获1100元津贴，已为您筛选3位高潜力客户，建议下周重点拜访。',
+            speechText: '您还差两千元FYC可多获一千一百元津贴，已为您筛选3位高潜力客户，建议下周重点拜访。',
           },
           {
             type: 'customer-list',
