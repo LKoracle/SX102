@@ -289,7 +289,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '正在分析李平安的客户画像，45岁，社会中坚客群',
+            speechText: '正在分析李平安的客户画像',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
@@ -328,7 +328,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '接下来进行保障检视，结合李平安内部和外部保险数据。',
+            speechText: '接下来进行保障检视，结合李平安在平安内部和之前所收集到外部保单情况，分析保障缺口。',
             data: {
               title: '保障检视',
               stepIcon: '📊',
