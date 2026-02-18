@@ -21,10 +21,15 @@ export function useChat() {
   const timeoutRefs = useRef<number[]>([]);
   const sessionRef = useRef(0);
   const speakFnRef = useRef<((text: string) => void) | null>(null);
+  const enqueueSpeakFnRef = useRef<((text: string) => void) | null>(null);
 
-  const registerSpeak = useCallback((fn: (text: string) => void) => {
-    speakFnRef.current = fn;
-  }, []);
+  const registerSpeak = useCallback(
+    (fn: (text: string) => void, enqueueFn: (text: string) => void) => {
+      speakFnRef.current = fn;
+      enqueueSpeakFnRef.current = enqueueFn;
+    },
+    []
+  );
 
   const clearTimeouts = useCallback(() => {
     timeoutRefs.current.forEach((t) => window.clearTimeout(t));
@@ -65,19 +70,13 @@ export function useChat() {
       setQuickReplies([]);
       setTyping(true);
 
-      const currentSession = sessionRef.current;
-
-      // Collect all speech texts and speak once upfront so voice starts
-      // immediately as messages begin appearing, instead of each message's
-      // speak() cancelling the previous one (which caused only the last
-      // message's speech to actually play — after all messages had appeared).
-      const allSpeechText = step.aiMessages
-        .map((m) => m.speechText)
-        .filter(Boolean)
-        .join('');
-      if (allSpeechText && speakFnRef.current) {
-        speakFnRef.current(allSpeechText);
+      // Cancel leftover speech from the previous step so it doesn't
+      // overlap with this step's per-message enqueued speech.
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
       }
+
+      const currentSession = sessionRef.current;
 
       let totalDelay = 600;
       const messageCallbacks: Array<{ delay: number; msg: typeof step.aiMessages[0] }> = [];
@@ -107,6 +106,12 @@ export function useChat() {
               },
             ],
           }));
+
+          // Enqueue speech per message (no cancel) so each component's
+          // voice plays exactly when that component appears on screen.
+          if (msg.speechText && enqueueSpeakFnRef.current) {
+            enqueueSpeakFnRef.current(msg.speechText);
+          }
 
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {

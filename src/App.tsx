@@ -75,10 +75,14 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Register speak callback so useChat triggers speech synchronously with messages
+  // Register speak callbacks so useChat triggers speech synchronously with messages
   useEffect(() => {
-    chat.registerSpeak(autoSpeak ? speech.speak : () => {});
-  }, [autoSpeak, speech.speak, chat.registerSpeak]);
+    const noop = () => {};
+    chat.registerSpeak(
+      autoSpeak ? speech.speak : noop,
+      autoSpeak ? speech.enqueueSpeak : noop
+    );
+  }, [autoSpeak, speech.speak, speech.enqueueSpeak, chat.registerSpeak]);
 
   // Auto scroll to bottom
   useEffect(() => {

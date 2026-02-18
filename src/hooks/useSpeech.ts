@@ -7,6 +7,7 @@ interface UseSpeechReturn {
   startListening: () => void;
   stopListening: () => void;
   speak: (text: string) => void;
+  enqueueSpeak: (text: string) => void;
   stopSpeaking: () => void;
   supported: boolean;
 }
@@ -182,6 +183,39 @@ export function useSpeech(): UseSpeechReturn {
     });
   }, []);
 
+  /** Queue speech WITHOUT cancelling ongoing utterances. */
+  const enqueueSpeak = useCallback((text: string) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    const voice = pickBestZhVoice();
+    const chunks = splitIntoChunks(text);
+    if (chunks.length === 0) return;
+
+    setIsSpeaking(true);
+
+    chunks.forEach((chunk) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
+      utterance.lang = 'zh-CN';
+      utterance.rate = 1.25;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      if (voice) utterance.voice = voice;
+
+      utterance.onend = () => {
+        if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+          setIsSpeaking(false);
+        }
+      };
+      utterance.onerror = () => {
+        if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+          setIsSpeaking(false);
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
   const stopSpeaking = useCallback(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -196,6 +230,7 @@ export function useSpeech(): UseSpeechReturn {
     startListening,
     stopListening,
     speak,
+    enqueueSpeak,
     stopSpeaking,
     supported,
   };
