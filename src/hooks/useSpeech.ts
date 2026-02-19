@@ -32,7 +32,10 @@ const getSpeechRecognition = (): (new () => any) | null => {
  */
 function pickMaleZhVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
-  const zhVoices = voices.filter((v) => v.lang.startsWith('zh'));
+  // Prefer Mandarin (zh-CN); only fall back to other zh variants if no CN voice exists
+  const allZh = voices.filter((v) => v.lang.startsWith('zh'));
+  const zhCN = allZh.filter((v) => v.lang.replace('_', '-').startsWith('zh-CN'));
+  const zhVoices = zhCN.length > 0 ? zhCN : allZh;
   if (zhVoices.length === 0) return null;
 
   const maleNames = ['Yunxi', 'Yunyang', 'Yunjian', 'Yunfeng', 'Yunhao'];
@@ -66,7 +69,9 @@ function pickMaleZhVoice(): SpeechSynthesisVoice | null {
  */
 function pickBestZhVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
-  const zhVoices = voices.filter((v) => v.lang.startsWith('zh'));
+  const allZh = voices.filter((v) => v.lang.startsWith('zh'));
+  const zhCN = allZh.filter((v) => v.lang.replace('_', '-').startsWith('zh-CN'));
+  const zhVoices = zhCN.length > 0 ? zhCN : allZh;
   if (zhVoices.length === 0) return null;
 
   // Rank by quality keywords (order matters – first match wins)
