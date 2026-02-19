@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 const OVERVIEW_NARRATION =
   '各位好，欢迎体验万能营销助手。' +
@@ -73,20 +73,32 @@ const timeline = [
 ];
 
 export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
-  // Auto-play overview narration shortly after mount to allow voices to load
-  useEffect(() => {
-    const t = window.setTimeout(() => narrate(OVERVIEW_NARRATION), 600);
-    return () => window.clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [narrating, setNarrating] = useState(false);
+
+  const handlePageClick = useCallback(
+    (e: React.MouseEvent) => {
+      // Don't trigger narration if clicking the start button
+      if ((e.target as HTMLElement).closest('.overview-start-btn')) return;
+      if (narrating) return;
+      setNarrating(true);
+      narrate(OVERVIEW_NARRATION);
+    },
+    [narrating, narrate]
+  );
 
   return (
-    <div className="overview-page">
+    <div className="overview-page" onClick={handlePageClick}>
       {/* Hero */}
       <div className="overview-hero">
         <div className="overview-logo">AI</div>
         <h1 className="overview-title">万能营销助手</h1>
         <p className="overview-subtitle">AI 驱动的智能保险销售全流程解决方案</p>
+        {!narrating && (
+          <div className="overview-narration-hint">
+            <span className="overview-narration-hint-icon">&#x1f50a;</span>
+            <span>点击页面开始语音解说</span>
+          </div>
+        )}
       </div>
 
       {/* 4 Pillars */}

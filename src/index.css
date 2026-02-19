@@ -539,3 +539,28 @@ html, body, #root {
 .overview-start-btn:active {
   transform: translateY(0) scale(0.98);
 }
+
+/* Narration hint */
+.overview-narration-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 8px 20px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  border-radius: 24px;
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+  cursor: pointer;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+.overview-narration-hint-icon {
+  font-size: 18px;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.04); }
+}
