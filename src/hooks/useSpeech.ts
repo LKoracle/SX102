@@ -35,13 +35,26 @@ function pickMaleZhVoice(): SpeechSynthesisVoice | null {
   const zhVoices = voices.filter((v) => v.lang.startsWith('zh'));
   if (zhVoices.length === 0) return null;
 
-  const maleKeywords = ['Yunxi', 'Yunyang', 'Yunjian', 'Yunfeng', 'Yunhao', 'Male'];
-  for (const kw of maleKeywords) {
-    const match = zhVoices.find((v) => v.name.includes(kw));
+  const maleNames = ['Yunxi', 'Yunyang', 'Yunjian', 'Yunfeng', 'Yunhao'];
+  const qualityTags = ['Natural', 'Premium', 'Enhanced', 'Neural'];
+
+  // 1st pass: Natural / Premium variant of a known male voice (best quality)
+  for (const name of maleNames) {
+    const premium = zhVoices.find(
+      (v) => v.name.includes(name) && qualityTags.some((t) => v.name.includes(t))
+    );
+    if (premium) return premium;
+  }
+  // 2nd pass: any known male voice
+  for (const name of maleNames) {
+    const match = zhVoices.find((v) => v.name.includes(name));
     if (match) return match;
   }
-  // Fallback: pick any voice other than the best female pick
+  // 3rd pass: any non-local (network) voice that isn't the female pick
   const femaleVoice = pickBestZhVoice();
+  const remote = zhVoices.find((v) => !v.localService && v !== femaleVoice);
+  if (remote) return remote;
+
   return zhVoices.find((v) => v !== femaleVoice) ?? null;
 }
 
