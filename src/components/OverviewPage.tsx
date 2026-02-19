@@ -1,5 +1,18 @@
+import { useEffect } from 'react';
+
+const OVERVIEW_NARRATION =
+  '各位好，欢迎体验万能营销助手。' +
+  '在保险销售中，代理人长期面临三大困境：不知该主动找谁、客户跟进容易脱节、成交链路过长难以把控。' +
+  '我们的AI万能助手，通过四大核心能力系统性破局。' +
+  '第一，深度可视化——客户画像、保障缺口、团队业绩，全部数据化呈现，一目了然。' +
+  '第二，服务被动转主动——AI在关键时间节点主动出击，让代理人永远比客户早一步。' +
+  '第三，对话即交易——自然对话中完成需求分析与方案推荐，每次沟通直指成交。' +
+  '第四，闭环式成交——从每月盘点、每周计划，到拜访前准备、拜访后复盘，全流程有迹可循。' +
+  '接下来，让我们通过七个真实场景，带您体验这套智能销售系统的完整能力。';
+
 interface OverviewPageProps {
   onStart: () => void;
+  narrate: (text: string, onEnd?: () => void) => void;
 }
 
 const pillars = [
@@ -59,7 +72,14 @@ const timeline = [
   { icon: '📈', label: '每月末', desc: '月度复盘', color: '#10B981' },
 ];
 
-export function OverviewPage({ onStart }: OverviewPageProps) {
+export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
+  // Auto-play overview narration shortly after mount to allow voices to load
+  useEffect(() => {
+    const t = window.setTimeout(() => narrate(OVERVIEW_NARRATION), 600);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="overview-page">
       {/* Hero */}

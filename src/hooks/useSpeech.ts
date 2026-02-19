@@ -8,6 +8,7 @@ interface UseSpeechReturn {
   stopListening: () => void;
   speak: (text: string) => void;
   enqueueSpeak: (text: string) => void;
+  narrate: (text: string, onEnd?: () => void) => void;
   stopSpeaking: () => void;
   supported: boolean;
 }
@@ -23,6 +24,26 @@ const getSpeechRecognition = (): (new () => any) | null => {
   const win = window as any;
   return win.SpeechRecognition || win.webkitSpeechRecognition || null;
 };
+
+/**
+ * Pick a male Chinese voice for narrator/旁白.
+ * Prefers Azure neural male voices exposed by Chrome/Edge.
+ * Falls back to any zh voice that is not the best female voice.
+ */
+function pickMaleZhVoice(): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices();
+  const zhVoices = voices.filter((v) => v.lang.startsWith('zh'));
+  if (zhVoices.length === 0) return null;
+
+  const maleKeywords = ['Yunxi', 'Yunyang', 'Yunjian', 'Yunfeng', 'Yunhao', 'Male'];
+  for (const kw of maleKeywords) {
+    const match = zhVoices.find((v) => v.name.includes(kw));
+    if (match) return match;
+  }
+  // Fallback: pick any voice other than the best female pick
+  const femaleVoice = pickBestZhVoice();
+  return zhVoices.find((v) => v !== femaleVoice) ?? null;
+}
 
 /**
  * Pick the most natural-sounding Chinese voice available.
@@ -85,6 +106,9 @@ export function useSpeech(): UseSpeechReturn {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null);
   const silenceTimerRef = useRef<number | null>(null);
+  // Session counter for narrate() – incremented on each call so a cancelled
+  // narration never fires its onEnd callback.
+  const narrateSessionRef = useRef(0);
 
   const SILENCE_TIMEOUT = 1000; // 1秒静默后自动发送
 
@@ -216,6 +240,60 @@ export function useSpeech(): UseSpeechReturn {
     });
   }, []);
 
+  /**
+   * Male-voice narrator. Cancels any ongoing speech, then speaks text using a
+   * male zh voice (lower pitch/rate to sound distinct from the AI chat voice).
+   * onEnd fires only if this narration is NOT interrupted by a subsequent call.
+   */
+  const narrate = useCallback((text: string, onEnd?: () => void) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      onEnd?.();
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    narrateSessionRef.current += 1;
+    const session = narrateSessionRef.current;
+
+    const voice = pickMaleZhVoice();
+    const chunks = splitIntoChunks(text);
+    if (chunks.length === 0) {
+      onEnd?.();
+      return;
+    }
+
+    setIsSpeaking(true);
+
+    chunks.forEach((chunk, idx) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
+      utterance.lang = 'zh-CN';
+      utterance.rate = 1.05;   // slightly deliberate for narration
+      utterance.pitch = 0.85;  // lower pitch for male/narrator feel
+      utterance.volume = 1.0;
+      if (voice) utterance.voice = voice;
+
+      if (idx === chunks.length - 1) {
+        utterance.onend = () => {
+          if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+            setIsSpeaking(false);
+          }
+          // Only fire callback if this narration was not superseded
+          if (narrateSessionRef.current === session) {
+            onEnd?.();
+          }
+        };
+        utterance.onerror = () => {
+          if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+            setIsSpeaking(false);
+          }
+          // Cancelled/interrupted – do NOT call onEnd
+        };
+      }
+
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
   const stopSpeaking = useCallback(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
@@ -231,6 +309,7 @@ export function useSpeech(): UseSpeechReturn {
     stopListening,
     speak,
     enqueueSpeak,
+    narrate,
     stopSpeaking,
     supported,
   };

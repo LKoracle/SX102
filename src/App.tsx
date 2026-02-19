@@ -16,6 +16,9 @@ const modulesMeta = [
     timing: '每月初',
     icon: '📋',
     color: '#4F6BF6',
+    narration:
+      '场景一，每月初主动出击。AI自动盘点全量客户，推送精选高价值名单，并一键生成月度经营计划。' +
+      '让服务从被动等待变为主动出击，这正是"服务被动转主动"的第一个落地场景。',
   },
   {
     id: 'weekly-plan',
@@ -23,6 +26,9 @@ const modulesMeta = [
     timing: '每周初',
     icon: '📅',
     color: '#6366F1',
+    narration:
+      '场景二，每周有的放矢。AI推送本周拜访优先级与客户跟进策略，深度可视化每位客户的潜力与紧迫程度。' +
+      '让代理人每周一打开手机，就知道该找谁、说什么。',
   },
   {
     id: 'pre-visit',
@@ -30,6 +36,9 @@ const modulesMeta = [
     timing: '拜访前',
     icon: '💼',
     color: '#818CF8',
+    narration:
+      '场景三，拜访前知己知彼。AI自动生成客户保障检视报告与专属产品方案，让每一次上门都是有备而来。' +
+      '对话即交易，从见面第一句话起，就直指客户的真实需求。',
   },
   {
     id: 'post-visit',
@@ -37,6 +46,9 @@ const modulesMeta = [
     timing: '拜访后',
     icon: '📝',
     color: '#7C3AED',
+    narration:
+      '场景四，拜访后立即闭环。AI语音记录拜访全程，自动生成拜访总结与下一步跟进计划。' +
+      '每次对话都形成完整闭环，这就是"闭环式成交"的核心理念。',
   },
   {
     id: 'team-coaching',
@@ -44,6 +56,9 @@ const modulesMeta = [
     timing: '晚上',
     icon: '👥',
     color: '#A78BFA',
+    narration:
+      '场景五，精准辅导团队。AI深度可视化下属的业绩数据与客户经营情况，精准定位短板，给出针对性辅导建议。' +
+      '让主管告别凭感觉带团队，用数据驱动团队持续成长。',
   },
   {
     id: 'weekly-summary',
@@ -51,6 +66,9 @@ const modulesMeta = [
     timing: '周末',
     icon: '📊',
     color: '#0EA5E9',
+    narration:
+      '场景六，周末一键成果可视化。AI汇总本周拜访、跟进与成交数据，自动生成图文并茂的工作周报。' +
+      '让每一周的努力清晰可见，为下周主动出击提供决策依据。',
   },
   {
     id: 'monthly-retrospective',
@@ -58,6 +76,9 @@ const modulesMeta = [
     timing: '月末',
     icon: '📈',
     color: '#10B981',
+    narration:
+      '场景七，月末深度闭环。AI生成月度复盘报告，全景呈现客户经营轨迹与成交成果。' +
+      '从盘点到复盘，从计划到结果，完整的经营闭环在这里形成。',
   },
 ];
 
@@ -104,17 +125,26 @@ function App() {
 
   const handleStartDemo = useCallback(() => {
     setShowOverview(false);
-    const firstModuleId = modulesMeta[0].id;
-    setActiveModule(firstModuleId);
-    chat.resetAndStartScenario(firstModuleId);
-  }, [chat]);
+    const first = modulesMeta[0];
+    setActiveModule(first.id);
+    if (autoSpeak) {
+      speech.narrate(first.narration, () => chat.resetAndStartScenario(first.id));
+    } else {
+      chat.resetAndStartScenario(first.id);
+    }
+  }, [chat, speech, autoSpeak]);
 
   const handleModuleClick = useCallback(
     (moduleId: string) => {
       setActiveModule(moduleId);
-      chat.resetAndStartScenario(moduleId);
+      const mod = modulesMeta.find((m) => m.id === moduleId);
+      if (autoSpeak && mod?.narration) {
+        speech.narrate(mod.narration, () => chat.resetAndStartScenario(moduleId));
+      } else {
+        chat.resetAndStartScenario(moduleId);
+      }
     },
-    [chat]
+    [chat, speech, autoSpeak]
   );
 
   const handleQuickReply = useCallback(
@@ -143,7 +173,12 @@ function App() {
   );
 
   if (showOverview) {
-    return <OverviewPage onStart={handleStartDemo} />;
+    return (
+      <OverviewPage
+        onStart={handleStartDemo}
+        narrate={autoSpeak ? speech.narrate : () => {}}
+      />
+    );
   }
 
   return (
