@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 
 const OVERVIEW_NARRATION =
   '各位好，欢迎体验万能营销助手。' +
@@ -73,32 +73,34 @@ const timeline = [
 ];
 
 export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
-  const [narrating, setNarrating] = useState(false);
+  useEffect(() => {
+    // Attempt auto-play. Chrome may block this without a prior user gesture —
+    // in that case the click handler below serves as a silent fallback.
+    const t = window.setTimeout(() => narrate(OVERVIEW_NARRATION), 500);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handlePageClick = useCallback(
+  // Silent click-to-start fallback: if auto-play was blocked, the first click
+  // anywhere on the page (except the start button) triggers narration.
+  const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      // Don't trigger narration if clicking the start button
       if ((e.target as HTMLElement).closest('.overview-start-btn')) return;
-      if (narrating) return;
-      setNarrating(true);
-      narrate(OVERVIEW_NARRATION);
+      const synth = window.speechSynthesis;
+      if (synth && !synth.speaking && !synth.pending) {
+        narrate(OVERVIEW_NARRATION);
+      }
     },
-    [narrating, narrate]
+    [narrate]
   );
 
   return (
-    <div className="overview-page" onClick={handlePageClick}>
+    <div className="overview-page" onClick={handleClick}>
       {/* Hero */}
       <div className="overview-hero">
         <div className="overview-logo">AI</div>
         <h1 className="overview-title">万能营销助手</h1>
         <p className="overview-subtitle">AI 驱动的智能保险销售全流程解决方案</p>
-        {!narrating && (
-          <div className="overview-narration-hint">
-            <span className="overview-narration-hint-icon">&#x1f50a;</span>
-            <span>点击页面开始语音解说</span>
-          </div>
-        )}
       </div>
 
       {/* 4 Pillars */}

@@ -241,8 +241,8 @@ export function useSpeech(): UseSpeechReturn {
   }, []);
 
   /**
-   * Male-voice narrator. Cancels any ongoing speech, then speaks text using a
-   * male zh voice (lower pitch/rate to sound distinct from the AI chat voice).
+   * Male-voice narrator. Uses a SINGLE utterance (no chunking) so the TTS
+   * engine handles prosody naturally without inter-chunk gaps that sound robotic.
    * onEnd fires only if this narration is NOT interrupted by a subsequent call.
    */
   const narrate = useCallback((text: string, onEnd?: () => void) => {
@@ -255,43 +255,35 @@ export function useSpeech(): UseSpeechReturn {
     narrateSessionRef.current += 1;
     const session = narrateSessionRef.current;
 
-    const voice = pickMaleZhVoice();
-    const chunks = splitIntoChunks(text);
-    if (chunks.length === 0) {
+    // Clean text for TTS: strip markdown, emoji, replace em-dashes with commas
+    const clean = text
+      .replace(/[#*_~`|>]/g, '')
+      .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
+      .replace(/——/g, '，')
+      .trim();
+
+    if (!clean) {
       onEnd?.();
       return;
     }
 
+    const voice = pickMaleZhVoice();
+    // Single utterance – lets the engine read the whole passage in one breath
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.lang = 'zh-CN';
+    utterance.rate = 1.0;   // natural narration pace
+    utterance.pitch = 0.9;  // slightly lower to distinguish from AI chat voice
+    utterance.volume = 1.0;
+    if (voice) utterance.voice = voice;
+
     setIsSpeaking(true);
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      if (narrateSessionRef.current === session) onEnd?.();
+    };
+    utterance.onerror = () => setIsSpeaking(false);
 
-    chunks.forEach((chunk, idx) => {
-      const utterance = new SpeechSynthesisUtterance(chunk);
-      utterance.lang = 'zh-CN';
-      utterance.rate = 1.05;   // slightly deliberate for narration
-      utterance.pitch = 0.85;  // lower pitch for male/narrator feel
-      utterance.volume = 1.0;
-      if (voice) utterance.voice = voice;
-
-      if (idx === chunks.length - 1) {
-        utterance.onend = () => {
-          if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
-            setIsSpeaking(false);
-          }
-          // Only fire callback if this narration was not superseded
-          if (narrateSessionRef.current === session) {
-            onEnd?.();
-          }
-        };
-        utterance.onerror = () => {
-          if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
-            setIsSpeaking(false);
-          }
-          // Cancelled/interrupted – do NOT call onEnd
-        };
-      }
-
-      window.speechSynthesis.speak(utterance);
-    });
+    window.speechSynthesis.speak(utterance);
   }, []);
 
   const stopSpeaking = useCallback(() => {
