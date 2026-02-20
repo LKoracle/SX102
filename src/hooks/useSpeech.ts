@@ -300,7 +300,7 @@ export function useSpeech(): UseSpeechReturn {
     // Single utterance – lets the engine read the whole passage in one breath
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.lang = 'zh-CN';
-    utterance.rate = 1.0;   // natural narration pace
+    utterance.rate = 1.15;  // brisk narration pace
     utterance.pitch = 0.9;  // slightly lower to distinguish from AI chat voice
     utterance.volume = 1.0;
     if (voice) utterance.voice = voice;
