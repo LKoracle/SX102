@@ -127,6 +127,9 @@ export function useSpeech(): UseSpeechReturn {
   // Session counter for narrate() – incremented on each call so a cancelled
   // narration never fires its onEnd callback.
   const narrateSessionRef = useRef(0);
+  // Chrome bug workaround: long utterances (>~15s) silently stop.
+  // A periodic pause+resume keeps the engine alive.
+  const keepAliveRef = useRef<number | null>(null);
 
   const SILENCE_TIMEOUT = 1000; // 1秒静默后自动发送
 
@@ -263,12 +266,20 @@ export function useSpeech(): UseSpeechReturn {
    * engine handles prosody naturally without inter-chunk gaps that sound robotic.
    * onEnd fires only if this narration is NOT interrupted by a subsequent call.
    */
+  const clearKeepAlive = useCallback(() => {
+    if (keepAliveRef.current !== null) {
+      clearInterval(keepAliveRef.current);
+      keepAliveRef.current = null;
+    }
+  }, []);
+
   const narrate = useCallback((text: string, onEnd?: () => void) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
       onEnd?.();
       return;
     }
 
+    clearKeepAlive();
     window.speechSynthesis.cancel();
     narrateSessionRef.current += 1;
     const session = narrateSessionRef.current;
@@ -296,20 +307,34 @@ export function useSpeech(): UseSpeechReturn {
 
     setIsSpeaking(true);
     utterance.onend = () => {
+      clearKeepAlive();
       setIsSpeaking(false);
       if (narrateSessionRef.current === session) onEnd?.();
     };
-    utterance.onerror = () => setIsSpeaking(false);
+    utterance.onerror = () => {
+      clearKeepAlive();
+      setIsSpeaking(false);
+    };
 
     window.speechSynthesis.speak(utterance);
-  }, []);
+
+    // Chrome bug: long utterances (>~15s) silently stop.
+    // Periodic pause+resume keeps the engine alive.
+    keepAliveRef.current = window.setInterval(() => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+      }
+    }, 10000);
+  }, [clearKeepAlive]);
 
   const stopSpeaking = useCallback(() => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
+      clearKeepAlive();
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     }
-  }, []);
+  }, [clearKeepAlive]);
 
   return {
     isListening,
