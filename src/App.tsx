@@ -9,6 +9,8 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios } from './data/scenarios';
 
+const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七'];
+
 const modulesMeta = [
   {
     id: 'monthly-review',
@@ -16,9 +18,7 @@ const modulesMeta = [
     timing: '每月初',
     icon: '📋',
     color: '#4F6BF6',
-    narration:
-      '场景一，每月初主动出击。AI自动盘点全量客户，推送精选高价值名单，并一键生成月度经营计划。' +
-      '让服务从被动等待变为主动出击，这正是"服务被动转主动"的第一个落地场景。',
+    narration: '场景一，每月初，AI主动提醒代理人盘点客户并生成经营计划。',
   },
   {
     id: 'weekly-plan',
@@ -26,9 +26,7 @@ const modulesMeta = [
     timing: '每周初',
     icon: '📅',
     color: '#6366F1',
-    narration:
-      '场景二，每周有的放矢。AI推送本周拜访优先级与客户跟进策略，深度可视化每位客户的潜力与紧迫程度。' +
-      '让代理人每周一打开手机，就知道该找谁、说什么。',
+    narration: '场景二，每周初，AI推送本周拜访计划与客户跟进策略。',
   },
   {
     id: 'pre-visit',
@@ -36,9 +34,7 @@ const modulesMeta = [
     timing: '拜访前',
     icon: '💼',
     color: '#818CF8',
-    narration:
-      '场景三，拜访前知己知彼。AI自动生成客户保障检视报告与专属产品方案，让每一次上门都是有备而来。' +
-      '对话即交易，从见面第一句话起，就直指客户的真实需求。',
+    narration: '场景三，拜访前，AI自动生成保障检视与专属产品方案。',
   },
   {
     id: 'post-visit',
@@ -46,9 +42,7 @@ const modulesMeta = [
     timing: '拜访后',
     icon: '📝',
     color: '#7C3AED',
-    narration:
-      '场景四，拜访后立即闭环。AI语音记录拜访全程，自动生成拜访总结与下一步跟进计划。' +
-      '每次对话都形成完整闭环，这就是"闭环式成交"的核心理念。',
+    narration: '场景四，拜访后，AI语音记录拜访并生成总结与跟进计划。',
   },
   {
     id: 'team-coaching',
@@ -56,9 +50,7 @@ const modulesMeta = [
     timing: '晚上',
     icon: '👥',
     color: '#A78BFA',
-    narration:
-      '场景五，精准辅导团队。AI深度可视化下属的业绩数据与客户经营情况，精准定位短板，给出针对性辅导建议。' +
-      '让主管告别凭感觉带团队，用数据驱动团队持续成长。',
+    narration: '场景五，当天晚上，AI辅助主管精准辅导下属。',
   },
   {
     id: 'weekly-summary',
@@ -66,9 +58,7 @@ const modulesMeta = [
     timing: '周末',
     icon: '📊',
     color: '#0EA5E9',
-    narration:
-      '场景六，周末一键成果可视化。AI汇总本周拜访、跟进与成交数据，自动生成图文并茂的工作周报。' +
-      '让每一周的努力清晰可见，为下周主动出击提供决策依据。',
+    narration: '场景六，每周末，AI自动生成本周工作周报。',
   },
   {
     id: 'monthly-retrospective',
@@ -76,9 +66,7 @@ const modulesMeta = [
     timing: '月末',
     icon: '📈',
     color: '#10B981',
-    narration:
-      '场景七，月末深度闭环。AI生成月度复盘报告，全景呈现客户经营轨迹与成交成果。' +
-      '从盘点到复盘，从计划到结果，完整的经营闭环在这里形成。',
+    narration: '场景七，每月末，AI生成月度复盘报告，闭环全月经营。',
   },
 ];
 
@@ -90,6 +78,7 @@ function App() {
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [showOverview, setShowOverview] = useState(true);
+  const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
 
   useEffect(() => {
     chat.initChat();
@@ -123,28 +112,38 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speech.isListening]);
 
-  const handleStartDemo = useCallback(() => {
-    setShowOverview(false);
-    const first = modulesMeta[0];
-    setActiveModule(first.id);
-    if (autoSpeak) {
-      speech.narrate(first.narration, () => chat.resetAndStartScenario(first.id));
-    } else {
-      chat.resetAndStartScenario(first.id);
-    }
-  }, [chat, speech, autoSpeak]);
-
-  const handleModuleClick = useCallback(
+  const startModuleWithNarration = useCallback(
     (moduleId: string) => {
+      const idx = modulesMeta.findIndex((m) => m.id === moduleId);
+      const mod = modulesMeta[idx];
+      if (!mod) return;
+
       setActiveModule(moduleId);
-      const mod = modulesMeta.find((m) => m.id === moduleId);
-      if (autoSpeak && mod?.narration) {
-        speech.narrate(mod.narration, () => chat.resetAndStartScenario(moduleId));
+      const label = `场景${SCENE_NUMS[idx]}：${mod.name}`;
+
+      if (autoSpeak && mod.narration) {
+        setTransition({ icon: mod.icon, label });
+        speech.narrate(mod.narration, () => {
+          setTransition(null);
+          chat.resetAndStartScenario(moduleId);
+        });
       } else {
         chat.resetAndStartScenario(moduleId);
       }
     },
     [chat, speech, autoSpeak]
+  );
+
+  const handleStartDemo = useCallback(() => {
+    setShowOverview(false);
+    startModuleWithNarration(modulesMeta[0].id);
+  }, [startModuleWithNarration]);
+
+  const handleModuleClick = useCallback(
+    (moduleId: string) => {
+      startModuleWithNarration(moduleId);
+    },
+    [startModuleWithNarration]
   );
 
   const handleQuickReply = useCallback(
@@ -231,47 +230,56 @@ function App() {
       <div className="phone-frame">
         <div className="phone-notch" />
         <div className="phone-screen">
-          <Header
-            isSpeaking={speech.isSpeaking}
-            onStopSpeaking={speech.stopSpeaking}
-            autoSpeak={autoSpeak}
-            onToggleAutoSpeak={() => {
-              setAutoSpeak((v) => {
-                if (v) speech.stopSpeaking();
-                return !v;
-              });
-            }}
-          />
+          {transition ? (
+            <div className="scene-transition">
+              <div className="scene-transition-icon">{transition.icon}</div>
+              <div className="scene-transition-label">{transition.label}</div>
+            </div>
+          ) : (
+            <>
+              <Header
+                isSpeaking={speech.isSpeaking}
+                onStopSpeaking={speech.stopSpeaking}
+                autoSpeak={autoSpeak}
+                onToggleAutoSpeak={() => {
+                  setAutoSpeak((v) => {
+                    if (v) speech.stopSpeaking();
+                    return !v;
+                  });
+                }}
+              />
 
-          {/* Chat messages area */}
-          <div
-            ref={chatContainerRef}
-            className="flex-1 overflow-y-auto pt-4 pb-4"
-            style={{ WebkitOverflowScrolling: 'touch' }}
-          >
-            {chat.messages.map((msg) => (
-              <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
-            ))}
+              {/* Chat messages area */}
+              <div
+                ref={chatContainerRef}
+                className="flex-1 overflow-y-auto pt-4 pb-4"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+              >
+                {chat.messages.map((msg) => (
+                  <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
+                ))}
 
-            {chat.isTyping && <TypingIndicator />}
+                {chat.isTyping && <TypingIndicator />}
 
-            {/* Quick replies */}
-            {chat.quickReplies.length > 0 && !chat.isTyping && (
-              <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
-            )}
+                {/* Quick replies */}
+                {chat.quickReplies.length > 0 && !chat.isTyping && (
+                  <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+                )}
 
-            <div ref={messagesEndRef} />
-          </div>
+                <div ref={messagesEndRef} />
+              </div>
 
-          {/* Input area */}
-          <InputBar
-            onSend={chat.handleUserMessage}
-            onVoiceStart={speech.startListening}
-            onVoiceStop={speech.stopListening}
-            isListening={speech.isListening}
-            transcript={speech.transcript}
-            disabled={chat.isTyping}
-          />
+              {/* Input area */}
+              <InputBar
+                onSend={chat.handleUserMessage}
+                onVoiceStart={speech.startListening}
+                onVoiceStop={speech.stopListening}
+                isListening={speech.isListening}
+                transcript={speech.transcript}
+                disabled={chat.isTyping}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
