@@ -14,7 +14,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '新的一个月开始啦，记得完成客户盘点哦。这是为您推荐的精选客户名单。',
-            speechText: '张经理，新的一月开始啦！我帮您挑了几位重点客户，一起看看吧。',
+            speechText: '张经理，新的一个月开始啦，记得完成客户盘点哦。',
           },
           {
             type: 'customer-card',
