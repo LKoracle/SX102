@@ -289,7 +289,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '正在分析李平安的客户画像。李平安，45岁，社会中坚客群，重点需求：保财富、保养老。',
+            speechText: '正在分析李平安的客户画像。45岁，社会中坚客群，重点需求：保财富、保养老。',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
@@ -328,7 +328,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '接下来进行保障检视，结合李平安在平安内部和之前所收集到外部保单情况，分析保障缺口。',
+            speechText: '接下来进行保障检视，结合李平安在平安内外部的保单情况，分析保障缺口。',
             data: {
               title: '保障检视',
               stepIcon: '📊',
@@ -457,7 +457,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content: '下午好！看到您刚完成对客户李平安的拜访，沟通情况如何？告诉我，我可以帮您记录',
-            speechText: '下午好！拜访结束了，情况如何？我来帮您记录',
+            speechText: '下午好！拜访结束了，可以告诉我具体的拜访情况吗？我来帮您记录',
           },
         ],
         quickReplies: [{ label: '开始智能记录', value: 'start-record' }],
@@ -802,7 +802,7 @@ export const scenarios: Scenario[] = [
             delay: 0,
           },
         ],
-        quickReplies: [{ label: '查看收入激励提醒', value: 'income' }],
+        quickReplies: [{ label: '业绩差额经营攻略', value: 'income' }],
       },
       // Step 3: 个人收入考核津贴提醒 + 推荐客户
       {
