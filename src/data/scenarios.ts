@@ -505,13 +505,13 @@ export const scenarios: Scenario[] = [
           },
           {
             type: 'text',
-            content: '本次拜访信息及客户情况已整理完毕，是否更新到客户档案？',
-            speechText: '本次拜访信息已整理完毕，是否更新到客户档案？',
+            content: '本次拜访信息及客户情况已整理完毕，请确认是否正确？',
+            speechText: '本次拜访信息已整理完毕，请确认是否正确？',
             delay: 800,
           },
         ],
         quickReplies: [
-          { label: '更新', value: 'confirm-update' },
+          { label: '确认', value: 'confirm-update' },
         ],
       },
       // Step 2: 确认更新 + 推荐附近客户
