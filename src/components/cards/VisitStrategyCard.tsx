@@ -17,6 +17,7 @@ export function VisitStrategyCard({ data }: VisitStrategyCardProps) {
     { bg: 'bg-purple-50', title: 'text-purple-600', dot: 'bg-purple-400' },
     { bg: 'bg-indigo-50', title: 'text-indigo-600', dot: 'bg-indigo-400' },
     { bg: 'bg-amber-50', title: 'text-amber-600', dot: 'bg-amber-400' },
+    { bg: 'bg-green-50', title: 'text-green-600', dot: 'bg-green-400' },
   ];
 
   return (
