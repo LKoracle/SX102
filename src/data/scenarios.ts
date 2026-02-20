@@ -363,6 +363,24 @@ export const scenarios: Scenario[] = [
             },
             delay: 500,
           },
+          {
+            type: 'visit-strategy',
+            content: '',
+            data: {
+              customerName: '李平安',
+              sections: [
+                {
+                  title: '历史案例参考',
+                  icon: '📖',
+                  items: [
+                    '张先生，46岁企业高管，同属社会中坚客群，保障缺口与李平安相似，最终选择"年金险+增额终身寿"组合方案，年缴保费4万元，兼顾教育金储备与养老规划',
+                    '赵女士，43岁，也面临财富缺口和养老缺口双重需求，通过分阶段投保策略，首年年缴2.5万元，次年追加至4万元，客户接受度更高',
+                  ],
+                },
+              ],
+            },
+            delay: 500,
+          },
         ],
         quickReplies: [
           { label: '查看方案详情', value: 'sales-benefit' },
