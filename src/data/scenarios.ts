@@ -313,7 +313,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'product-plans',
             content: '',
-            speechText: '根据需求分析和保障缺口，已为李平安智能匹配产品+服务方案平安添盈-臻享家医和销售攻略，您可以查看详情。',
+            speechText: '根据需求分析和保障缺口，已为李平安智能匹配专属产品+服务方案平安添盈-臻享家医和销售攻略，您可以查看详情。',
             data: {
               needsSummary:
                 '根据客户需求及保险缺口，智能匹配以下产品方案：',
