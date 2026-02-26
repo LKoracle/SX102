@@ -75,6 +75,7 @@ function App() {
   const speech = useSpeech();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+   const lastTranscriptRef = useRef<string>('');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [showOverview, setShowOverview] = useState(true);
@@ -101,16 +102,18 @@ function App() {
     }
   }, [chat.messages, chat.isTyping, chat.quickReplies]);
 
-  // Handle voice transcript submission
+  // Handle voice transcript submission（防止同一段识别结果重复发送）
   useEffect(() => {
-    if (speech.transcript && !speech.isListening) {
-      const text = speech.transcript.trim();
-      if (text) {
-        chat.handleUserMessage(text);
-      }
-    }
+    if (speech.isListening) return;
+    if (!speech.transcript) return;
+    const text = speech.transcript.trim();
+    if (!text) return;
+    if (text === lastTranscriptRef.current) return;
+
+    lastTranscriptRef.current = text;
+    chat.handleUserMessage(text);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [speech.isListening]);
+  }, [speech.isListening, speech.transcript]);
 
   const startModuleWithNarration = useCallback(
     (moduleId: string) => {

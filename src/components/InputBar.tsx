@@ -50,9 +50,6 @@ export function InputBar({
   const handleVoiceToggle = () => {
     if (isListening) {
       onVoiceStop();
-      if (text.trim()) {
-        setTimeout(() => handleSend(), 200);
-      }
     } else {
       setText('');
       onVoiceStart();
@@ -152,7 +149,7 @@ export function InputBar({
             </button>
 
             <button
-              onClick={() => { onVoiceStop(); if (text.trim()) setTimeout(handleSend, 200); }}
+              onClick={() => { onVoiceStop(); }}
               className={`absolute right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                 text.trim()
                   ? 'text-white hover:scale-105'
