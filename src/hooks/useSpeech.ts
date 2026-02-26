@@ -217,7 +217,11 @@ export function useSpeech(): UseSpeechReturn {
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
 
-      if (voice) utterance.voice = voice;
+      // 只在找到本地中文语音时显式指定 voice，避免某些浏览器把
+      // 远程语音列出来但实际播不出来，导致整体静音。
+      if (voice && voice.lang.startsWith('zh') && voice.localService) {
+        utterance.voice = voice;
+      }
 
       if (idx === chunks.length - 1) {
         utterance.onend = () => setIsSpeaking(false);
@@ -244,7 +248,9 @@ export function useSpeech(): UseSpeechReturn {
       utterance.rate = 1.25;
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
-      if (voice) utterance.voice = voice;
+      if (voice && voice.lang.startsWith('zh') && voice.localService) {
+        utterance.voice = voice;
+      }
 
       utterance.onend = () => {
         if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {

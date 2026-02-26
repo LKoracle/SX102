@@ -8,45 +8,15 @@ export const scenarios: Scenario[] = [
     icon: '📋',
     description: '每月初',
     steps: [
-      // Step 0: 提醒盘点客户
+      // Step 0: AI 主动播报 + 展示盘点经过与经营计划
       {
         aiMessages: [
           {
             type: 'text',
-            content: '新的一个月开始啦，记得完成客户盘点哦。这是为您推荐的精选客户名单。',
-            speechText: '张经理，新的一个月开始啦，记得完成客户盘点哦。',
-          },
-          {
-            type: 'customer-card',
-            content: '',
-            data: { customerId: 'c2' },
-            delay: 400,
-          },
-          {
-            type: 'customer-card',
-            content: '',
-            data: { customerId: 'c3' },
-            delay: 300,
-          },
-          {
-            type: 'customer-card',
-            content: '',
-            data: { customerId: 'c4' },
-            delay: 300,
-          },
-        ],
-        quickReplies: [
-          { label: '帮我盘点本月客户', value: 'review-all' },
-          { label: '查看精选客户名单', value: 'view-list' },
-        ],
-      },
-      // Step 1: 完成盘点 + 生成经营计划
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '已为您完成本月全部客户的盘点。根据盘点的客户，为您生成当月经营计划，请查收。',
-            speechText: '盘点完成了，经营计划也生成好了，请过目。',
+            content:
+              '张经理，新的一个月开始了，我结合季度目标客户名单对您的客户进行了盘点，增补了两位重点高温客户并生成了经营计划，请您看看是否合适。',
+            speechText:
+              '张经理，新的一个月开始了，我结合季度目标客户名单对您的客户进行了盘点，增补了两位重点高温客户并生成了经营计划，请您看看是否合适。',
           },
           {
             type: 'monthly-plan',
@@ -86,25 +56,11 @@ export const scenarios: Scenario[] = [
             },
             delay: 400,
           },
-        ],
-        quickReplies: [
-          { label: '查看要经营的客户', value: 'view-customers' },
-        ],
-      },
-      // Step 2: 查看经营客户列表
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content:
-              '已为您整理好本月客户经营清单，并根据每位客户的特点推荐了经营动作，您可以一键转发经营素材和参考话术，高效完成客户经营。',
-            speechText: '清单整理好了，每位客户都有推荐动作，您可以直接操作。',
-          },
           {
             type: 'customer-list',
             content: '',
             data: {
-              totalCount: 34,
+              totalCount: 6,
               customers: [
                 {
                   name: '赵高',
@@ -161,19 +117,20 @@ export const scenarios: Scenario[] = [
                   lastContact: '本月',
                 },
               ],
-              summary: '建议优先跟进高温高价值客户赵高、王建国，本月面访目标15次，当前已完成0次',
+              summary: '已为您圈选出6位重点经营客户，建议优先推进高温高价值与中温高价值客群。',
             },
-            delay: 500,
+            delay: 400,
           },
         ],
+        // 不再给快捷回复，引导代理人通过语音/输入自然说出“Ok，我约了下周一下午两点……”这类话
         quickReplies: [],
       },
-      // Step 3: 添加计划
+      // Step 1: 代理人反馈后，直接确认并展示拜访计划
       {
         aiMessages: [
           {
             type: 'text',
-            content: '已帮您添加下周一14点拜访李平安的计划',
+            content: '好的，已添加拜访计划。',
             speechText: '好的，已添加拜访计划。',
           },
           {
@@ -289,7 +246,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '正在分析李平安的客户画像。45岁，社会中坚客群，重点需求：保财富、保养老。',
+            speechText: '正在根据客户宫格分析客户李平安的痛点及需求。45岁，社会中坚客群，重点需求：保财富、保养老。',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
@@ -356,7 +313,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'product-plans',
             content: '',
-            speechText: '根据需求分析和保障缺口，已为李平安智能匹配产品方案，您可以查看详情。',
+            speechText: '根据需求分析和保障缺口，已为李平安智能匹配产品+服务方案平安添盈-臻享家医和销售攻略，您可以查看详情。',
             data: {
               needsSummary:
                 '根据客户需求及保险缺口，智能匹配以下产品方案：',
