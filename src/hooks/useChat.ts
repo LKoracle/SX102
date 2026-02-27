@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Message, ChatState, QuickReply } from '../types';
-import { scenarios } from '../data/scenarios';
+import { scenarios, managerScenarios } from '../data/scenarios';
 
 let messageIdCounter = 0;
 function generateId() {
@@ -187,7 +187,7 @@ export function useChat() {
                 currentStep: 0,
               }));
               setQuickReplies(
-                scenarios.map((s) => ({
+                managerScenarios.map((s) => ({
                   label: `${s.icon} ${s.name}`,
                   value: s.id,
                 }))
@@ -245,7 +245,7 @@ export function useChat() {
         });
         setTyping(false);
         setQuickReplies(
-          scenarios.map((s) => ({
+          managerScenarios.map((s) => ({
             label: `${s.icon} ${s.name}`,
             value: s.id,
           }))
@@ -297,7 +297,7 @@ export function useChat() {
     setState((prev) => ({
       ...prev,
       messages: [welcomeMsg],
-      quickReplies: scenarios.map((s) => ({
+      quickReplies: managerScenarios.map((s) => ({
         label: `${s.icon} ${s.name}`,
         value: s.id,
       })),

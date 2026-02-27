@@ -977,4 +977,464 @@ export const scenarios: Scenario[] = [
       },
     ],
   },
+  // 主管场景1: 月初面谈名单推荐
+  {
+    id: 'manager-monthly-coaching-list',
+    name: '月初，推荐本月面谈计划',
+    icon: '📋',
+    description: '每月初',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '尊敬的您，新的一个月开始了。我已经为您分析了团队成员的本月业绩达成情况。以下是建议您重点面谈的成员名单，按优先级排序。',
+            speechText: '尊敬的您，新的一个月开始了。我已经为您分析了团队成员的本月业绩达成情况。以下是建议您重点面谈的成员名单，按优先级排序。',
+          },
+          {
+            type: 'monthly-coaching-list',
+            content: '',
+            data: {
+              members: ['t1', 't3', 't6'],
+              month: '2025年3月',
+              tips: ['保证面谈完成率在100%以上', '优先级由高到低，建议按序进行', '充分准备面谈指引，提升面谈效率'],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看李明详细计划', value: 't1' },
+          { label: '查看小周详细计划', value: 't3' },
+          { label: '查看小杨详细计划', value: 't6' },
+          { label: '查看整月日程', value: 'schedule' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '李明本月业绩完成率仅为43%，是团队中最需要关注的成员。他存在面访完成率低、邀约转化率偏低等问题。我为您准备了详细的面谈计划。',
+            speechText: '李明本月业绩完成率仅为43%，是团队中最需要关注的成员。他存在面访完成率低、邀约转化率偏低等问题。我为您准备了详细的面谈计划。',
+          },
+          {
+            type: 'member-coaching-plan',
+            content: '',
+            data: {
+              memberId: 't1',
+              topics: ['收入分析', '客户盘点'],
+              suggestedDate: '2025-03-05',
+              duration: '40分钟',
+            },
+            delay: 400,
+          },
+        ],
+        quickReplies: [
+          { label: '确认安排该日期', value: 'confirm' },
+          { label: '选择其他日期', value: 'change-date' },
+          { label: '查看其他成员', value: 'back' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '这是根据您的日程和成员的可用时间自动生成的合理安排，涵盖了所有需要重点面谈的成员。',
+            speechText: '这是根据您的日程和成员的可用时间自动生成的合理安排，涵盖了所有需要重点面谈的成员。',
+          },
+          {
+            type: 'coaching-schedule',
+            content: '',
+            data: {
+              schedule: [
+                { date: '2025-03-05', member: 't1', topic: '收入分析' },
+                { date: '2025-03-08', member: 't3', topic: '拜访计划' },
+                { date: '2025-03-12', member: 't6', topic: '新人培训' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '全部确认', value: 'confirm-all' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
+  // 主管场景2: 面谈前指引
+  {
+    id: 'manager-pre-coaching-guidance',
+    name: '面谈前，推荐面谈指引',
+    icon: '💡',
+    description: '面谈前',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '尊敬的您，面谈前的充分准备是提高面谈效果的关键。请选择本次面谈的主题，我将为您推荐针对性的分析和话术建议。',
+            speechText: '尊敬的您，面谈前的充分准备是提高面谈效果的关键。请选择本次面谈的主题，我将为您推荐针对性的分析和话术建议。',
+          },
+          {
+            type: 'coaching-topic',
+            content: '',
+            data: {
+              topics: [
+                { id: 'income', label: '📊 收入分析', desc: '帮助成员找到收入突破口' },
+                { id: 'customer', label: '👥 客户盘点', desc: '优化客户结构和拜访策略' },
+                { id: 'recruitment', label: '🎯 准增员盘点', desc: '规划团队发展和新兵培养' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '收入分析', value: 'income' },
+          { label: '客户盘点', value: 'customer' },
+          { label: '准增员盘点', value: 'recruitment' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '李明的收入差距主要来自于面访机会不足和成交效率偏低。以下是基于他的数据生成的收入分析：',
+            speechText: '李明的收入差距主要来自于面访机会不足和成交效率偏低。以下是基于他的数据生成的收入分析：',
+          },
+          {
+            type: 'income-analysis-coaching',
+            content: '',
+            data: {
+              memberId: 't1',
+              currentIncome: 150000,
+              targetIncome: 350000,
+              gap: 200000,
+              sources: [
+                { source: '新单保费', current: 80000, gap: 100000 },
+                { source: '续期保费', current: 70000, gap: 50000 },
+              ],
+              improvements: ['每周触客不低于50人', '面访成功率提升至25%以上', '客户单案保费提升至5000元'],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看达成路径', value: 'path' },
+          { label: '查看面谈话术', value: 'speaking' },
+          { label: '重新选择主题', value: 'back' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '根据分析，李明要达成收入目标，需要在以下三个方面取得进展。我已经为您分解了具体的行动步骤：',
+            speechText: '根据分析，李明要达成收入目标，需要在以下三个方面取得进展。我已经为您分解了具体的行动步骤：',
+          },
+          {
+            type: 'coaching-path',
+            content: '',
+            data: {
+              goal: '月收入累计突破35万，与目标缩小差距',
+              strategies: [
+                { step: 1, action: '每周触客50+人，通过电话、拜访等多渠道', target: '提升面访机会' },
+                { step: 2, action: '面访成功率不低于25%，通过话术演练提升', target: '提升成交概率' },
+                { step: 3, action: '单案保费5000+元，推荐更优质产品组合', target: '提升客单价' },
+              ],
+              estimatedTimeline: '30天内可见初步成效',
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看面谈话术', value: 'speaking' },
+          { label: '返回分析详情', value: 'back' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '以下是针对李明本次面谈精心准备的话术指引。参考这些话术可以帮助您更有效地进行对话：',
+            speechText: '以下是针对李明本次面谈精心准备的话术指引。参考这些话术可以帮助您更有效地进行对话：',
+          },
+          {
+            type: 'coaching-speaking-point',
+            content: '',
+            data: {
+              topic: '收入分析',
+              openingLine: '"李明，我们来看看你3月的业绩，相比2月有不少亮点，但也有需要关注的地方。让我们一起分析一下。"',
+              keyPoints: [
+                {
+                  point: '肯定成绩',
+                  example: '"你这月新单保费突破8万，这是个不错的进步。周期业务也保持稳定。这体现了你在产品销售上的实力。"',
+                },
+                {
+                  point: '分析问题',
+                  example: '"但我们看到，面访完成率还有不少提升空间，目标是15次，实际只完成了3次。这是拉低收入的主要原因。"',
+                },
+                {
+                  point: '制定计划',
+                  example: '"接下来，我们可以这样调整：每周固定安排50个触客机会，其中20个重点客户进行上门拜访，预计面访完成率能提升到10次以上。"',
+                },
+              ],
+              objectionHandling: [
+                {
+                  objection: '"35万的目标太高了，我觉得不太可能。"',
+                  response: '"我理解你的想法，但让我们看看数据。你11月的新单保费就突破了8万，再加上续期7万，其实离35万不远。关键是稳定这个水平，并逐步提升。"',
+                },
+                {
+                  objection: '"我没有那么多客户可以拜访啊。"',
+                  response: '"这个想法我也常听到。实际上，增加触客的方法有很多。比如，电话回访、老客户转介绍、到社区进行讲座等。我这里有一份触客渠道清单，我们一起看看哪些渠道对你最可行。"',
+                },
+              ],
+            },
+            delay: 600,
+          },
+        ],
+        quickReplies: [
+          { label: '面谈准备完毕', value: 'done' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
+  // 主管场景3: 面谈中实时记录
+  {
+    id: 'manager-during-coaching-record',
+    name: '面谈中，实时记录并生成总结',
+    icon: '📱',
+    description: '面谈中',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '尊敬的您，面谈已经开始。系统已准备好为您实时记录面谈的关键信息。您每说出重要要点，系统都会帮您整理整合。',
+            speechText: '尊敬的您，面谈已经开始。系统已准备好为您实时记录面谈的关键信息。您每说出重要要点，系统都会帮您整理整合。',
+          },
+          {
+            type: 'coaching-record',
+            content: '',
+            data: {
+              memberName: '李明',
+              topics: ['业绩分析', '改进建议', '行动计划'],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '面谈记录完毕，查看总结', value: 'summary' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '基于本次面谈的内容，系统已自动生成总结和改进建议，供您参考和进一步分析。',
+            speechText: '基于本次面谈的内容，系统已自动生成总结和改进建议，供您参考和进一步分析。',
+          },
+          {
+            type: 'coaching-record',
+            content: '',
+            data: {
+              memberName: '李明',
+              topics: ['业绩分析', '改进建议', '行动计划'],
+            },
+            delay: 400,
+          },
+        ],
+        quickReplies: [
+          { label: '保存总结，开始追踪', value: 'tracking' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
+  // 主管场景4: 面谈后追踪
+  {
+    id: 'manager-post-coaching-tracking',
+    name: '面谈后，追踪执行过程',
+    icon: '📊',
+    description: '面谈后',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '尊敬的您，面谈已结束。现在系统为您展示李明的执行追踪看板。包括目标达成进度、行动项执行状态，以及针对性的辅导建议。',
+            speechText: '尊敬的您，面谈已结束。现在系统为您展示李明的执行追踪看板。包括目标达成进度、行动项执行状态，以及针对性的辅导建议。',
+          },
+          {
+            type: 'coaching-tracking',
+            content: '',
+            data: {
+              memberName: '李明',
+              executions: [
+                {
+                  action: '每周触客50+人，记录所有客户沟通',
+                  deadline: '2025-03-12',
+                  status: 'in-progress',
+                },
+                { action: '完成3次客户深度面访，准备方案', deadline: '2025-03-15', status: 'pending' },
+                { action: '参加异议处理话术培训，提交学习笔记', deadline: '2025-03-10', status: 'completed' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看更新进度', value: 'update' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '这是李明从面谈至今的执行更新详情。您可以看到每项行动的进展，以及距离截止日期的时间窗口。系统建议对"完成3次客户深度面访"进行加强跟进，确保按期完成。',
+            speechText: '这是李明从面谈至今的执行更新详情。您可以看到每项行动的进展，以及距离截止日期的时间窗口。系统建议对深度面访进行加强跟进。',
+          },
+          {
+            type: 'coaching-tracking',
+            content: '',
+            data: {
+              memberName: '李明',
+              executions: [
+                {
+                  action: '每周触客50+人，记录所有客户沟通',
+                  deadline: '2025-03-12',
+                  status: 'in-progress',
+                  progress: 65,
+                },
+                { action: '完成3次客户深度面访，准备方案', deadline: '2025-03-15', status: 'pending', progress: 0 },
+                { action: '参加异议处理话术培训，提交学习笔记', deadline: '2025-03-10', status: 'completed', progress: 100 },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看辅导建议', value: 'coaching-advice' },
+          { label: '返回查看面板', value: 'back' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '针对李明的执行情况，系统建议的辅导重点：1. 加强客户深度开拓，建议每周指导2次面访准备；2. 强化异议处理应用，在实际面访中运用所学；3. 每周进行一次执行检查，及时调整策略。预计通过这些措施，李明可以在3月15日前完成所有行动目标。',
+            speechText: '系统针对李明的执行情况，给出了三点辅导建议。加强客户深度开拓、强化异议处理应用、以及每周执行检查。预计可以在3月15日前完成所有行动目标。',
+          },
+          {
+            type: 'text',
+            content: '💡 核心建议：\n• 加强客户深度开拓 - 每周指导2次面访准备\n• 强化异议处理应用 - 在实际面访中运用所学\n• 每周执行检查 - 及时调整策略和方向\n\n预期成果：3月15日前完成所有行动目标，收入累计达成率超过75%',
+            speechText: '已为您生成辅导建议',
+          },
+        ],
+        quickReplies: [
+          { label: '确认辅导计划', value: 'confirm' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
+  // 主管场景5: 主管工作总结
+  {
+    id: 'manager-work-summary',
+    name: '主管工作总结，分析团队业绩',
+    icon: '📈',
+    description: '每天/周/月',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '尊敬的您，这是本周的团队工作总结。系统已汇总了团队业绩、成员表现、存在的问题，以及建议的改进方向。让我们一起来看看。',
+            speechText: '尊敬的您，这是本周的团队工作总结。系统已汇总了团队业绩、成员表现、存在的问题，以及建议的改进方向。让我们一起来看看。',
+          },
+          {
+            type: 'manager-summary',
+            content: '',
+            data: {
+              period: '本周',
+              members: [
+                { name: '李明', incomeRate: 43, visitCount: 5, status: 'needs-attention' },
+                { name: '小林', incomeRate: 80, visitCount: 12, status: 'good' },
+                { name: '小周', incomeRate: 45, visitCount: 6, status: 'needs-attention' },
+                { name: '小吴', incomeRate: 110, visitCount: 18, status: 'excellent' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看详细分析', value: 'details' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '以下是本周团队成员的详细分析。您可以看到三个关键指标：收入达成率、客户拜访数、以及整体状态评分。系统重点关注了需要帮扶的成员（李明和小周），以及表现优异的成员（小吴）。',
+            speechText: '以下是本周团队成员的详细分析。关键指标包括收入达成率、客户拜访数和整体状态评分。重点关注需要帮扶的李明和小周，以及表现优异的小吴。',
+          },
+          {
+            type: 'manager-summary',
+            content: '',
+            data: {
+              period: '本周',
+              totalIncome: 680000,
+              targetIncome: 800000,
+              achieveRate: 85,
+              visitCount: 41,
+              conversionRate: 32,
+              members: [
+                { name: '李明', incomeRate: 43, visitCount: 5, status: 'needs-attention', performance: '需要加强面访和产品转化' },
+                { name: '小林', incomeRate: 80, visitCount: 12, status: 'good', performance: '表现稳定，维持状态' },
+                { name: '小周', incomeRate: 45, visitCount: 6, status: 'needs-attention', performance: '需要增加拜访频率' },
+                { name: '小吴', incomeRate: 110, visitCount: 18, status: 'excellent', performance: '业绩突出，可作为示范' },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看改进建议', value: 'improvements' },
+          { label: '返回概览', value: 'back' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '基于本周的团队分析，系统生成了以下改进建议：',
+            speechText: '基于本周的团队分析，系统生成了改进建议。',
+          },
+          {
+            type: 'text',
+            content: '🎯 团队层面：\n• 整体收入达成率85%，距目标还有15%的提升空间\n• 平均面访转化率32%，建议提升到35%以上\n• 小吴的销售话术可作为团队标杆进行分享\n\n👥 个人层面：\n• 李明：需要在面访准备和异议处理上加强辅导（面谈后追踪中已有计划）\n• 小周：建议增加拜访频率，目标调整至每周10+次客户接触\n• 小林：保持目前的稳健发展，预计可在月底突破目标\n• 小吴：给予更多新客户资源，充分发挥其优秀能力\n\n📊 下周重点：\n1. 执行李明的面谈辅导计划，确保行动项按期完成\n2. 对小周进行一次深度辅导，制定个性化提升方案\n3. 邀请小吴分享销售成功经验，进行团队培训',
+            speechText: '已为您生成改进建议。包括团队层面的整体目标、个人层面的具体辅导计划，以及下周的重点工作安排。',
+          },
+        ],
+        quickReplies: [
+          { label: '确认计划', value: 'confirm' },
+          { label: '返回菜单', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
 ];
+
+// 只导出主管场景
+export const managerScenarios = scenarios.filter(
+  (s) =>
+    s.id === 'manager-monthly-coaching-list' ||
+    s.id === 'manager-pre-coaching-guidance' ||
+    s.id === 'manager-during-coaching-record' ||
+    s.id === 'manager-post-coaching-tracking' ||
+    s.id === 'manager-work-summary'
+);

@@ -23,6 +23,14 @@ import { VisitStrategyCard } from './cards/VisitStrategyCard';
 import { AbilityAnalysisCard } from './cards/AbilityAnalysisCard';
 import { CoachingPlanCard } from './cards/CoachingPlanCard';
 import { LearningPlanCard } from './cards/LearningPlanCard';
+import { MonthlyCoachingListCard } from './cards/MonthlyCoachingListCard';
+import { MemberCoachingPlanCard } from './cards/MemberCoachingPlanCard';
+import { CoachingScheduleCard } from './cards/CoachingScheduleCard';
+import { CoachingGuidanceCard } from './cards/CoachingGuidanceCard';
+import { CoachingSpeakingPointCard } from './cards/CoachingSpeakingPointCard';
+import { CoachingRecordCard } from './cards/CoachingRecordCard';
+import { CoachingTrackingCard } from './cards/CoachingTrackingCard';
+import { ManagerSummaryCard } from './cards/ManagerSummaryCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -163,6 +171,30 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <CoachingPlanCard data={message.data as Record<string, unknown>} />;
       case 'learning-plan':
         return <LearningPlanCard data={message.data as Record<string, unknown>} />;
+      case 'monthly-coaching-list':
+        return <MonthlyCoachingListCard data={message.data as Record<string, unknown>} />;
+      case 'member-coaching-plan':
+        return <MemberCoachingPlanCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-schedule':
+        return <CoachingScheduleCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-topic':
+        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
+      case 'income-analysis-coaching':
+        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
+      case 'customer-audit-coaching':
+        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
+      case 'recruitment-audit-coaching':
+        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-path':
+        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-speaking-point':
+        return <CoachingSpeakingPointCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-record':
+        return <CoachingRecordCard data={message.data as Record<string, unknown>} />;
+      case 'coaching-tracking':
+        return <CoachingTrackingCard data={message.data as Record<string, unknown>} />;
+      case 'manager-summary':
+        return <ManagerSummaryCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

@@ -217,9 +217,8 @@ export function useSpeech(): UseSpeechReturn {
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
 
-      // 只在找到本地中文语音时显式指定 voice，避免某些浏览器把
-      // 远程语音列出来但实际播不出来，导致整体静音。
-      if (voice && voice.lang.startsWith('zh') && voice.localService) {
+      // 设置女性语音，无论是本地还是网络语音
+      if (voice && voice.lang.startsWith('zh')) {
         utterance.voice = voice;
       }
 
@@ -248,7 +247,7 @@ export function useSpeech(): UseSpeechReturn {
       utterance.rate = 1.25;
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
-      if (voice && voice.lang.startsWith('zh') && voice.localService) {
+      if (voice && voice.lang.startsWith('zh')) {
         utterance.voice = voice;
       }
 
@@ -302,12 +301,13 @@ export function useSpeech(): UseSpeechReturn {
       return;
     }
 
-    const voice = pickMaleZhVoice();
+    // 使用女性声音作为讲解声音，与AI助手保持一致
+    const voice = pickBestZhVoice();
     // Single utterance – lets the engine read the whole passage in one breath
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.lang = 'zh-CN';
     utterance.rate = 1.15;  // brisk narration pace
-    utterance.pitch = 0.9;  // slightly lower to distinguish from AI chat voice
+    utterance.pitch = 1.0;  // 女性音调
     utterance.volume = 1.0;
     if (voice) utterance.voice = voice;
 

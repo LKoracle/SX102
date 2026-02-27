@@ -70,24 +70,16 @@ const timeline = [
 
 export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
   useEffect(() => {
-    // Attempt auto-play. Chrome may block this without a prior user gesture —
-    // in that case the click handler below serves as a silent fallback.
-    const t = window.setTimeout(() => narrate(OVERVIEW_NARRATION), 500);
-    return () => window.clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // 不播放overview页面的声音，直接从功能页开始有声音
   }, []);
 
-  // Silent click-to-start fallback: if auto-play was blocked, the first click
-  // anywhere on the page (except the start button) triggers narration.
+  // 点击开始演示
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       if ((e.target as HTMLElement).closest('.overview-start-btn')) return;
-      const synth = window.speechSynthesis;
-      if (synth && !synth.speaking && !synth.pending) {
-        narrate(OVERVIEW_NARRATION);
-      }
+      // 不在overview页播放声音
     },
-    [narrate]
+    []
   );
 
   return (

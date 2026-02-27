@@ -14,6 +14,10 @@ export const teamMembers: TeamMember[] = [
     conversionRate: 0.12,
     status: 'needs-attention',
     issues: ['面访完成率低于20%', '邀约转化率偏低', '在"异议处理"和"促成动作"上存在短板'],
+    coachingNeeded: true,
+    coachingPriority: 'high',
+    coachingTopics: ['收入分析', '客户盘点'],
+    coachingDate: '2025-03-05',
   },
   {
     id: 't2',
@@ -27,6 +31,10 @@ export const teamMembers: TeamMember[] = [
     newCustomers: 5,
     conversionRate: 0.35,
     status: 'good',
+    coachingNeeded: true,
+    coachingPriority: 'low',
+    coachingTopics: ['产品策略', '客户维系'],
+    coachingDate: '2025-03-10',
   },
   {
     id: 't3',
@@ -41,6 +49,10 @@ export const teamMembers: TeamMember[] = [
     conversionRate: 0.15,
     status: 'needs-attention',
     issues: ['拜访量不足', '客户跟进不及时', '产品知识薄弱'],
+    coachingNeeded: true,
+    coachingPriority: 'high',
+    coachingTopics: ['拜访计划', '产品知识'],
+    coachingDate: '2025-03-08',
   },
   {
     id: 't4',
@@ -54,6 +66,10 @@ export const teamMembers: TeamMember[] = [
     newCustomers: 8,
     conversionRate: 0.42,
     status: 'excellent',
+    coachingNeeded: true,
+    coachingPriority: 'low',
+    coachingTopics: ['管理能力', '准增员盘点'],
+    coachingDate: '2025-03-15',
   },
   {
     id: 't5',
@@ -67,6 +83,9 @@ export const teamMembers: TeamMember[] = [
     newCustomers: 4,
     conversionRate: 0.28,
     status: 'good',
+    coachingNeeded: false,
+    coachingPriority: 'medium',
+    coachingTopics: ['目标提升'],
   },
   {
     id: 't6',
@@ -81,5 +100,9 @@ export const teamMembers: TeamMember[] = [
     conversionRate: 0.08,
     status: 'needs-attention',
     issues: ['新人缺乏信心', '话术不熟练', '缺乏客户资源'],
+    coachingNeeded: true,
+    coachingPriority: 'medium',
+    coachingTopics: ['新人培训', '话术演练'],
+    coachingDate: '2025-03-12',
   },
 ];

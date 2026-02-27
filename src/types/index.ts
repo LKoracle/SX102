@@ -23,7 +23,19 @@ export type MessageContentType =
   | 'visit-strategy'
   | 'ability-analysis'
   | 'coaching-plan'
-  | 'learning-plan';
+  | 'learning-plan'
+  | 'monthly-coaching-list'
+  | 'member-coaching-plan'
+  | 'coaching-schedule'
+  | 'coaching-topic'
+  | 'income-analysis-coaching'
+  | 'customer-audit-coaching'
+  | 'recruitment-audit-coaching'
+  | 'coaching-path'
+  | 'coaching-speaking-point'
+  | 'coaching-record'
+  | 'coaching-tracking'
+  | 'manager-summary';
 
 export interface Message {
   id: string;
@@ -111,6 +123,11 @@ export interface TeamMember {
   conversionRate: number;
   status: 'excellent' | 'good' | 'needs-attention';
   issues?: string[];
+  // 面谈相关字段
+  coachingNeeded?: boolean;
+  coachingPriority?: 'high' | 'medium' | 'low';
+  coachingTopics?: string[];
+  coachingDate?: string;
 }
 
 export interface ChatState {
