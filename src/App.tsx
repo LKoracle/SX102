@@ -7,76 +7,6 @@ import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
-import { scenarios } from './data/scenarios';
-
-const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七'];
-
-const agentModules = [
-  {
-    id: 'monthly-review',
-    name: '每月初，提醒代理人盘点客户',
-    timing: '每月初',
-    icon: '📋',
-    color: '#4F6BF6',
-    narration: '场景一，每月初，AI主动提醒代理人盘点客户并生成经营计划。',
-    category: 'agent',
-  },
-  {
-    id: 'weekly-plan',
-    name: '每周初，提醒本周经营计划',
-    timing: '每周初',
-    icon: '📅',
-    color: '#6366F1',
-    narration: '场景二，每周初，AI推送本周拜访计划与客户跟进策略。',
-    category: 'agent',
-  },
-  {
-    id: 'pre-visit',
-    name: '某天，客户拜访前',
-    timing: '拜访前',
-    icon: '💼',
-    color: '#818CF8',
-    narration: '场景三，拜访前，AI自动生成保障检视与专属产品方案。',
-    category: 'agent',
-  },
-  {
-    id: 'post-visit',
-    name: '某天，客户拜访后',
-    timing: '拜访后',
-    icon: '📝',
-    color: '#7C3AED',
-    narration: '场景四，拜访后，AI语音记录拜访并生成总结与跟进计划。',
-    category: 'agent',
-  },
-  {
-    id: 'team-coaching',
-    name: '某天晚上：辅导下属',
-    timing: '晚上',
-    icon: '👥',
-    color: '#A78BFA',
-    narration: '场景五，当天晚上，AI辅助主管精准辅导下属。',
-    category: 'agent',
-  },
-  {
-    id: 'weekly-summary',
-    name: '每周末，形成周工作总结',
-    timing: '周末',
-    icon: '📊',
-    color: '#0EA5E9',
-    narration: '场景六，每周末，AI自动生成本周工作周报。',
-    category: 'agent',
-  },
-  {
-    id: 'monthly-retrospective',
-    name: '每月末，形成月度工作复盘',
-    timing: '月末',
-    icon: '📈',
-    color: '#10B981',
-    narration: '场景七，每月末，AI生成月度复盘报告，闭环全月经营。',
-    category: 'agent',
-  },
-];
-
 const backofficeModules = [
   {
     id: 'backoffice-progress-tracking',
@@ -114,9 +44,45 @@ const backofficeModules = [
     narration: '面谈全程辅助已准备就绪，系统将为您实时录音、转写并生成面谈总结。',
     category: 'backoffice',
   },
+  {
+    id: 'backoffice-report-generation',
+    name: '报告一键制作',
+    timing: '智能报告',
+    icon: '📋',
+    color: '#6366F1',
+    narration: '报告一键制作功能已就绪，请上传素材或授权数据，AI将自动生成专业报告。',
+    category: 'backoffice',
+  },
+  {
+    id: 'backoffice-material-generation',
+    name: '营销素材生成',
+    timing: '营销素材',
+    icon: '🎨',
+    color: '#9333EA',
+    narration: '营销素材生成功能已就绪，30秒内为您生成全套营销素材并支持跨平台分发。',
+    category: 'backoffice',
+  },
+  {
+    id: 'backoffice-case-mining',
+    name: '典范案例挖掘',
+    timing: '案例挖掘',
+    icon: '🏆',
+    color: '#047857',
+    narration: '典范案例挖掘功能已就绪，系统将根据您设定的标签自动匹配最佳案例。',
+    category: 'backoffice',
+  },
+  {
+    id: 'backoffice-case-summary',
+    name: '案例智能归纳',
+    timing: '案例归纳',
+    icon: '🎬',
+    color: '#0369A1',
+    narration: 'AI数字人访谈功能已就绪，将自动归纳典范事迹并生成宣导视频。',
+    category: 'backoffice',
+  },
 ];
 
-const modulesMeta = [...agentModules, ...backofficeModules];
+const modulesMeta = backofficeModules;
 
 function App() {
   const chat = useChat();
@@ -165,16 +131,13 @@ function App() {
 
   const startModuleWithNarration = useCallback(
     (moduleId: string) => {
-      const idx = modulesMeta.findIndex((m) => m.id === moduleId);
-      const mod = modulesMeta[idx];
+      const mod = modulesMeta.find((m) => m.id === moduleId);
       if (!mod) return;
 
       setActiveModule(moduleId);
-      const isAgentModule = mod.category === 'agent';
-      const label = isAgentModule ? `场景${SCENE_NUMS[idx]}：${mod.name}` : mod.name;
 
       if (autoSpeak && mod.narration) {
-        setTransition({ icon: mod.icon, label });
+        setTransition({ icon: mod.icon, label: mod.name });
         speech.narrate(mod.narration, () => {
           setTransition(null);
           chat.resetAndStartScenario(moduleId);
@@ -200,11 +163,11 @@ function App() {
 
   const handleQuickReply = useCallback(
     (reply: { label: string; value: string }) => {
-      const scenario = scenarios.find((s) => s.id === reply.value);
-      if (scenario) {
+      const mod = backofficeModules.find((m) => m.id === reply.value);
+      if (mod) {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
-        chat.startScenario(scenario.id);
-        setActiveModule(scenario.id);
+        chat.startScenario(mod.id);
+        setActiveModule(mod.id);
       } else {
         chat.handleQuickReply(reply);
       }

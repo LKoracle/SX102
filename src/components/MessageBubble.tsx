@@ -1,36 +1,4 @@
 import type { Message } from '../types';
-import { CustomerCard } from './cards/CustomerCard';
-import { PlanCard } from './cards/PlanCard';
-import { ProductCard } from './cards/ProductCard';
-import { CoverageGapCard } from './cards/CoverageGapCard';
-import { TeamDashboard } from './cards/TeamDashboard';
-import { MemberCard } from './cards/MemberCard';
-import { VisitSummaryCard } from './cards/VisitSummaryCard';
-import { WorkSummaryCard } from './cards/WorkSummaryCard';
-import { ScheduleCard } from './cards/ScheduleCard';
-import { IncomeCard } from './cards/IncomeCard';
-import { NearbyCustomersCard } from './cards/NearbyCustomersCard';
-import { MonthlyPlanCard } from './cards/MonthlyPlanCard';
-import { CustomerGridCard } from './cards/CustomerGridCard';
-import { CustomerListCard } from './cards/CustomerListCard';
-import { AutoStepProgress } from './cards/AutoStepProgress';
-import { CustomerProfileGrid } from './cards/CustomerProfileGrid';
-import { CoverageAnalysisCard } from './cards/CoverageAnalysisCard';
-import { ProductPlansCard } from './cards/ProductPlansCard';
-import { CollapsibleStepCard } from './cards/CollapsibleStepCard';
-import { ObjectionHandlingCard } from './cards/ObjectionHandlingCard';
-import { VisitStrategyCard } from './cards/VisitStrategyCard';
-import { AbilityAnalysisCard } from './cards/AbilityAnalysisCard';
-import { CoachingPlanCard } from './cards/CoachingPlanCard';
-import { LearningPlanCard } from './cards/LearningPlanCard';
-import { MonthlyCoachingListCard } from './cards/MonthlyCoachingListCard';
-import { MemberCoachingPlanCard } from './cards/MemberCoachingPlanCard';
-import { CoachingScheduleCard } from './cards/CoachingScheduleCard';
-import { CoachingGuidanceCard } from './cards/CoachingGuidanceCard';
-import { CoachingSpeakingPointCard } from './cards/CoachingSpeakingPointCard';
-import { CoachingRecordCard } from './cards/CoachingRecordCard';
-import { CoachingTrackingCard } from './cards/CoachingTrackingCard';
-import { ManagerSummaryCard } from './cards/ManagerSummaryCard';
 import { ProgressListCard } from './cards/ProgressListCard';
 import { AgentReportCard } from './cards/AgentReportCard';
 import { AICallCard } from './cards/AICallCard';
@@ -43,6 +11,15 @@ import { ResponseStrategyCard } from './cards/ResponseStrategyCard';
 import { RecordingCard } from './cards/RecordingCard';
 import { MeetingResultCard } from './cards/MeetingResultCard';
 import { PlanDeliveryCard } from './cards/PlanDeliveryCard';
+import { ReportUploadCard } from './cards/ReportUploadCard';
+import { ReportPreviewCard } from './cards/ReportPreviewCard';
+import { MaterialConfigCard } from './cards/MaterialConfigCard';
+import { MaterialPreviewCard } from './cards/MaterialPreviewCard';
+import { MaterialDistributeCard } from './cards/MaterialDistributeCard';
+import { CaseSearchCard } from './cards/CaseSearchCard';
+import { CaseResultCard } from './cards/CaseResultCard';
+import { CaseInterviewCard } from './cards/CaseInterviewCard';
+import { CaseVideoCard } from './cards/CaseVideoCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -139,78 +116,6 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
 
   const renderContent = () => {
     switch (message.type) {
-      case 'customer-card':
-        return <CustomerCard data={message.data as Record<string, unknown>} />;
-      case 'plan-card':
-        return <PlanCard data={message.data as Record<string, unknown>} />;
-      case 'product-card':
-        return <ProductCard data={message.data as Record<string, unknown>} />;
-      case 'coverage-gap':
-        return <CoverageGapCard data={message.data as Record<string, unknown>} />;
-      case 'team-dashboard':
-        return <TeamDashboard />;
-      case 'member-card':
-        return <MemberCard data={message.data as Record<string, unknown>} />;
-      case 'visit-summary':
-        return <VisitSummaryCard data={message.data as Record<string, unknown>} />;
-      case 'work-summary':
-        return <WorkSummaryCard data={message.data as Record<string, unknown>} />;
-      case 'schedule-card':
-        return <ScheduleCard data={message.data as Record<string, unknown>} />;
-      case 'income-card':
-        return <IncomeCard data={message.data as Record<string, unknown>} />;
-      case 'nearby-customers':
-        return <NearbyCustomersCard data={message.data as Record<string, unknown>} />;
-      case 'monthly-plan':
-        return <MonthlyPlanCard data={message.data as Record<string, unknown>} />;
-      case 'customer-grid':
-        return <CustomerGridCard data={message.data as Record<string, unknown>} />;
-      case 'customer-list':
-        return <CustomerListCard data={message.data as Record<string, unknown>} />;
-      case 'auto-step-progress':
-        return <AutoStepProgress data={message.data as Record<string, unknown>} />;
-      case 'customer-profile-grid':
-        return <CustomerProfileGrid data={message.data as Record<string, unknown>} />;
-      case 'coverage-analysis':
-        return <CoverageAnalysisCard data={message.data as Record<string, unknown>} />;
-      case 'product-plans':
-        return <ProductPlansCard data={message.data as Record<string, unknown>} />;
-      case 'collapsible-step':
-        return <CollapsibleStepCard data={message.data as Record<string, unknown>} />;
-      case 'objection-handling':
-        return <ObjectionHandlingCard data={message.data as Record<string, unknown>} />;
-      case 'visit-strategy':
-        return <VisitStrategyCard data={message.data as Record<string, unknown>} />;
-      case 'ability-analysis':
-        return <AbilityAnalysisCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-plan':
-        return <CoachingPlanCard data={message.data as Record<string, unknown>} />;
-      case 'learning-plan':
-        return <LearningPlanCard data={message.data as Record<string, unknown>} />;
-      case 'monthly-coaching-list':
-        return <MonthlyCoachingListCard data={message.data as Record<string, unknown>} />;
-      case 'member-coaching-plan':
-        return <MemberCoachingPlanCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-schedule':
-        return <CoachingScheduleCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-topic':
-        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
-      case 'income-analysis-coaching':
-        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
-      case 'customer-audit-coaching':
-        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
-      case 'recruitment-audit-coaching':
-        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-path':
-        return <CoachingGuidanceCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-speaking-point':
-        return <CoachingSpeakingPointCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-record':
-        return <CoachingRecordCard data={message.data as Record<string, unknown>} />;
-      case 'coaching-tracking':
-        return <CoachingTrackingCard data={message.data as Record<string, unknown>} />;
-      case 'manager-summary':
-        return <ManagerSummaryCard data={message.data as Record<string, unknown>} />;
       case 'progress-list':
         return <ProgressListCard data={message.data as Record<string, unknown>} />;
       case 'agent-report':
@@ -235,6 +140,24 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <MeetingResultCard data={message.data as Record<string, unknown>} />;
       case 'plan-delivery':
         return <PlanDeliveryCard data={message.data as Record<string, unknown>} />;
+      case 'report-upload':
+        return <ReportUploadCard data={message.data as Record<string, unknown>} />;
+      case 'report-preview':
+        return <ReportPreviewCard data={message.data as Record<string, unknown>} />;
+      case 'material-config':
+        return <MaterialConfigCard data={message.data as Record<string, unknown>} />;
+      case 'material-preview':
+        return <MaterialPreviewCard data={message.data as Record<string, unknown>} />;
+      case 'material-distribute':
+        return <MaterialDistributeCard data={message.data as Record<string, unknown>} />;
+      case 'case-search':
+        return <CaseSearchCard data={message.data as Record<string, unknown>} />;
+      case 'case-result':
+        return <CaseResultCard data={message.data as Record<string, unknown>} />;
+      case 'case-interview':
+        return <CaseInterviewCard data={message.data as Record<string, unknown>} />;
+      case 'case-video':
+        return <CaseVideoCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

@@ -1,41 +1,5 @@
 export type MessageContentType =
   | 'text'
-  | 'customer-card'
-  | 'plan-card'
-  | 'product-card'
-  | 'coverage-gap'
-  | 'team-dashboard'
-  | 'member-card'
-  | 'visit-summary'
-  | 'work-summary'
-  | 'schedule-card'
-  | 'income-card'
-  | 'nearby-customers'
-  | 'monthly-plan'
-  | 'customer-grid'
-  | 'customer-list'
-  | 'auto-step-progress'
-  | 'customer-profile-grid'
-  | 'coverage-analysis'
-  | 'product-plans'
-  | 'collapsible-step'
-  | 'objection-handling'
-  | 'visit-strategy'
-  | 'ability-analysis'
-  | 'coaching-plan'
-  | 'learning-plan'
-  | 'monthly-coaching-list'
-  | 'member-coaching-plan'
-  | 'coaching-schedule'
-  | 'coaching-topic'
-  | 'income-analysis-coaching'
-  | 'customer-audit-coaching'
-  | 'recruitment-audit-coaching'
-  | 'coaching-path'
-  | 'coaching-speaking-point'
-  | 'coaching-record'
-  | 'coaching-tracking'
-  | 'manager-summary'
   | 'progress-list'
   | 'agent-report'
   | 'ai-call'
@@ -47,7 +11,16 @@ export type MessageContentType =
   | 'response-strategy'
   | 'recording'
   | 'meeting-result'
-  | 'plan-delivery';
+  | 'plan-delivery'
+  | 'report-upload'
+  | 'report-preview'
+  | 'material-config'
+  | 'material-preview'
+  | 'material-distribute'
+  | 'case-search'
+  | 'case-result'
+  | 'case-interview'
+  | 'case-video';
 
 export interface Message {
   id: string;
@@ -83,63 +56,6 @@ export interface Scenario {
   icon: string;
   description: string;
   steps: ScenarioStep[];
-}
-
-export interface Customer {
-  id: string;
-  name: string;
-  avatar: string;
-  age: number;
-  gender: '男' | '女';
-  phone: string;
-  occupation: string;
-  annualIncome: string;
-  familyStatus: string;
-  existingPolicies: Policy[];
-  tags: string[];
-  lastContact: string;
-  priority: 'high' | 'medium' | 'low';
-  address: string;
-  notes: string;
-}
-
-export interface Policy {
-  name: string;
-  type: string;
-  premium: string;
-  coverage: string;
-  insured: string;
-}
-
-export interface Product {
-  id: string;
-  name: string;
-  type: string;
-  features: string[];
-  premium: string;
-  coverage: string;
-  suitableFor: string;
-  sellingPoints: string[];
-}
-
-export interface TeamMember {
-  id: string;
-  name: string;
-  avatar: string;
-  level: string;
-  monthlyTarget: number;
-  monthlyAchieved: number;
-  weeklyVisits: number;
-  weeklyTarget: number;
-  newCustomers: number;
-  conversionRate: number;
-  status: 'excellent' | 'good' | 'needs-attention';
-  issues?: string[];
-  // 面谈相关字段
-  coachingNeeded?: boolean;
-  coachingPriority?: 'high' | 'medium' | 'low';
-  coachingTopics?: string[];
-  coachingDate?: string;
 }
 
 export interface ChatState {
