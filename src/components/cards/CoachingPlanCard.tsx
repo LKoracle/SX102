@@ -15,7 +15,7 @@ export function CoachingPlanCard({ data }: CoachingPlanCardProps) {
   const trainings = data.trainings as TrainingItem[];
 
   return (
-    <div className="bg-white rounded-[20px] border border-indigo-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-indigo-200 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-indigo-500 to-blue-500 px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📋 {memberName} - 面谈方案</h3>
       </div>

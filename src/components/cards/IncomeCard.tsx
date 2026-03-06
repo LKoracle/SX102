@@ -23,7 +23,7 @@ export function IncomeCard({ data }: IncomeCardProps) {
   ];
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-3">
         <p className="text-white/80 text-[13px]">{period}</p>
         <div className="flex items-end gap-2 mt-1">

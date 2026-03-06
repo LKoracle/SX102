@@ -12,7 +12,7 @@ export function PlanCard({ data }: PlanCardProps) {
   const items = data.items as PlanItem[];
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-[20px] border border-gray-200/50 shadow-sm shadow-gray-200/40 overflow-hidden">
+    <div className="bg-white/90 backdrop-blur-sm rounded-[24px] border border-gray-200/50 shadow-sm shadow-gray-200/40 overflow-hidden">
       <div className="bg-gradient-to-br from-blue-500 to-blue-600 px-4 py-3">
         <h3 className="text-white font-semibold text-[15px] flex items-center gap-2">
           📋 {title}

@@ -37,7 +37,7 @@ export function MonthlyCoachingListCard({ data }: MonthlyCoachingListCardProps) 
   };
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-[#F59E0B] to-[#EC4899] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📋 {month}推荐面谈名单</h3>
       </div>
@@ -69,7 +69,7 @@ export function MonthlyCoachingListCard({ data }: MonthlyCoachingListCardProps) 
             return (
               <div
                 key={member.id}
-                className="border border-gray-100 rounded-[14px] p-2.5 hover:border-[#667eea]/30 hover:bg-gradient-to-r hover:from-[#f8f9ff] hover:to-transparent transition-all cursor-pointer"
+                className="border border-gray-100 rounded-[14px] p-2.5 hover:border-[#3B82F6]/30 hover:bg-gradient-to-r hover:from-[#f8f9ff] hover:to-transparent transition-all cursor-pointer"
               >
                 {/* 成员基本信息 */}
                 <div className="flex items-start justify-between mb-2">
@@ -77,7 +77,7 @@ export function MonthlyCoachingListCard({ data }: MonthlyCoachingListCardProps) 
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
                       style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
                       }}
                     >
                       {member.avatar}
@@ -99,14 +99,14 @@ export function MonthlyCoachingListCard({ data }: MonthlyCoachingListCardProps) 
                 <div className="mb-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[11px] text-[#666]">本月完成率</span>
-                    <span className="text-[12px] font-bold text-[#667eea]">{metrics}%</span>
+                    <span className="text-[12px] font-bold text-[#3B82F6]">{metrics}%</span>
                   </div>
                   <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-700"
                       style={{
                         width: `${Math.max(metrics, 2)}%`,
-                        background: 'linear-gradient(90deg, #667eea88, #667eea)',
+                        background: 'linear-gradient(90deg, #3B82F688, #3B82F6)',
                       }}
                     />
                   </div>
@@ -118,7 +118,7 @@ export function MonthlyCoachingListCard({ data }: MonthlyCoachingListCardProps) 
                     {member.coachingTopics.map((topic: string, i: number) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded text-[10px] bg-[#f0f4ff] text-[#667eea]"
+                        className="px-2 py-0.5 rounded text-[10px] bg-[#f0f4ff] text-[#3B82F6]"
                       >
                         {topic}
                       </span>
@@ -132,7 +132,7 @@ export function MonthlyCoachingListCard({ data }: MonthlyCoachingListCardProps) 
 
         {/* 统计信息 */}
         <div className="bg-gradient-to-r from-[#f0f4ff] to-[#f8f0ff] rounded-xl p-2.5">
-          <p className="text-[12px] text-[#667eea] font-medium">
+          <p className="text-[12px] text-[#3B82F6] font-medium">
             共需面谈 <span className="font-bold text-[14px]">{sortedMembers.length}</span> 位成员
           </p>
         </div>

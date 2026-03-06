@@ -20,7 +20,6 @@ export function MemberCoachingPlanCard({ data }: MemberCoachingPlanCardProps) {
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -32,8 +31,8 @@ export function MemberCoachingPlanCard({ data }: MemberCoachingPlanCardProps) {
     : 0;
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-4 py-2.5">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">💼 面谈计划详情</h3>
       </div>
 
@@ -43,7 +42,7 @@ export function MemberCoachingPlanCard({ data }: MemberCoachingPlanCardProps) {
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
             style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
             }}
           >
             {member.avatar}
@@ -58,14 +57,14 @@ export function MemberCoachingPlanCard({ data }: MemberCoachingPlanCardProps) {
         <div className="bg-gradient-to-r from-[#f0f4ff] to-[#f8f9ff] rounded-[14px] p-2.5">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[12px] font-medium text-[#333]">本月业绩进度</span>
-            <span className="text-[13px] font-bold text-[#667eea]">{metrics}%</span>
+            <span className="text-[13px] font-bold text-[#3B82F6]">{metrics}%</span>
           </div>
           <div className="h-2 bg-white rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-700"
               style={{
                 width: `${Math.max(metrics, 2)}%`,
-                background: 'linear-gradient(90deg, #667eea88, #667eea)',
+                background: 'linear-gradient(90deg, #3B82F688, #3B82F6)',
               }}
             />
           </div>
@@ -97,7 +96,7 @@ export function MemberCoachingPlanCard({ data }: MemberCoachingPlanCardProps) {
             {topics.map((topic: string, i: number) => (
               <span
                 key={i}
-                className="px-2.5 py-1.5 rounded-[8px] bg-gradient-to-r from-[#667eea]/10 to-[#764ba2]/10 text-[12px] font-medium text-[#667eea] border border-[#667eea]/20"
+                className="px-2.5 py-1.5 rounded-[8px] bg-gradient-to-r from-[#3B82F6]/10 to-[#1D4ED8]/10 text-[12px] font-medium text-[#3B82F6] border border-[#3B82F6]/20"
               >
                 {topic}
               </span>

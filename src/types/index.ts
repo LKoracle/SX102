@@ -35,7 +35,19 @@ export type MessageContentType =
   | 'coaching-speaking-point'
   | 'coaching-record'
   | 'coaching-tracking'
-  | 'manager-summary';
+  | 'manager-summary'
+  | 'progress-list'
+  | 'agent-report'
+  | 'ai-call'
+  | 'data-capture'
+  | 'risk-radar'
+  | 'root-cause'
+  | 'meeting-target'
+  | 'meeting-script'
+  | 'response-strategy'
+  | 'recording'
+  | 'meeting-result'
+  | 'plan-delivery';
 
 export interface Message {
   id: string;

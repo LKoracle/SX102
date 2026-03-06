@@ -52,7 +52,7 @@ export function CoachingTrackingCard({ data }: CoachingTrackingCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-[#10B981] to-[#059669] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📊 面谈后执行追踪</h3>
       </div>

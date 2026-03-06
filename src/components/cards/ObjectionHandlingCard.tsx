@@ -13,7 +13,7 @@ export function ObjectionHandlingCard({ data }: ObjectionHandlingCardProps) {
   const objections = data.objections as Objection[];
 
   return (
-    <div className="bg-white rounded-[20px] border border-amber-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-amber-200 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-amber-500 to-orange-400 px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">💡 异议处理建议 - {customerName}</h3>
       </div>

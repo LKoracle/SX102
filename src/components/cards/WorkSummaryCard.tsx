@@ -15,7 +15,7 @@ export function WorkSummaryCard({ data }: WorkSummaryCardProps) {
   const improvements = data.improvements as string[];
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📊 工作总结</h3>
         <p className="text-white/80 text-[13px]">{period}</p>

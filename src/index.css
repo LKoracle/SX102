@@ -1,35 +1,43 @@
 @import "tailwindcss";
 
-/* ===== 1. 颜色系统和渐变 ===== */
+/* ===== 1. 颜色系统和渐变 (Alice Blue Crystal) ===== */
 :root {
-    /* 主色调渐变 */
-    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-secondary: linear-gradient(135deg, #4A90E2 0%, #667eea 100%);
-    --gradient-accent: linear-gradient(135deg, #FF6B9D 0%, #FE8E78 100%);
-    --gradient-warm: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+    /* 主色调渐变 - 科技蓝 */
+    --gradient-primary: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+    --gradient-secondary: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+    --gradient-accent: linear-gradient(135deg, #D4AF37 0%, #E0C068 100%);
+    --gradient-warm: linear-gradient(135deg, #D4AF37 0%, #ECD48A 100%);
 
-    /* 背景渐变 */
-    --gradient-bg: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
+    /* 背景渐变 - 浅蓝晶透 */
+    --gradient-bg: linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%);
 
-    /* 阴影 */
-    --shadow-card: 0 4px 16px rgba(102, 126, 234, 0.12);
-    --shadow-card-hover: 0 8px 24px rgba(102, 126, 234, 0.18);
+    /* 阴影 - 蓝色调 */
+    --shadow-card: 0 8px 30px rgba(37, 99, 235, 0.06);
+    --shadow-card-hover: 0 10px 40px -10px rgba(37, 99, 235, 0.15);
+
+    /* 品牌色 */
+    --brand-navy: #1E3A8A;
+    --brand-blue: #3B82F6;
+    --brand-deep: #1D4ED8;
+    --gold: #D4AF37;
+    --emerald: #10B981;
+
+    /* 字体 */
+    --font-serif-brand: "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", serif;
 }
 
-/* --- 修改这里：不再强制所有元素 padding 为 0 --- */
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* 页面背景与基础重置 */
 body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background: linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%);
   min-height: 100vh;
-  color: #333;
+  color: #0F172A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -42,34 +50,59 @@ html, body, #root {
   padding: 0;
 }
 
-/* ===== 2. 卡片样式 ===== */
+/* ===== 2. 卡片样式 - 毛玻璃 ===== */
 .card {
-    background: white;
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 24px;
     padding: 20px;
     margin-bottom: 16px;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.12);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 30px 0 rgba(37, 99, 235, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.18);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,1),
+                0 10px 40px -10px rgba(37,99,235,0.15);
 }
 
-/* 紧凑型卡片 */
 .card.compact {
     padding: 16px;
-    border-radius: 16px;
+    border-radius: 20px;
 }
 
-/* ===== Sidebar ===== */
+/* ===== 噪点纹理覆盖层 ===== */
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px;
+}
+
+/* ===== Sidebar - 毛玻璃 ===== */
 .sidebar {
   width: 280px;
   height: 100%;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.80);
   margin-right: 24px;
   display: flex;
   flex-direction: column;
@@ -82,27 +115,19 @@ html, body, #root {
   align-items: center;
   gap: 12px;
   padding: 0 8px 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.08);
 }
 
 .sidebar-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: var(--gradient-primary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  flex-shrink: 0;
+  display: none;
 }
 
 .sidebar-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1e293b;
+  font-family: var(--font-serif-brand);
+  font-size: 20px;
+  font-weight: 900;
+  color: #1E3A8A;
+  letter-spacing: 0.08em;
 }
 
 .sidebar-subtitle {
@@ -134,29 +159,30 @@ html, body, #root {
   gap: 10px;
   width: 100%;
   padding: 10px 8px;
-  border-radius: 10px;
+  border-radius: 14px;
   border: none;
   background: transparent;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.25s ease;
   position: relative;
   text-align: left;
   font-family: inherit;
 }
 
 .sidebar-item:hover {
-  background: #f8f9ff;
+  background: rgba(59, 130, 246, 0.06);
 }
 
 .sidebar-item-active {
-  background: #f0f2ff;
+  background: rgba(59, 130, 246, 0.10);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
 }
 
 .sidebar-icon {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
-  background: #f1f5f9;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +199,7 @@ html, body, #root {
 .sidebar-item-name {
   font-size: 13px;
   font-weight: 500;
-  color: #334155;
+  color: #1E3A8A;
 }
 
 .sidebar-item-timing {
@@ -192,7 +218,7 @@ html, body, #root {
 
 .sidebar-footer {
   padding: 16px 8px 0;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(59, 130, 246, 0.08);
   margin-top: auto;
 }
 
@@ -203,16 +229,19 @@ html, body, #root {
   margin: 2px 0;
 }
 
-/* ===== 移动端框架 ===== */
+/* ===== 移动端框架 - 毛玻璃 ===== */
 .phone-frame {
   width: 350px;
   height: 100%;
-  background: white;
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: 40px;
   padding: 0;
   box-shadow:
-    0 20px 60px rgba(0,0,0,0.3),
-    0 0 0 1px rgba(255,255,255,0.1);
+    0 8px 30px rgba(37, 99, 235, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+  border: 1px solid rgba(255, 255, 255, 0.80);
   position: relative;
   flex-shrink: 0;
   overflow: hidden;
@@ -227,9 +256,10 @@ html, body, #root {
   height: 100%;
   border-radius: 40px;
   overflow: hidden;
-  background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
+  background: linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%);
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 /* ===== Scrollbar ===== */
@@ -239,15 +269,17 @@ html, body, #root {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(102, 126, 234, 0.3);
+  background: rgba(59, 130, 246, 0.25);
   border-radius: 2px;
 }
 
 /* ===== 消息气泡样式 ===== */
 .bot-message .message-bubble {
-    background: white;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(24px);
+    color: #0F172A;
+    box-shadow: 0 8px 30px 0 rgba(37, 99, 235, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.80);
 }
 
 .user-message .message-bubble {
@@ -255,30 +287,59 @@ html, body, #root {
     color: white;
 }
 
-/* 保留你其他的动画代码... */
+/* ===== 核心动画系统 ===== */
+
+/* 入场动画 - 流式加载感 */
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(32px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .animate-slide-in-left {
-  animation: fadeInUp 0.3s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
+/* 呼吸脉冲 */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(102, 126, 234, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); }
 }
 
 .animate-pulse-glow {
   animation: pulse-glow 2s infinite;
 }
 
-/* Progressive item reveal in CollapsibleStepCard */
+/* AI 呼吸感 - 光晕呼吸 */
+@keyframes ai-breathe {
+  0%, 100% {
+    box-shadow: 0 0 16px 4px rgba(59, 130, 246, 0.20);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 28px 8px rgba(59, 130, 246, 0.35);
+    transform: scale(1.06);
+  }
+}
+
+.animate-ai-breathe {
+  animation: ai-breathe 3s ease-in-out infinite;
+}
+
+/* 虚线光轨旋转 */
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-orbit {
+  animation: orbit-spin 10s linear infinite;
+}
+
+/* Progressive item reveal */
 @keyframes stepItemReveal {
   from {
     opacity: 0;
@@ -294,7 +355,7 @@ html, body, #root {
   animation: stepItemReveal 0.4s ease-out forwards;
 }
 
-/* Fade-in for summary */
+/* Fade-in */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -304,6 +365,7 @@ html, body, #root {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+/* Voice pulse/wave */
 @keyframes voice-pulse {
   0% { transform: scale(1); opacity: 0.5; }
   50% { transform: scale(1.2); opacity: 0.3; }
@@ -315,6 +377,49 @@ html, body, #root {
   50% { transform: scaleY(1); }
 }
 
+/* 扫光特效 (Shimmer) */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+.shimmer-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-on-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%) skewX(-15deg);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.shimmer-on-hover:hover::after {
+  animation: shimmer-sweep 0.7s ease-in-out;
+}
+
+/* 金色扫光 */
+.shimmer-gold::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.20) 50%,
+    transparent 100%
+  ) !important;
+}
+
 /* ===== Overview Page ===== */
 .overview-page {
   width: 100%;
@@ -324,43 +429,33 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   padding: 40px 48px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background: linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%);
+  position: relative;
 }
 
 /* Hero */
 .overview-hero {
   text-align: center;
   margin-bottom: 36px;
-  animation: fadeInUp 0.6s ease-out;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .overview-logo {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 22px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: none;
 }
 
 .overview-title {
-  font-size: 36px;
-  font-weight: 800;
-  color: white;
-  margin: 0 0 8px;
-  letter-spacing: 0.02em;
+  font-family: var(--font-serif-brand);
+  font-size: 42px;
+  font-weight: 900;
+  color: #1E3A8A;
+  margin: 0 0 4px;
+  letter-spacing: 0.08em;
 }
 
 .overview-subtitle {
   font-size: 16px;
-  color: rgba(255,255,255,0.85);
+  color: #475569;
   margin: 0;
   font-weight: 400;
 }
@@ -373,22 +468,25 @@ html, body, #root {
   width: 100%;
   max-width: 1100px;
   margin-bottom: 36px;
-  animation: fadeInUp 0.6s ease-out 0.15s both;
+  animation: fadeInUp 0.8s ease-out 0.15s both;
 }
 
 .overview-pillar-card {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  border-radius: 24px;
   padding: 24px 20px;
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.06);
 }
 
 .overview-pillar-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,1),
+              0 10px 40px -10px rgba(37,99,235,0.15);
 }
 
 .overview-pillar-icon {
@@ -400,7 +498,7 @@ html, body, #root {
   justify-content: center;
   font-size: 22px;
   margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
 }
 
 .overview-pillar-title {
@@ -441,14 +539,14 @@ html, body, #root {
   width: 100%;
   max-width: 1100px;
   margin-bottom: 36px;
-  animation: fadeInUp 0.6s ease-out 0.3s both;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .overview-section-title {
   text-align: center;
   font-size: 18px;
   font-weight: 700;
-  color: rgba(255,255,255,0.95);
+  color: #1E3A8A;
   margin: 0 0 20px;
 }
 
@@ -457,9 +555,11 @@ html, body, #root {
   justify-content: center;
   align-items: flex-start;
   gap: 0;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  border-radius: 24px;
   padding: 28px 24px;
 }
 
@@ -480,7 +580,7 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
   position: relative;
   z-index: 1;
 }
@@ -488,13 +588,13 @@ html, body, #root {
 .overview-timeline-label {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255,255,255,0.95);
+  color: #1E3A8A;
   margin-top: 10px;
 }
 
 .overview-timeline-desc {
   font-size: 12px;
-  color: rgba(255,255,255,0.7);
+  color: #475569;
   margin-top: 2px;
 }
 
@@ -504,12 +604,12 @@ html, body, #root {
   left: calc(50% + 22px);
   width: calc(100% - 44px);
   height: 2px;
-  background: rgba(255,255,255,0.3);
+  background: rgba(59, 130, 246, 0.20);
 }
 
 /* Start Button */
 .overview-start-area {
-  animation: fadeInUp 0.6s ease-out 0.45s both;
+  animation: fadeInUp 0.8s ease-out 0.45s both;
   flex-shrink: 0;
 }
 
@@ -520,20 +620,43 @@ html, body, #root {
   padding: 14px 56px;
   font-size: 18px;
   font-weight: 700;
-  color: #764ba2;
-  background: white;
+  color: white;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
   border: none;
-  border-radius: 50px;
+  border-radius: 20px;
   cursor: pointer;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.30);
   transition: transform 0.2s, box-shadow 0.2s;
   letter-spacing: 0.04em;
   font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.overview-start-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.30) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%) skewX(-15deg);
+  pointer-events: none;
 }
 
 .overview-start-btn:hover {
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+  box-shadow: 0 12px 40px rgba(37, 99, 235, 0.40);
+}
+
+.overview-start-btn:hover::after {
+  animation: shimmer-sweep 0.7s ease-in-out;
 }
 
 .overview-start-btn:active {
@@ -549,7 +672,7 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   padding-bottom: 15%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
   animation: fadeIn 0.4s ease-out;
 }
 
@@ -568,4 +691,3 @@ html, body, #root {
   line-height: 1.6;
   animation: fadeInUp 0.5s ease-out 0.25s both;
 }
-

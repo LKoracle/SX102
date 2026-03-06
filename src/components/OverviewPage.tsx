@@ -1,11 +1,5 @@
 import { useEffect, useCallback } from 'react';
 
-const OVERVIEW_NARRATION =
-  '欢迎体验“万能营销助手”。' +
-  '这是一款面向寿险代理人和团队管理者的 AI 经营助手，聚焦“深度可视化、服务被动转主动、对话即交易、闭环式成交”四大能力，' +
-  '通过看得见的客户与保障洞察、自动生成提醒与计划、用自然对话推进业务，并把从盘点到复盘的每一步串成闭环。' +
-  '接下来，我们用七个典型场景，带您快速体验这套能力。';
-
 interface OverviewPageProps {
   onStart: () => void;
   narrate: (text: string, onEnd?: () => void) => void;
@@ -15,8 +9,8 @@ const pillars = [
   {
     icon: '📊',
     title: '深度可视化',
-    color: '#4F6BF6',
-    gradient: 'linear-gradient(135deg, #4F6BF6 0%, #667eea 100%)',
+    color: '#1D4ED8',
+    gradient: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
     points: [
       '客户画像多维分析，精准定位客群',
       '保障缺口可视化，量化需求差距',
@@ -26,8 +20,8 @@ const pillars = [
   {
     icon: '🔔',
     title: '服务被动转主动',
-    color: '#7C3AED',
-    gradient: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+    color: '#D4AF37',
+    gradient: 'linear-gradient(135deg, #D4AF37 0%, #E0C068 100%)',
     points: [
       '每月自动提醒盘点客户，生成经营计划',
       '每周推送行事历，持续跟进不遗漏',
@@ -37,8 +31,8 @@ const pillars = [
   {
     icon: '💬',
     title: '对话即交易',
-    color: '#0EA5E9',
-    gradient: 'linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%)',
+    color: '#2563EB',
+    gradient: 'linear-gradient(135deg, #2563EB 0%, #60A5FA 100%)',
     points: [
       '对话式定制产品方案，自然流畅',
       '语音智能记录拜访，自动生成总结',
@@ -59,16 +53,16 @@ const pillars = [
 ];
 
 const timeline = [
-  { icon: '📋', label: '每月初', desc: '盘点客户', color: '#4F6BF6' },
-  { icon: '📅', label: '每周初', desc: '经营计划', color: '#6366F1' },
-  { icon: '💼', label: '拜访前', desc: '方案准备', color: '#818CF8' },
-  { icon: '📝', label: '拜访后', desc: '智能记录', color: '#7C3AED' },
-  { icon: '👥', label: '当晚', desc: '辅导下属', color: '#A78BFA' },
-  { icon: '📊', label: '每周末', desc: '周工作总结', color: '#0EA5E9' },
+  { icon: '📋', label: '每月初', desc: '盘点客户', color: '#3B82F6' },
+  { icon: '📅', label: '每周初', desc: '经营计划', color: '#2563EB' },
+  { icon: '💼', label: '拜访前', desc: '方案准备', color: '#1D4ED8' },
+  { icon: '📝', label: '拜访后', desc: '智能记录', color: '#D4AF37' },
+  { icon: '👥', label: '当晚', desc: '辅导下属', color: '#D4AF37' },
+  { icon: '📊', label: '每周末', desc: '周工作总结', color: '#2563EB' },
   { icon: '📈', label: '每月末', desc: '月度复盘', color: '#10B981' },
 ];
 
-export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
+export function OverviewPage({ onStart, narrate: _narrate }: OverviewPageProps) {
   useEffect(() => {
     // 不播放overview页面的声音，直接从功能页开始有声音
   }, []);
@@ -83,11 +77,27 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
   );
 
   return (
-    <div className="overview-page" onClick={handleClick}>
+    <div className="overview-page noise-overlay" onClick={handleClick}>
       {/* Hero */}
       <div className="overview-hero">
-        <div className="overview-logo">AI</div>
-        <h1 className="overview-title">万能营销助手</h1>
+        <h1
+          className="overview-title"
+          style={{ fontFamily: '"Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", serif' }}
+        >
+          万能营销
+        </h1>
+        <span
+          style={{
+            display: 'inline-block',
+            fontSize: '14px',
+            color: '#D4AF37',
+            letterSpacing: '0.2em',
+            fontWeight: 600,
+            marginBottom: '8px',
+          }}
+        >
+          PRO
+        </span>
         <p className="overview-subtitle">AI 驱动的智能保险销售全流程解决方案</p>
       </div>
 
@@ -137,7 +147,7 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
 
       {/* Start Button */}
       <div className="overview-start-area">
-        <button className="overview-start-btn" onClick={onStart}>
+        <button className="overview-start-btn shimmer-on-hover" onClick={onStart}>
           开始演示
         </button>
       </div>

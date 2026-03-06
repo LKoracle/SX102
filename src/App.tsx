@@ -77,55 +77,46 @@ const agentModules = [
   },
 ];
 
-const managerModules = [
+const backofficeModules = [
   {
-    id: 'manager-monthly-coaching-list',
-    name: '月初，推荐本月面谈计划',
-    timing: '每月初',
-    icon: '📋',
-    color: '#F59E0B',
-    narration: '尊敬的您，新的一个月开始了。我已经为您分析了团队成员的本月业绩达成情况。这是建议您重点面谈的成员名单，以及自动生成的面谈计划。',
-    category: 'manager',
-  },
-  {
-    id: 'manager-pre-coaching-guidance',
-    name: '面谈前，推荐面谈指引',
-    timing: '面谈前',
-    icon: '💡',
-    color: '#EC4899',
-    narration: '尊敬的您，面谈前的充分准备是提高面谈效果的关键。我为您准备了详细的面谈指引，包括收入分析、客户盘点、准增员盘点和面谈话术建议。',
-    category: 'manager',
-  },
-  {
-    id: 'manager-during-coaching-record',
-    name: '面谈中，实时记录并生成总结',
-    timing: '面谈中',
-    icon: '📱',
-    color: '#8B5CF6',
-    narration: '尊敬的您，在面谈进行中，系统可以帮您实时记录谈话要点。面谈后，自动生成面谈总结和改进建议，让您快速掌握关键信息。',
-    category: 'manager',
-  },
-  {
-    id: 'manager-post-coaching-tracking',
-    name: '面谈后，追踪执行过程',
-    timing: '面谈后',
+    id: 'backoffice-progress-tracking',
+    name: '进度自动追踪',
+    timing: '进度追踪',
     icon: '📊',
-    color: '#10B981',
-    narration: '尊敬的您，面谈后的追踪同样重要。系统为您提供目标达成情况和经营过程追踪看板，帮您及时了解团队成员的执行进展和辅导重点。',
-    category: 'manager',
+    color: '#3B82F6',
+    narration: '郑晓您好，本月代理人业绩追踪已自动更新，让我们来看看各位代理人的进度。',
+    category: 'backoffice',
   },
   {
-    id: 'manager-work-summary',
-    name: '主管工作总结，分析团队业绩',
-    timing: '每天/周/月',
-    icon: '📈',
-    color: '#0891B2',
-    narration: '尊敬的您，每天、每周、每月结束时，系统都会为您生成团队业绩分析、成员活动情况等详细报表，帮助您更好地管理团队。',
-    category: 'manager',
+    id: 'backoffice-problem-diagnosis',
+    name: '问题预警诊断',
+    timing: '问题预警',
+    icon: '🔍',
+    color: '#DC2626',
+    narration: '系统正在为您从多个数据源自动抓取代理人经营数据，进行问题预警诊断。',
+    category: 'backoffice',
+  },
+  {
+    id: 'backoffice-meeting-strategy',
+    name: '面谈策略指引',
+    timing: '面谈策略',
+    icon: '💡',
+    color: '#7C3AED',
+    narration: '根据代理人的问题诊断结果，系统已为您生成面谈策略指引。',
+    category: 'backoffice',
+  },
+  {
+    id: 'backoffice-meeting-assist',
+    name: '面谈全程辅助',
+    timing: '面谈辅助',
+    icon: '🎙️',
+    color: '#059669',
+    narration: '面谈全程辅助已准备就绪，系统将为您实时录音、转写并生成面谈总结。',
+    category: 'backoffice',
   },
 ];
 
-const modulesMeta = [...agentModules, ...managerModules];
+const modulesMeta = [...agentModules, ...backofficeModules];
 
 function App() {
   const chat = useChat();
@@ -197,7 +188,7 @@ function App() {
 
   const handleStartDemo = useCallback(() => {
     setShowOverview(false);
-    startModuleWithNarration(managerModules[0].id);
+    startModuleWithNarration(backofficeModules[0].id);
   }, [startModuleWithNarration]);
 
   const handleModuleClick = useCallback(
@@ -242,20 +233,20 @@ function App() {
   }
 
   return (
-    <div className="h-full flex items-center justify-center py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' }}>
+    <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
       {/* Left Sidebar Navigation */}
       <div className="sidebar">
         <div className="sidebar-header">
-          <div className="sidebar-logo">AI</div>
           <div>
-            <h2 className="sidebar-title">万能营销助手</h2>
+            <h2 className="sidebar-title">万能营销</h2>
+            <span style={{ fontSize: '11px', color: '#D4AF37', letterSpacing: '0.15em', fontWeight: 600 }}>PRO</span>
           </div>
         </div>
 
-        <div className="sidebar-label">外勤主管场景</div>
+        <div className="sidebar-label">内勤场景</div>
 
         <nav className="sidebar-nav">
-          {managerModules.map((mod) => (
+          {backofficeModules.map((mod) => (
             <button
               key={mod.id}
               className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
@@ -312,7 +303,7 @@ function App() {
               {/* Chat messages area */}
               <div
                 ref={chatContainerRef}
-                className="flex-1 overflow-y-auto pt-4 pb-4"
+                className="flex-1 overflow-y-auto pt-4 pb-28"
                 style={{ WebkitOverflowScrolling: 'touch' }}
               >
                 {chat.messages.map((msg) => (

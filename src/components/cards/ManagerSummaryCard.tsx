@@ -39,7 +39,7 @@ export function ManagerSummaryCard({ data }: ManagerSummaryCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-[#0891B2] to-[#0EA5E9] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📈 主管工作总结</h3>
       </div>

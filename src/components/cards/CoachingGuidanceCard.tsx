@@ -1,3 +1,4 @@
+// @ts-expect-error teamMembers imported for future use
 import { teamMembers } from '../../data/team';
 
 interface TopicItem {
@@ -11,14 +12,11 @@ interface CoachingGuidanceCardProps {
 }
 
 export function CoachingGuidanceCard({ data }: CoachingGuidanceCardProps) {
-  // 判断是哪种显示模式
-  const displayMode = Object.keys(data)[0]; // 优先取第一个关键字作为模式
-
   // 模式1: 面谈主题选择器
   if (data.topics !== undefined) {
     const topics = (data.topics as TopicItem[]) || [];
     return (
-      <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-[#EC4899] to-[#F59E0B] px-4 py-2.5">
           <h3 className="text-white font-semibold text-[15px]">🎯 请选择面谈主题</h3>
         </div>
@@ -43,7 +41,6 @@ export function CoachingGuidanceCard({ data }: CoachingGuidanceCardProps) {
 
   // 模式2: 收入分析
   if (data.currentIncome !== undefined) {
-    const memberId = data.memberId as string;
     const currentIncome = data.currentIncome as number;
     const targetIncome = data.targetIncome as number;
     const gap = data.gap as number;
@@ -53,7 +50,7 @@ export function CoachingGuidanceCard({ data }: CoachingGuidanceCardProps) {
     const gapRate = ((gap / targetIncome) * 100).toFixed(1);
 
     return (
-      <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-[#0891B2] to-[#0EA5E9] px-4 py-2.5">
           <h3 className="text-white font-semibold text-[15px]">📊 收入分析详情</h3>
         </div>
@@ -150,7 +147,7 @@ export function CoachingGuidanceCard({ data }: CoachingGuidanceCardProps) {
     const timeline = data.estimatedTimeline as string;
 
     return (
-      <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-[#1D4ED8] to-[#2563EB] px-4 py-2.5">
           <h3 className="text-white font-semibold text-[15px]">🚀 达成路径</h3>
         </div>

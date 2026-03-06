@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Message, ChatState, QuickReply } from '../types';
-import { scenarios, managerScenarios } from '../data/scenarios';
+import { scenarios, backofficeScenarios } from '../data/scenarios';
 
 let messageIdCounter = 0;
 function generateId() {
@@ -187,7 +187,7 @@ export function useChat() {
                 currentStep: 0,
               }));
               setQuickReplies(
-                managerScenarios.map((s) => ({
+                backofficeScenarios.map((s) => ({
                   label: `${s.icon} ${s.name}`,
                   value: s.id,
                 }))
@@ -245,7 +245,7 @@ export function useChat() {
         });
         setTyping(false);
         setQuickReplies(
-          managerScenarios.map((s) => ({
+          backofficeScenarios.map((s) => ({
             label: `${s.icon} ${s.name}`,
             value: s.id,
           }))
@@ -289,15 +289,15 @@ export function useChat() {
       role: 'ai',
       type: 'text',
       content:
-        '您好，张经理！我是您的AI智能助理\n\n今天是2025年2月14日，我已经为您准备好了今天的工作安排。\n\n📌 今日待办：\n• 10:00 拜访王建国（教育金方案）\n• 14:00 团队周例会\n• 16:00 电话跟进李美琳\n\n请选择您需要的服务：',
-      speechText: '张经理您好！今天有三项待办，请选择需要的服务。',
+        '郑晓您好！我是您的AI智能助理\n\n本月代理人业绩追踪已自动更新，以下是您管辖的代理人概览。\n\n📌 重点关注：\n• 李平安 FYC达成率持续下滑（38%）\n• 王丽华 活动量偏低需关注\n\n请选择您需要的服务：',
+      speechText: '郑晓您好！本月代理人业绩已更新，李平安达成率持续下滑，建议重点关注。',
       timestamp: Date.now(),
     };
 
     setState((prev) => ({
       ...prev,
       messages: [welcomeMsg],
-      quickReplies: managerScenarios.map((s) => ({
+      quickReplies: backofficeScenarios.map((s) => ({
         label: `${s.icon} ${s.name}`,
         value: s.id,
       })),

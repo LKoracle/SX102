@@ -15,7 +15,7 @@ export function NearbyCustomersCard({ data }: NearbyCustomersCardProps) {
   const customers = data.customers as NearbyCustomer[];
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📍 附近客户推荐</h3>
       </div>

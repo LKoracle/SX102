@@ -28,7 +28,7 @@ export function CoachingSpeakingPointCard({ data }: CoachingSpeakingPointCardPro
   };
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">💬 {topic}面谈话术</h3>
       </div>

@@ -16,8 +16,8 @@ export function MonthlyPlanCard({ data }: MonthlyPlanCardProps) {
   const upgradeTarget = data.upgradeTarget as string | undefined;
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-4 py-2.5">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📊 本月经营计划总览</h3>
       </div>
       <div className="p-3 space-y-3">
@@ -53,7 +53,7 @@ export function MonthlyPlanCard({ data }: MonthlyPlanCardProps) {
           <div className="bg-gradient-to-r from-[#f8f0ff] to-[#f0f4ff] rounded-xl p-2.5 flex items-start gap-2">
             <span className="text-[16px] leading-none mt-0.5">🎯</span>
             <div>
-              <p className="text-[13px] font-medium text-[#764ba2]">客户升温目标</p>
+              <p className="text-[13px] font-medium text-[#1D4ED8]">客户升温目标</p>
               <p className="text-[12px] text-[#666] mt-0.5">{upgradeTarget}</p>
             </div>
           </div>

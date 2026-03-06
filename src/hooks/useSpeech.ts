@@ -30,7 +30,8 @@ const getSpeechRecognition = (): (new () => any) | null => {
  * Prefers Azure neural male voices exposed by Chrome/Edge.
  * Falls back to any zh voice that is not the best female voice.
  */
-function pickMaleZhVoice(): SpeechSynthesisVoice | null {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function pickMaleZhVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
   // Prefer Mandarin (zh-CN); only fall back to other zh variants if no CN voice exists
   const allZh = voices.filter((v) => v.lang.startsWith('zh'));

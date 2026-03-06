@@ -31,6 +31,18 @@ import { CoachingSpeakingPointCard } from './cards/CoachingSpeakingPointCard';
 import { CoachingRecordCard } from './cards/CoachingRecordCard';
 import { CoachingTrackingCard } from './cards/CoachingTrackingCard';
 import { ManagerSummaryCard } from './cards/ManagerSummaryCard';
+import { ProgressListCard } from './cards/ProgressListCard';
+import { AgentReportCard } from './cards/AgentReportCard';
+import { AICallCard } from './cards/AICallCard';
+import { DataCaptureCard } from './cards/DataCaptureCard';
+import { RiskRadarCard } from './cards/RiskRadarCard';
+import { RootCauseCard } from './cards/RootCauseCard';
+import { MeetingTargetCard } from './cards/MeetingTargetCard';
+import { MeetingScriptCard } from './cards/MeetingScriptCard';
+import { ResponseStrategyCard } from './cards/ResponseStrategyCard';
+import { RecordingCard } from './cards/RecordingCard';
+import { MeetingResultCard } from './cards/MeetingResultCard';
+import { PlanDeliveryCard } from './cards/PlanDeliveryCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -76,11 +88,11 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
       const rows = tableLines.slice(1);
 
       tableHtml = `<table class="w-full border-collapse my-2 text-[14px]"><thead><tr>${headers
-        .map((h) => `<th class="px-2 py-1.5 bg-[#f8f9ff] border border-[#e0e4ff]/60 text-left font-medium text-[#667eea]">${h}</th>`)
+        .map((h) => `<th class="px-2 py-1.5 bg-blue-50 border border-[#BFDBFE]/60 text-left font-medium text-[#1D4ED8]">${h}</th>`)
         .join('')}</tr></thead><tbody>${rows
         .map((row) => {
           const cells = row.split('|').filter(Boolean).map((c) => c.trim());
-          return `<tr>${cells.map((c) => `<td class="px-2 py-1.5 border border-[#e0e4ff]/60">${c}</td>`).join('')}</tr>`;
+          return `<tr>${cells.map((c) => `<td class="px-2 py-1.5 border border-[#BFDBFE]/60">${c}</td>`).join('')}</tr>`;
         })
         .join('')}</tbody></table>`;
     }
@@ -90,7 +102,7 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
     <div className="relative group">
       {beforeTable && (
         <div
-          className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#333]"
+          className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#0F172A]"
           dangerouslySetInnerHTML={{ __html: renderMarkdown(beforeTable) }}
         />
       )}
@@ -99,17 +111,21 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
       )}
       {afterTable && (
         <div
-          className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#333]"
+          className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#0F172A]"
           dangerouslySetInnerHTML={{ __html: renderMarkdown(afterTable) }}
         />
       )}
       {onSpeak && (
         <button
           onClick={() => onSpeak(content)}
-          className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#f8f9ff] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           title="朗读"
+          style={{
+            background: 'rgba(255,255,255,0.70)',
+            border: '1px solid rgba(255,255,255,0.80)',
+          }}
         >
-          <svg className="w-3 h-3 text-[#667eea]" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 text-[#3B82F6]" fill="currentColor" viewBox="0 0 24 24">
             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
           </svg>
         </button>
@@ -195,6 +211,30 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <CoachingTrackingCard data={message.data as Record<string, unknown>} />;
       case 'manager-summary':
         return <ManagerSummaryCard data={message.data as Record<string, unknown>} />;
+      case 'progress-list':
+        return <ProgressListCard data={message.data as Record<string, unknown>} />;
+      case 'agent-report':
+        return <AgentReportCard data={message.data as Record<string, unknown>} />;
+      case 'ai-call':
+        return <AICallCard data={message.data as Record<string, unknown>} />;
+      case 'data-capture':
+        return <DataCaptureCard data={message.data as Record<string, unknown>} />;
+      case 'risk-radar':
+        return <RiskRadarCard data={message.data as Record<string, unknown>} />;
+      case 'root-cause':
+        return <RootCauseCard data={message.data as Record<string, unknown>} />;
+      case 'meeting-target':
+        return <MeetingTargetCard data={message.data as Record<string, unknown>} />;
+      case 'meeting-script':
+        return <MeetingScriptCard data={message.data as Record<string, unknown>} />;
+      case 'response-strategy':
+        return <ResponseStrategyCard data={message.data as Record<string, unknown>} />;
+      case 'recording':
+        return <RecordingCard data={message.data as Record<string, unknown>} />;
+      case 'meeting-result':
+        return <MeetingResultCard data={message.data as Record<string, unknown>} />;
+      case 'plan-delivery':
+        return <PlanDeliveryCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }
@@ -206,7 +246,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         <div
           className="max-w-[85%] px-4 py-2.5 rounded-[18px] text-white"
           style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
           }}
         >
           <p className="text-[15px] leading-[1.5]">{message.content}</p>
@@ -218,7 +258,16 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   return (
     <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {message.type === 'text' ? (
-        <div className="max-w-[85%] bg-white rounded-[18px] px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+        <div
+          className="max-w-[85%] rounded-[18px] px-4 py-3"
+          style={{
+            background: 'rgba(255,255,255,0.70)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            boxShadow: '0 8px 30px 0 rgba(37,99,235,0.06)',
+            border: '1px solid rgba(255,255,255,0.80)',
+          }}
+        >
           {renderContent()}
         </div>
       ) : (

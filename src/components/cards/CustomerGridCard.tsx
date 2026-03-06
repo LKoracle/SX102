@@ -11,7 +11,7 @@ const heatColors: Record<string, string> = {
   '高温高价值': '#7c3aed',
   '高温中价值': '#8b5cf6',
   '高温低价值': '#a78bfa',
-  '中温高价值': '#667eea',
+  '中温高价值': '#3B82F6',
   '中温中价值': '#818cf8',
   '中温低价值': '#a5b4fc',
   '低温高价值': '#6366f1',
@@ -38,7 +38,7 @@ export function CustomerGridCard({ data }: CustomerGridCardProps) {
   const colLabels = ['高价值', '中价值', '低价值'];
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">🔲 客户经营九宫格</h3>
       </div>
@@ -60,7 +60,7 @@ export function CustomerGridCard({ data }: CustomerGridCardProps) {
               </div>
               {row.map((cell, ci) => {
                 const key = cell.label;
-                const color = heatColors[key] || '#667eea';
+                const color = heatColors[key] || '#3B82F6';
                 const bg = bgColors[key] || '#f0f4ff';
                 return (
                   <div

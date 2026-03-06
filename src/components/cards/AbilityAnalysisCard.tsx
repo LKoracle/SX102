@@ -25,7 +25,7 @@ export function AbilityAnalysisCard({ data }: AbilityAnalysisCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-[20px] border border-purple-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-[24px] border border-purple-200 shadow-sm overflow-hidden">
       <div className="bg-gradient-to-r from-purple-500 to-violet-400 px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📊 {memberName} - 画像与能力分析</h3>
       </div>

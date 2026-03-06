@@ -32,8 +32,8 @@ export function CoachingScheduleCard({ data }: CoachingScheduleCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-4 py-2.5">
+    <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📅 整月面谈日程表</h3>
       </div>
 
@@ -45,7 +45,7 @@ export function CoachingScheduleCard({ data }: CoachingScheduleCardProps) {
               <div key={index} className="relative">
                 {/* 时间线竖线 */}
                 {index < sortedSchedule.length - 1 && (
-                  <div className="absolute left-[15px] top-[38px] h-8 w-0.5 bg-gradient-to-b from-[#667eea]/30 to-transparent"></div>
+                  <div className="absolute left-[15px] top-[38px] h-8 w-0.5 bg-gradient-to-b from-[#3B82F6]/30 to-transparent"></div>
                 )}
 
                 {/* 日程项目 */}
@@ -55,7 +55,7 @@ export function CoachingScheduleCard({ data }: CoachingScheduleCardProps) {
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
                       style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
                       }}
                     >
                       {getMemberInitial(item.member)}
@@ -66,12 +66,12 @@ export function CoachingScheduleCard({ data }: CoachingScheduleCardProps) {
                   <div className="flex-1 bg-gradient-to-r from-[#f8f9ff] to-[#f0f4ff] rounded-[12px] p-2.5">
                     <div className="flex items-center justify-between mb-1">
                       <p className="text-[13px] font-semibold text-[#333]">{formatDate(item.date)}</p>
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-[#DDD6FE] text-[#667eea] font-medium">
+                      <span className="px-2 py-0.5 rounded text-[10px] bg-[#DDD6FE] text-[#3B82F6] font-medium">
                         {item.topic}
                       </span>
                     </div>
                     <p className="text-[12px] text-[#666]">
-                      与 <span className="font-semibold text-[#667eea]">
+                      与 <span className="font-semibold text-[#3B82F6]">
                         {['李明', '小林', '小周', '小吴', '小黄', '小杨', '新员'][
                           parseInt(item.member.replace('t', '')) - 1
                         ]}
@@ -89,19 +89,19 @@ export function CoachingScheduleCard({ data }: CoachingScheduleCardProps) {
         {/* 统计汇总 */}
         {sortedSchedule.length > 0 && (
           <div className="bg-gradient-to-r from-[#f0f9ff] to-[#f8f4ff] rounded-[14px] p-2.5 space-y-1.5">
-            <p className="text-[12px] font-medium text-[#667eea]">📊 本月日程统计</p>
+            <p className="text-[12px] font-medium text-[#3B82F6]">📊 本月日程统计</p>
             <div className="grid grid-cols-3 gap-2 text-[11px]">
               <div>
                 <p className="text-[#666]">面谈场次</p>
-                <p className="font-bold text-[14px] text-[#667eea]">{sortedSchedule.length}</p>
+                <p className="font-bold text-[14px] text-[#3B82F6]">{sortedSchedule.length}</p>
               </div>
               <div>
                 <p className="text-[#666]">总耗时</p>
-                <p className="font-bold text-[14px] text-[#667eea]">{sortedSchedule.length * 30}分钟</p>
+                <p className="font-bold text-[14px] text-[#3B82F6]">{sortedSchedule.length * 30}分钟</p>
               </div>
               <div>
                 <p className="text-[#666]">参与人数</p>
-                <p className="font-bold text-[14px] text-[#667eea]">{new Set(sortedSchedule.map((s) => s.member)).size}</p>
+                <p className="font-bold text-[14px] text-[#3B82F6]">{new Set(sortedSchedule.map((s) => s.member)).size}</p>
               </div>
             </div>
           </div>
