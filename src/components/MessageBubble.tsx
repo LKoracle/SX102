@@ -20,6 +20,16 @@ import { CaseSearchCard } from './cards/CaseSearchCard';
 import { CaseResultCard } from './cards/CaseResultCard';
 import { CaseInterviewCard } from './cards/CaseInterviewCard';
 import { CaseVideoCard } from './cards/CaseVideoCard';
+import { FieldMomentsPostCard } from './cards/FieldMomentsPostCard';
+import { FieldAIAnalysisCard } from './cards/FieldAIAnalysisCard';
+import { FieldReplyPreviewCard } from './cards/FieldReplyPreviewCard';
+import { FieldCustomerProfileCard } from './cards/FieldCustomerProfileCard';
+import { FieldNeedsAnalysisCard } from './cards/FieldNeedsAnalysisCard';
+import { FieldSalesScriptCard } from './cards/FieldSalesScriptCard';
+import { FieldGapDiagnosisCard } from './cards/FieldGapDiagnosisCard';
+import { FieldProductPlansCard } from './cards/FieldProductPlansCard';
+import { FieldCommissionCard } from './cards/FieldCommissionCard';
+import { FieldMaterialsCard } from './cards/FieldMaterialsCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -158,6 +168,26 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <CaseInterviewCard data={message.data as Record<string, unknown>} />;
       case 'case-video':
         return <CaseVideoCard data={message.data as Record<string, unknown>} />;
+      case 'field-moments-post':
+        return <FieldMomentsPostCard data={message.data as Record<string, unknown>} />;
+      case 'field-ai-analysis':
+        return <FieldAIAnalysisCard data={message.data as Record<string, unknown>} />;
+      case 'field-reply-preview':
+        return <FieldReplyPreviewCard data={message.data as Record<string, unknown>} />;
+      case 'field-customer-profile':
+        return <FieldCustomerProfileCard data={message.data as Record<string, unknown>} />;
+      case 'field-needs-analysis':
+        return <FieldNeedsAnalysisCard data={message.data as Record<string, unknown>} />;
+      case 'field-sales-script':
+        return <FieldSalesScriptCard data={message.data as Record<string, unknown>} />;
+      case 'field-gap-diagnosis':
+        return <FieldGapDiagnosisCard data={message.data as Record<string, unknown>} />;
+      case 'field-product-plans':
+        return <FieldProductPlansCard data={message.data as Record<string, unknown>} />;
+      case 'field-commission':
+        return <FieldCommissionCard data={message.data as Record<string, unknown>} />;
+      case 'field-materials':
+        return <FieldMaterialsCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

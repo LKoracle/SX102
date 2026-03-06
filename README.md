@@ -1,272 +1,300 @@
-# 万能营销助手 Demo（保险销售 AI 聊天应用）
+# 万能营销 Pro — 内勤 & 外勤智能管理 Demo
 
 ## 一、项目概览
 
-本项目是一个面向寿险代理人/团队主管/内勤管理人员的 **AI 营销助手 Demo**，通过对话式界面与大屏手机 Mock UI，模拟了两大核心使用场景：
+面向寿险管理人员的 **AI 智能助手 Demo**，以对话式界面 + 手机 Mock UI，演示两大业务场景：
 
-- **外勤代理人场景**：从 **月初盘点 → 周经营 → 单次拜访前后 → 团队辅导 → 周末总结 → 月末复盘** 的完整经营闭环
-- **内勤管理场景**：面向内勤管理人员（如郑晓），实现对代理人（如李平安）的 **进度追踪 → 问题诊断 → 面谈策略 → 面谈辅助** 全流程数字化管理
+- **内勤场景**：内勤管理人员（郑晓）如何借助 AI 完成代理人管理、报告制作、营销素材生成、典范案例挖掘等日常工作
+- **外勤场景**：外勤代理人（小李）如何借助 AI 完成客户获取、智能回复、需求分析、产品匹配、方案生成等销售全流程
 
-整体定位为「万能营销 PRO」的前端交互层 Demo，用于演示：
+**八大内勤场景**覆盖完整管理闭环：
 
-- **业务侧**：保险代理人的七大经营场景 + 内勤管理人员的四大管理场景如何被 AI 驱动自动化、可视化和闭环管理
-- **产品侧**：以聊天为主轴，搭配各类 **卡片式可视化组件**（客户卡片、保障缺口分析、进度追踪、风险雷达、面谈脚本等）
-- **技术侧**：基于 **React + TypeScript + Vite** 与浏览器 **Web Speech API** 的语音输入/播报能力
+```
+进度追踪 → 问题诊断 → 面谈策略 → 面谈辅助 → 报告制作 → 营销素材 → 案例挖掘 → 案例归纳
+```
 
-> 注意：本项目为前端演示应用，不包含真实后端接口调用和大模型在线推理，所有数据与话术均为本地模拟。
+**八大外勤场景**覆盖完整销售闭环：
 
----
+```
+内容定制 → 智能回复 → 兴趣洞察 → 话术推荐 → 缺口诊断 → 产品匹配 → 收益测算 → 素材生成
+```
 
-## 二、主要功能与业务场景
+通过侧边栏右侧隐藏的切换标签，可在内勤/外勤两种模式之间自由切换。
 
-### 1. 入口概览页 `OverviewPage`
-
-首次进入时展示的概览页，用于给决策者/观众讲清楚「万能营销助手」的能力框架：
-
-- **四大核心能力**（深度可视化 / 服务被动转主动 / 对话即交易 / 闭环式成交）
-- **完整时间线**：从月初盘点 → 每周计划 → 单日拜访前后 → 当晚辅导 → 周末总结 → 月末复盘
-- 点击「开始演示」后进入主聊天演示界面
-
-对应代码：`src/components/OverviewPage.tsx`
-
-### 2. 聊天主界面 `App`
-
-`App.tsx` 负责整体页面布局与场景切换：
-
-- 左侧为 **内勤场景导航栏**（4 个模块）
-  - 进度自动追踪、问题预警诊断、面谈策略指引、面谈全程辅助
-  - 点击模块会调用 `startModuleWithNarration`：先播报场景旁白，再重置并启动对应场景对话
-- 中间为 **手机框 Chat Mock**：
-  - 顶部 `Header` 展示助手状态 + 语音开关
-  - 中部为消息气泡区 `MessageBubble` 列表
-  - 底部是输入区 `InputBar`，支持文本输入、语音录入按钮
-  - 下方可动态出现 `QuickReplies` 快捷选项
-- 通过 `useChat` 管理对话状态，通过 `useSpeech` 管理语音识别/播报
-
-对应代码：`src/App.tsx`
-
-### 3. 内勤管理四大场景
-
-#### 场景一：进度自动追踪 `backoffice-progress-tracking`
-- AI 自动更新代理人业绩追踪，展示进度列表卡片（李平安/张明辉/王丽华）
-- 点击查看李平安详情，展示 6 个月 FYC 趋势报告（85%→38% 持续下滑）
-- 支持 AI 主管外呼，模拟电话沟通界面
-
-对应卡片：`ProgressListCard`、`AgentReportCard`、`AICallCard`
-
-#### 场景二：问题预警诊断 `backoffice-problem-diagnosis`
-- 从 CRM/通话/考勤/保单等多数据源自动抓取数据（动画展示）
-- 异常雷达展示 5 项风险（2 高危/2 中危/1 低危）
-- 推导根因链：技能不足 → 信心下降 → 行为退缩
-
-对应卡片：`DataCaptureCard`、`RiskRadarCard`、`RootCauseCard`
-
-#### 场景三：面谈策略指引 `backoffice-meeting-strategy`
-- 生成 5 项面谈核心目标（带优先级和进度勾选）
-- 提供 5 段可折叠面谈话术脚本（开场白/数据对齐/原因探讨/行动计划/收尾激励）
-- 3 种人格类型应对策略（防御型/自责型/口头答应型），支持 Tab 切换
-
-对应卡片：`MeetingTargetCard`、`MeetingScriptCard`、`ResponseStrategyCard`
-
-#### 场景四：面谈全程辅助 `backoffice-meeting-assist`
-- 实时录音界面，含波形动画和实时语音转文字
-- 面谈结束后自动生成结果摘要（关键发现 + 识别问题 + 改善行动）
-- 生成 30 天改善计划（4 周详细行动安排），确认后下发给代理人
-
-对应卡片：`RecordingCard`、`MeetingResultCard`、`PlanDeliveryCard`
-
-### 4. 外勤代理人七大场景
-
-外勤代理人场景数据仍保留在 `scenarios.ts` 中，包含：
-
-| 场景 | ID | 说明 |
-|------|----|------|
-| 每月初盘点客户 | `monthly-review` | AI 主动播报客户盘点与经营计划 |
-| 每周初经营计划 | `weekly-plan` | 推送本周行事历与拜访计划 |
-| 客户拜访前 | `pre-visit` | 自动分析需求、检视保障、推荐方案 |
-| 客户拜访后 | `post-visit` | 语音记录拜访、生成总结、推荐附近客户 |
-| 辅导下属 | `team-coaching` | 团队看板、成员分析、辅助面谈 |
-| 每周末工作总结 | `weekly-summary` | 周报生成、薄弱环节分析、学习推荐 |
-| 每月末工作复盘 | `monthly-retrospective` | 月度复盘、技能评估、下月计划 |
-
-### 5. 对话与场景引擎 `useChat` + `scenarios.ts`
-
-对话完全由前端驱动，不依赖真实后端：
-
-- `src/hooks/useChat.ts`
-  - 管理 `ChatState`：消息列表、当前场景 ID、当前步骤索引、是否正在输入、当前快捷选项等
-  - `initChat()`：进入聊天主界面时生成首条欢迎语（内勤角色郑晓），并给出场景快捷入口
-  - `startScenario/resetAndStartScenario`：根据场景 ID 启动或重置并启动整个场景流程
-  - `playScenarioStep`：按 **步骤** 展示一系列 AI 消息（支持 delay 动画）并在末尾展示 Quick Reply
-  - `handleQuickReply`：处理「返回菜单」「进入下一步」等快捷选项
-  - `handleUserMessage`：处理用户自由输入，根据文案中是否提到某个场景名字/描述来匹配并启动场景
-- `src/data/scenarios.ts`
-  - 用数据驱动的方式定义了 7 个代理人场景 + 4 个内勤场景的完整对话脚本
-  - 导出 `backofficeScenarios`（侧边栏使用的 4 个内勤场景）
-  - 每条 `aiMessages` 可指定：
-    - `type`: 消息类型（普通文本 / 各种卡片组件）
-    - `content`: 文本内容
-    - `speechText`: 可选的 TTS 播报文本
-    - `data`: 传给卡片组件的结构化数据
-    - `delay`: 与上一条消息的时间间隔，用于模拟 AI 分段输出
-
-通过这种设计，**所有业务脚本都集中在 `data/scenarios.ts`，前端渲染层则通过 `MessageContentType` + 卡片组件解耦展示逻辑**，便于后续按业务迭代场景内容。
-
-### 6. 语音能力 `useSpeech`
-
-`src/hooks/useSpeech.ts` 基于浏览器 `Web Speech API` 封装了中英文语音功能，主要包括：
-
-- **语音识别（STT）**：
-  - 封装 `SpeechRecognition / webkitSpeechRecognition`
-  - 自动去掉中文标点、处理静默超时（1 秒无声自动停止并触发消息发送）
-- **语音播报（TTS）**：
-  - 选取合适的中文女声/男声（优先 Azure Neural 等高质量声线）
-  - `speak`：适合对话内容，按句子切 chunk，队列播报
-  - `enqueueSpeak`：不打断当前播报，追加排队
-  - `narrate`：用于概览页/场景过场的旁白，采用男声、单条长句，带 Chrome 保活处理
-  - `stopSpeaking`：停止当前所有播报并清理状态
+> 本项目为纯前端演示，不依赖后端接口或大模型在线推理，所有数据与对话脚本均为本地模拟。
 
 ---
 
-## 三、UI 与组件体系
+## 二、内勤八大业务场景
 
-### 1. 视觉风格
+### 场景一：进度自动追踪
 
-采用 **Alice Blue Crystal** 设计主题：
+AI 自动更新代理人业绩，展示进度列表（红/黄/绿状态），可下钻查看李平安 6 个月 FYC 趋势报告（85% → 38%），支持 AI 主管外呼提醒。
 
-- 主色调：蓝色系（`#3B82F6` / `#1D4ED8`），搭配金色品牌色（`#D4AF37`）
-- 玻璃态（Glassmorphism）效果：`backdrop-blur`、半透明白色背景、微噪点纹理
-- 品牌字体：衬线体（Georgia/Times）用于标题，无衬线体用于正文
-- 圆角卡片：`rounded-[24px]`，渐变色头部，最大高度 `450px` 可滚动
+**卡片组件**：`ProgressListCard` · `AgentReportCard` · `AICallCard`
 
-### 2. 消息与卡片类型定义
+### 场景二：问题预警诊断
 
-在 `src/types/index.ts` 中定义了统一的数据结构：
+从 CRM/通话/考勤/保单四大数据源自动抓取（动画展示），生成异常雷达（5 项风险，2 高危/2 中危/1 低危），推导根因链：技能不足 → 信心下降 → 行为退缩。
 
-- `MessageContentType`：列举所有消息类型，包括：
-  - 基础类型：`text`、`customer-card`、`visit-summary`、`schedule-card` 等
-  - 内勤卡片：`progress-list`、`agent-report`、`ai-call`、`data-capture`、`risk-radar`、`root-cause`、`meeting-target`、`meeting-script`、`response-strategy`、`recording`、`meeting-result`、`plan-delivery`
-- `Message`：一条对话消息的统一结构（角色、类型、文本、可选语音文本、结构化数据、时间戳）
-- `Scenario` / `ScenarioStep`：业务场景及其多步骤的消息与快捷选项
+**卡片组件**：`DataCaptureCard` · `RiskRadarCard` · `RootCauseCard`
 
-### 3. 卡片组件
+### 场景三：面谈策略指引
 
-卡片组件位于 `src/components/cards/` 下，按业务含义分类：
+生成 5 项面谈核心目标（带优先级），提供 5 段可折叠话术脚本（开场白/数据对齐/原因探讨/行动计划/收尾激励），以及 3 种人格类型应对策略（防御型/自责型/口头答应型）Tab 切换。
 
-**外勤代理人卡片：**
-- `CustomerCard`：客户画像与标签
-- `MonthlyPlanCard`：月度经营计划进度
-- `WorkSummaryCard`、`VisitSummaryCard`：周/月工作总结、拜访总结
-- `TeamDashboard`、`AbilityAnalysisCard`：团队看板、能力分析
+**卡片组件**：`MeetingTargetCard` · `MeetingScriptCard` · `ResponseStrategyCard`
 
-**内勤管理卡片（新增 12 个）：**
-- `ProgressListCard`：代理人进度列表（红/黄/绿状态）
-- `AgentReportCard`：代理人详细报告（6 月趋势图 + 建议）
-- `AICallCard`：AI 主管外呼界面（拨号/通话/结束状态）
-- `DataCaptureCard`：多数据源抓取动画（4 源进度条）
-- `RiskRadarCard`：异常雷达（5 项风险，高/中/低危）
-- `RootCauseCard`：根因链分析（3 因子链式展示）
-- `MeetingTargetCard`：面谈目标清单（5 项可勾选）
-- `MeetingScriptCard`：面谈话术脚本（5 段可折叠）
-- `ResponseStrategyCard`：应对策略（3 种人格 Tab 切换）
-- `RecordingCard`：录音界面（计时器 + 波形 + 实时转写）
-- `MeetingResultCard`：面谈结果摘要（关键发现 + 问题识别）
-- `PlanDeliveryCard`：计划下发确认（4 周行动表 + 确认按钮）
+### 场景四：面谈全程辅助
 
-所有卡片通过 `Message.data` 接收结构化数据，可以方便地由后端/大模型生成数据后前端渲染。
+实时录音界面（波形动画 + 语音转文字），面谈结束自动生成结果摘要（关键发现 + 问题识别），生成 30 天改善计划（4 周详细安排），确认后下发给代理人。
 
----
+**卡片组件**：`RecordingCard` · `MeetingResultCard` · `PlanDeliveryCard`
 
-## 四、项目结构（简要）
+### 场景五：报告一键制作
 
-主要目录说明：
+上传图片/PPT/邮件或授权寿险业务系统数据，AI 自动挖掘关联分析，生成包含 **NBEV、增员率、3 转、13 留** 四项关键指标的报告。支持 **三种展示样式切换**（卡片/图表/表格），日期切换到下周时数据自动更新。
 
-- `src/main.tsx`：应用入口，挂载 `App` 组件
-- `src/App.tsx`：主界面布局 + 内勤场景导航 + Chat 容器
-- `src/components/`
-  - `Header.tsx`：顶部头像与状态栏
-  - `MessageBubble.tsx`：根据 `MessageContentType` 渲染普通文本或各类卡片
-  - `QuickReplies.tsx` / `TypingIndicator.tsx` / `InputBar.tsx`：对话交互基础组件
-  - `OverviewPage.tsx`：演示前的整体能力概览页
-  - `cards/`：各类业务卡片组件（外勤 + 内勤共 30+ 个组件）
-- `src/hooks/`
-  - `useChat.ts`：对话/场景状态机
-  - `useSpeech.ts`：语音识别与播报封装
-- `src/data/`
-  - `scenarios.ts`：外勤 7 场景 + 内勤 4 场景的完整对话脚本与卡片数据
-  - `customers.ts` / `products.ts` / `team.ts`：客户、产品、团队等静态模拟数据
-- `src/index.css`：整体样式（glassmorphism、动画、侧边栏、手机 Mock 布局）
+**卡片组件**：`ReportUploadCard` · `ReportPreviewCard`
+
+### 场景六：营销素材生成
+
+输入活动目标（深圳亲子自然研学）、人群画像（三口之家）、主推产品（平安「全家保」），一键生成全套素材：活动海报、客户邀请函、代理人宣导话术、完整课件、朋友圈文案，自动合规校验。支持跨平台分发：微信版偏私域信任表达，小红书版强化标题吸引力与话题标签，一键推送至代理人端。
+
+**卡片组件**：`MaterialConfigCard` · `MaterialPreviewCard` · `MaterialDistributeCard`
+
+### 场景七：典范案例挖掘
+
+输入案例需求意图（"快速成长型 1 年期代理人"），选择六维标签（年龄/性别/年限/月增长/佣金/地区），系统自动匹配代理人案例。展示曲潇完整成长故事与里程碑轨迹，案例内容支持**折叠/展开/复制/转发**。
+
+**卡片组件**：`CaseSearchCard` · `CaseResultCard`
+
+### 场景八：案例智能归纳
+
+AI 数字人对曲潇进行访谈（虚线人像框 + 波形动画 + 实时转写），访谈结束自动生成宣导视频。支持**切换三种封面风格**（专业商务/温暖励志/现代科技）和**三个标题选项**。
+
+**卡片组件**：`CaseInterviewCard` · `CaseVideoCard`
 
 ---
 
-## 五、本地开发与运行方式
+## 三、外勤八大业务场景
 
-### 1. 环境要求
+外勤场景围绕代理人"小李"向潜在客户"王哥"展开销售的完整流程。在外勤模式下，界面采用**双手机布局**：左侧为产品 AI 界面，右侧为**微信模拟器**，两者实时同步。
 
-- Node.js：**推荐 >= 18**（Vite 官方推荐版本）
-- 包管理工具：已提供 `package-lock.json`，建议使用 **npm**
+### 场景一：个性内容定制
 
-### 2. 安装依赖
+结合小李个人爱运动的人设、近期体育新闻，AI 定制个性化朋友圈内容（含真实配图），展示内容亮点分析。确认发布后，右侧微信模拟器自动切换到朋友圈视图，显示刚发布的动态（含点赞和评论）。
 
-在项目根目录执行：
+**卡片组件**：`FieldMomentsPostCard`（支持真实图片 + 文字占位符双模式）
+
+### 场景二：问题智能回复
+
+王哥通过微信咨询三高能否买保险。右侧微信模拟器显示王哥消息 + 输入法 AI 截图帮回浮层。左侧展示 AI 智能分析（问题类型/客户情绪/意向阶段/应对建议），生成推荐回复（含回复要点）。一键发送后，微信模拟器同步显示聊天记录。
+
+**卡片组件**：`FieldAIAnalysisCard` · `FieldReplyPreviewCard`
+
+### 场景三：好友兴趣洞察
+
+AI 扫描王哥朋友圈动态，右侧微信模拟器切换到朋友圈视图展示王哥的真实动态（高尔夫、健康文章、养生等）。左侧输出客户画像（年龄/职业/爱好/家庭/消费偏好六维分析），并生成需求深度解析（核心需求/次要需求/紧迫程度星级评估）。
+
+**卡片组件**：`FieldCustomerProfileCard` · `FieldNeedsAnalysisCard`
+
+### 场景四：精准话术推荐
+
+AI 设计自然切入的询问话术，帮助小李了解王哥家庭现有保障情况。展示话术设计要点（先给信心 → 说明目的 → 降低负担 → 具体引导）。一键发送后，微信模拟器同步显示对话过程及王哥的回复。
+
+**卡片组件**：`FieldSalesScriptCard`
+
+### 场景五：保障缺口诊断
+
+AI 结合王哥年龄、三高状况、家庭结构及现有保障，输出诊断结果：意外险/医疗险（团险覆盖但依赖性强）、重疾险严重不足（20万→100万+，缺口80万+）、寿险未覆盖、养老未启动。以色彩编码（绿/黄/红）直观呈现风险等级。
+
+**卡片组件**：`FieldGapDiagnosisCard`
+
+### 场景六：产品精准匹配
+
+根据画像和缺口自动输出两套方案：均衡版（AI主推，重疾+医疗+寿险三险联动）、尊享版（增加年金险实现保障与财富传承双轮驱动）。每套方案含产品明细、亮点说明和推荐徽章。
+
+**卡片组件**：`FieldProductPlansCard`
+
+### 场景七：收益分析测算
+
+输出均衡版和尊享版的代理人收益测算：年缴保费、首年佣金比例、首年到手收入、续期三年合计佣金，高亮关键收益数字，提示尊享版佣金为均衡版的 1.7 倍。
+
+**卡片组件**：`FieldCommissionCard`
+
+### 场景八：讲解素材生成
+
+自动生成四份材料（一页纸方案总览、三高核保说明、理赔流程动图、同类客户脱敏案例），每份材料**可点击展开**查看详细内容（含配图和完整文案）。一键发送给王哥后，微信模拟器显示文件发送过程和王哥的回复，同时**弹出跟进提醒弹窗**（3天/5天/7天阶梯式跟进计划）。
+
+**卡片组件**：`FieldMaterialsCard`（支持展开/收起详细内容）
+
+---
+
+## 四、微信模拟器
+
+外勤模式下右侧展示的微信模拟器（`WeChatSimulator`），与左侧产品 AI 界面实时同步：
+
+### 功能特性
+
+- **聊天视图**：模拟微信聊天界面，绿色气泡（小李）/ 白色气泡（王哥），支持文件消息样式
+- **朋友圈视图**：模拟微信朋友圈，显示头像、内容、真实图片、点赞和评论
+- **输入法 AI 截图帮回**：浮层动画展示截图识别 → AI 分析 → 生成回复的过程
+- **Tab 切换**：聊天 / 朋友圈两个视图可手动或通过场景事件自动切换
+
+### 同步机制
+
+场景脚本中每条 `aiMessage` 可携带 `wechatEvents` 数组，支持以下事件类型：
+
+| 事件类型 | 说明 |
+|---------|------|
+| `add-chat` | 添加一条聊天消息 |
+| `add-moment` | 添加一条朋友圈动态 |
+| `set-chat-messages` | 替换全部聊天消息 |
+| `set-moments` | 替换全部朋友圈动态 |
+| `switch-view` | 切换聊天/朋友圈视图 |
+| `show-screenshot-helper` | 显示截图帮回浮层 |
+| `hide-screenshot-helper` | 隐藏截图帮回浮层 |
+| `show-followup-reminder` | 弹出跟进提醒弹窗 |
+
+---
+
+## 五、技术架构
+
+### 技术栈
+
+| 层面 | 技术 |
+|------|------|
+| 框架 | React 19 + TypeScript |
+| 构建 | Vite 7 |
+| 样式 | Tailwind CSS 4（@tailwindcss/vite） |
+| 语音 | Web Speech API（STT + TTS） |
+| 代码质量 | ESLint + typescript-eslint |
+
+### 视觉风格：Alice Blue Crystal
+
+- 主色调：蓝色系（`#3B82F6` → `#1D4ED8`）
+- 玻璃态效果：`backdrop-blur` + 半透明白 + 微噪点纹理
+- 圆角卡片：`rounded-[24px]`、渐变色头部、`max-h` 可滚动
+- 品牌字体：衬线体标题 + 无衬线正文
+- 微信模拟器：WeChat 绿（`#07C160` / `#95EC69`）+ 灰色背景（`#EDEDED`）
+
+### 核心设计模式
+
+```
+scenarios.ts / fieldScenarios.ts（对话脚本） → useChat（状态机） → MessageBubble（路由） → Card 组件（渲染）
+                                                    ↓
+                                             wechatEvents → App.tsx（事件处理） → WeChatSimulator（微信模拟）
+```
+
+- **数据驱动**：场景脚本集中在 `scenarios.ts`（内勤）和 `fieldScenarios.ts`（外勤），前端渲染层通过 `MessageContentType` + 卡片组件解耦
+- **模式切换**：`App.tsx` 维护 `mode` 状态（`backoffice` / `field`），动态切换场景数据、侧边栏模块和布局（单手机 / 双手机）
+- **消息协议**：每条 `aiMessage` 携带 `type`（路由到卡片）、`content`（文本）、`data`（结构化数据）、`speechText`（TTS）、`wechatEvents`（微信同步事件）
+- **微信同步**：`wechatEvents` 通过 `registerWeChatEvent` 回调派发，App.tsx 的事件处理器更新 `wechatState`，驱动 `WeChatSimulator` 实时刷新
+- **卡片接口统一**：`{ data: Record<string, unknown> }` props，组件内部强类型解析
+
+---
+
+## 六、项目结构
+
+```
+src/
+├── main.tsx                    # 应用入口
+├── App.tsx                     # 主布局 + 侧边栏 + 内勤/外勤模式切换 + 微信事件处理
+├── index.css                   # 全局样式（glassmorphism/动画/布局/微信模拟器样式）
+├── types/index.ts              # MessageContentType + 消息/场景/微信类型定义
+├── hooks/
+│   ├── useChat.ts              # 对话状态机（场景切换/步骤播放/快捷回复/微信事件派发）
+│   └── useSpeech.ts            # 语音识别 + TTS 播报
+├── data/
+│   ├── scenarios.ts            # 8 个内勤场景的完整对话脚本
+│   └── fieldScenarios.ts       # 8 个外勤场景的完整对话脚本（含微信事件和结构化数据）
+└── components/
+    ├── Header.tsx              # 顶部状态栏
+    ├── MessageBubble.tsx       # 消息路由（type → Card 组件，31 种类型）
+    ├── InputBar.tsx            # 输入区（文本 + 语音）
+    ├── QuickReplies.tsx        # 快捷回复按钮
+    ├── TypingIndicator.tsx     # AI 输入中动画
+    ├── OverviewPage.tsx        # 首页能力概览
+    ├── WeChatSimulator.tsx     # 微信模拟器（聊天/朋友圈/截图帮回）
+    └── cards/                  # 31 个卡片组件
+        ├── ProgressListCard.tsx       # 内勤 - 进度列表
+        ├── AgentReportCard.tsx        # 内勤 - 代理人报告
+        ├── AICallCard.tsx             # 内勤 - AI 外呼
+        ├── DataCaptureCard.tsx        # 内勤 - 数据采集
+        ├── RiskRadarCard.tsx          # 内勤 - 风险雷达
+        ├── RootCauseCard.tsx          # 内勤 - 根因分析
+        ├── MeetingTargetCard.tsx       # 内勤 - 面谈目标
+        ├── MeetingScriptCard.tsx       # 内勤 - 面谈话术
+        ├── ResponseStrategyCard.tsx    # 内勤 - 应对策略
+        ├── RecordingCard.tsx          # 内勤 - 录音界面
+        ├── MeetingResultCard.tsx       # 内勤 - 面谈结果
+        ├── PlanDeliveryCard.tsx        # 内勤 - 计划下发
+        ├── ReportUploadCard.tsx        # 内勤 - 报告上传
+        ├── ReportPreviewCard.tsx       # 内勤 - 报告预览
+        ├── MaterialConfigCard.tsx      # 内勤 - 素材配置
+        ├── MaterialPreviewCard.tsx     # 内勤 - 素材预览
+        ├── MaterialDistributeCard.tsx  # 内勤 - 素材分发
+        ├── CaseSearchCard.tsx         # 内勤 - 案例搜索
+        ├── CaseResultCard.tsx         # 内勤 - 案例结果
+        ├── CaseInterviewCard.tsx      # 内勤 - 数字人访谈
+        ├── CaseVideoCard.tsx          # 内勤 - 视频生成
+        ├── FieldMomentsPostCard.tsx    # 外勤 - 朋友圈定制
+        ├── FieldAIAnalysisCard.tsx     # 外勤 - AI 智能分析
+        ├── FieldReplyPreviewCard.tsx   # 外勤 - 推荐回复
+        ├── FieldCustomerProfileCard.tsx # 外勤 - 客户画像
+        ├── FieldNeedsAnalysisCard.tsx  # 外勤 - 需求解析
+        ├── FieldSalesScriptCard.tsx    # 外勤 - 话术推荐
+        ├── FieldGapDiagnosisCard.tsx   # 外勤 - 缺口诊断
+        ├── FieldProductPlansCard.tsx   # 外勤 - 产品匹配
+        ├── FieldCommissionCard.tsx     # 外勤 - 收益测算
+        └── FieldMaterialsCard.tsx     # 外勤 - 素材生成（可展开）
+```
+
+---
+
+## 七、本地开发
+
+### 环境要求
+
+- Node.js >= 18
+- npm（已提供 `package-lock.json`）
+
+### 安装与运行
 
 ```bash
 npm install
-```
-
-### 3. 启动开发服务器
-
-```bash
 npm run dev
 ```
 
-默认会在 `http://localhost:5173/myproject/` 启动开发服务器。
-打开浏览器访问即可看到：
+访问 `http://localhost:5173/myproject/`，左侧场景导航（默认内勤），中间手机对话界面。侧边栏右侧有隐藏的切换标签，可在内勤/外勤之间切换。外勤模式下右侧会出现微信模拟器。
 
-- 左侧内勤场景导航（4 个场景）
-- 中间手机对话界面
-- 支持语音播报与语音输入的 AI 助手 Demo
-
-### 4. 构建与预览（编译运行）
-
-执行构建（TypeScript 编译 + 生产构建）：
+### 构建
 
 ```bash
 npm run build
-```
-
-本地预览生产构建结果：
-
-```bash
 npm run preview
 ```
 
 ---
 
-## 六、如何扩展本项目
+## 八、如何扩展
 
-### 1. 新增一个业务场景
+### 新增场景
 
-1. 在 `src/data/scenarios.ts` 中新增一个 `Scenario`：
-   - 设置 `id` / `name` / `icon` / `description`
-   - 以步骤数组的形式编排每个阶段的 `aiMessages` 和 `quickReplies`
-2. 如需展示在侧边栏，更新 `backofficeScenarios` 过滤条件或在 `App.tsx` 的 `backofficeModules` 中增加模块元数据
-3. 若需要新 UI 展示形式，可在 `components/cards/` 目录下新增卡片组件，并将其类型加到 `MessageContentType`，然后在 `MessageBubble.tsx` 注册渲染
+1. 内勤场景：在 `scenarios.ts` 新增 `Scenario` 对象，在 `App.tsx` 的 `backofficeModules` 中添加模块元数据
+2. 外勤场景：在 `fieldScenarios.ts` 新增 `Scenario` 对象（可携带 `wechatEvents`），在 `App.tsx` 的 `fieldModules` 中添加模块元数据
+3. 若需新卡片：在 `cards/` 新建组件 → `types/index.ts` 加类型 → `MessageBubble.tsx` 注册
 
-### 2. 替换为真实后端/大模型
+### 新增微信事件类型
 
-当前 Demo 完全由前端模拟，若要接入真实服务可以：
+1. 在 `types/index.ts` 的 `WeChatEvent.type` 联合类型中添加新事件名
+2. 在 `App.tsx` 的 `handleWeChatEvents` 中添加对应处理逻辑
+3. 在场景脚本的 `wechatEvents` 中使用
 
-- 将 `useChat` 中的 `playScenarioStep` 替换为调用后端编排/Agent 服务的结果
-- 在 `data/*` 中使用真实 API 返回的数据而不是本地静态数据
-- 保持 `Message` / `MessageContentType` 协议不变，以减少前端改动
+### 接入真实后端
 
----
-
-## 七、技术栈说明
-
-- **React 19 + TypeScript**：构建组件化单页应用
-- **Vite 7**：开发服务器与构建工具，脚本见 `package.json`
-- **Tailwind CSS 4（通过 @tailwindcss/vite）**：快速实现现代化 UI
-- **ESLint + typescript-eslint**：基础代码质量保障
-- **Web Speech API**：浏览器内建语音识别与中文语音合成
+- 替换 `useChat` 中的 `playScenarioStep` 为后端 API 调用
+- 保持 `Message` / `MessageContentType` 协议不变，前端无需改动
+- `data` 字段由后端/大模型生成，卡片组件直接消费
+- `wechatEvents` 可由后端动态返回，微信模拟器自动响应

@@ -1,12 +1,17 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { MessageBubble } from './components/MessageBubble';
 import { InputBar } from './components/InputBar';
 import { QuickReplies } from './components/QuickReplies';
 import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
+import { WeChatSimulator } from './components/WeChatSimulator';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
+import { scenarios as backofficeScenarioData } from './data/scenarios';
+import { fieldScenarios } from './data/fieldScenarios';
+import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder } from './types';
+
 const backofficeModules = [
   {
     id: 'backoffice-progress-tracking',
@@ -82,18 +87,140 @@ const backofficeModules = [
   },
 ];
 
-const modulesMeta = backofficeModules;
+const fieldModules = [
+  {
+    id: 'field-content-creation',
+    name: '个性内容定制',
+    timing: '朋友圈内容',
+    icon: '✍️',
+    color: '#3B82F6',
+    narration: '小李您好，我来帮您定制一条个性化朋友圈内容，吸引潜在客户关注。',
+    category: 'field',
+  },
+  {
+    id: 'field-smart-reply',
+    name: '问题智能回复',
+    timing: '客户咨询',
+    icon: '💬',
+    color: '#DC2626',
+    narration: '王哥在微信上发来了关于健康险的咨询，我来帮您快速生成专业回复。',
+    category: 'field',
+  },
+  {
+    id: 'field-interest-insight',
+    name: '好友兴趣洞察',
+    timing: '需求解析',
+    icon: '🔍',
+    color: '#7C3AED',
+    narration: '正在分析王哥的社交动态和兴趣偏好，为您生成个性化需求分析。',
+    category: 'field',
+  },
+  {
+    id: 'field-sales-script',
+    name: '精准话术推荐',
+    timing: '话术准备',
+    icon: '🎯',
+    color: '#059669',
+    narration: '基于王哥的需求画像，为您推荐最合适的销售话术和沟通策略。',
+    category: 'field',
+  },
+  {
+    id: 'field-coverage-gap',
+    name: '保障缺口诊断',
+    timing: '缺口分析',
+    icon: '🛡️',
+    color: '#6366F1',
+    narration: '正在分析王哥现有的保障情况，诊断潜在的保障缺口。',
+    category: 'field',
+  },
+  {
+    id: 'field-product-matching',
+    name: '产品精准匹配',
+    timing: '产品推荐',
+    icon: '📦',
+    color: '#9333EA',
+    narration: '根据保障缺口，为王哥精准匹配最合适的保险产品组合。',
+    category: 'field',
+  },
+  {
+    id: 'field-commission-calc',
+    name: '收益分析测算',
+    timing: '佣金测算',
+    icon: '💰',
+    color: '#047857',
+    narration: '为您测算本次推荐方案的预期收益和佣金明细。',
+    category: 'field',
+  },
+  {
+    id: 'field-presentation-gen',
+    name: '讲解素材生成',
+    timing: '素材与跟进',
+    icon: '📑',
+    color: '#0369A1',
+    narration: '正在为您生成面见王哥时的专业讲解素材和跟进提醒计划。',
+    category: 'field',
+  },
+];
 
 function App() {
-  const chat = useChat();
+  const [mode, setMode] = useState<'backoffice' | 'field'>('backoffice');
+
+  const currentModules = mode === 'backoffice' ? backofficeModules : fieldModules;
+  const currentScenarios = useMemo(
+    () => (mode === 'backoffice' ? backofficeScenarioData : fieldScenarios),
+    [mode]
+  );
+
+  const chat = useChat(currentScenarios);
   const speech = useSpeech();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-   const lastTranscriptRef = useRef<string>('');
+  const lastTranscriptRef = useRef<string>('');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [showOverview, setShowOverview] = useState(false);  // manual change
   const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
+
+  // WeChat simulator state (only used in field mode)
+  const [wechatState, setWechatState] = useState<WeChatState>({
+    currentView: 'chat',
+    chatMessages: [],
+    moments: [],
+    screenshotHelper: null,
+  });
+
+  // Follow-up reminder popup state
+  const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
+
+  // WeChat event handler
+  const handleWeChatEvents = useCallback((events: WeChatEvent[]) => {
+    events.forEach((evt) => {
+      if (evt.type === 'show-followup-reminder') {
+        setFollowUpReminder(evt.data as FollowUpReminder);
+        return;
+      }
+      setWechatState((prev) => {
+        switch (evt.type) {
+          case 'add-chat':
+            return { ...prev, chatMessages: [...prev.chatMessages, evt.data as WeChatChatMessage] };
+          case 'add-moment':
+            return { ...prev, moments: [evt.data as WeChatMoment, ...prev.moments] };
+          case 'set-chat-messages':
+            return { ...prev, chatMessages: evt.data as WeChatChatMessage[] };
+          case 'set-moments':
+            return { ...prev, moments: evt.data as WeChatMoment[] };
+          case 'switch-view':
+            return { ...prev, currentView: evt.data as 'chat' | 'moments' };
+          case 'show-screenshot-helper':
+            return { ...prev, screenshotHelper: evt.data as WeChatState['screenshotHelper'] };
+          case 'hide-screenshot-helper':
+            return { ...prev, screenshotHelper: null };
+          default:
+            return prev;
+        }
+      });
+    });
+  }, []);
 
   useEffect(() => {
     chat.initChat();
@@ -109,6 +236,15 @@ function App() {
     );
   }, [autoSpeak, speech.speak, speech.enqueueSpeak, chat.registerSpeak]);
 
+  // Register WeChat event handler for field mode synchronization
+  useEffect(() => {
+    if (mode === 'field') {
+      chat.registerWeChatEvent(handleWeChatEvents);
+    } else {
+      chat.registerWeChatEvent(() => {});
+    }
+  }, [mode, chat.registerWeChatEvent, handleWeChatEvents]);
+
   // Auto scroll to bottom
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -116,7 +252,7 @@ function App() {
     }
   }, [chat.messages, chat.isTyping, chat.quickReplies]);
 
-  // Handle voice transcript submission（防止同一段识别结果重复发送）
+  // Handle voice transcript submission
   useEffect(() => {
     if (speech.isListening) return;
     if (!speech.transcript) return;
@@ -131,7 +267,7 @@ function App() {
 
   const startModuleWithNarration = useCallback(
     (moduleId: string) => {
-      const mod = modulesMeta.find((m) => m.id === moduleId);
+      const mod = currentModules.find((m) => m.id === moduleId);
       if (!mod) return;
 
       setActiveModule(moduleId);
@@ -146,13 +282,13 @@ function App() {
         chat.resetAndStartScenario(moduleId);
       }
     },
-    [chat, speech, autoSpeak]
+    [chat, speech, autoSpeak, currentModules]
   );
 
   const handleStartDemo = useCallback(() => {
     setShowOverview(false);
-    startModuleWithNarration(backofficeModules[0].id);
-  }, [startModuleWithNarration]);
+    startModuleWithNarration(currentModules[0].id);
+  }, [startModuleWithNarration, currentModules]);
 
   const handleModuleClick = useCallback(
     (moduleId: string) => {
@@ -163,7 +299,7 @@ function App() {
 
   const handleQuickReply = useCallback(
     (reply: { label: string; value: string }) => {
-      const mod = backofficeModules.find((m) => m.id === reply.value);
+      const mod = currentModules.find((m) => m.id === reply.value);
       if (mod) {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
         chat.startScenario(mod.id);
@@ -172,7 +308,7 @@ function App() {
         chat.handleQuickReply(reply);
       }
     },
-    [chat]
+    [chat, currentModules]
   );
 
   const handleSpeak = useCallback(
@@ -185,6 +321,29 @@ function App() {
     },
     [speech]
   );
+
+  const handleModeToggle = useCallback(() => {
+    const newMode = mode === 'backoffice' ? 'field' : 'backoffice';
+    setMode(newMode);
+    setActiveModule(null);
+    speech.stopSpeaking();
+    setTransition(null);
+    // Reset WeChat state
+    setWechatState({ currentView: 'chat', chatMessages: [], moments: [], screenshotHelper: null });
+    setFollowUpReminder(null);
+
+    // Reinitialize chat with appropriate welcome after state settles
+    setTimeout(() => {
+      if (newMode === 'backoffice') {
+        chat.initChat();
+      } else {
+        chat.initChat(
+          '小李您好！我是您的AI销售助理\n\n我将全程协助您拓展客户、精准营销。让我们开始今天的工作吧！\n\n📌 待跟进客户：\n• 王哥 — 三高体况，健康险咨询意向\n• 朋友圈营销内容待发布\n\n请选择您需要的服务：',
+          '小李您好！我是您的AI销售助理，让我们开始今天的工作。'
+        );
+      }
+    }, 50);
+  }, [mode, chat, speech]);
 
   if (showOverview) {
     return (
@@ -206,10 +365,10 @@ function App() {
           </div>
         </div>
 
-        <div className="sidebar-label">内勤场景</div>
+        <div className="sidebar-label">{mode === 'backoffice' ? '内勤场景' : '外勤场景'}</div>
 
         <nav className="sidebar-nav">
-          {backofficeModules.map((mod) => (
+          {currentModules.map((mod) => (
             <button
               key={mod.id}
               className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
@@ -235,12 +394,21 @@ function App() {
         </nav>
 
         <div className="sidebar-footer">
-          <p>智能辅导系统</p>
+          <p>{mode === 'backoffice' ? '智能辅导系统' : '智能销售助手'}</p>
           <p>点击场景开始演示</p>
         </div>
+
+        {/* Hidden mode toggle tab */}
+        <button
+          className="mode-toggle-tab"
+          onClick={handleModeToggle}
+          title={mode === 'backoffice' ? '切换到外勤场景' : '切换到内勤场景'}
+        >
+          {mode === 'backoffice' ? '外勤' : '内勤'}
+        </button>
       </div>
 
-      {/* Phone Mockup - Centered */}
+      {/* Phone Mockup - Product UI */}
       <div className="phone-frame">
         <div className="phone-notch" />
         <div className="phone-screen">
@@ -296,6 +464,49 @@ function App() {
           )}
         </div>
       </div>
+
+      {/* WeChat Simulator - only in field mode */}
+      {mode === 'field' && (
+        <div className="wechat-phone-frame">
+          <div className="phone-notch" />
+          <div className="phone-screen" style={{ background: '#EDEDED' }}>
+            <WeChatSimulator
+              currentView={wechatState.currentView}
+              chatMessages={wechatState.chatMessages}
+              moments={wechatState.moments}
+              screenshotHelper={wechatState.screenshotHelper}
+              onSwitchView={(v) => setWechatState((prev) => ({ ...prev, currentView: v }))}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Follow-up Reminder Popup */}
+      {followUpReminder && (
+        <div className="followup-popup-overlay" onClick={() => setFollowUpReminder(null)}>
+          <div className="followup-popup" onClick={(e) => e.stopPropagation()}>
+            <div className="followup-popup-header">
+              <span className="followup-popup-icon">⏰</span>
+              <span className="followup-popup-title">{followUpReminder.title}</span>
+              <button className="followup-popup-close" onClick={() => setFollowUpReminder(null)}>✕</button>
+            </div>
+            <div className="followup-popup-body">
+              {followUpReminder.schedule.map((item, i) => (
+                <div key={i} className="followup-popup-item">
+                  <div className="followup-popup-date">{item.date}</div>
+                  <div className="followup-popup-action">{item.action}</div>
+                </div>
+              ))}
+            </div>
+            {followUpReminder.summary && (
+              <div className="followup-popup-summary">{followUpReminder.summary}</div>
+            )}
+            <button className="followup-popup-confirm" onClick={() => setFollowUpReminder(null)}>
+              知道了
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -20,7 +20,17 @@ export type MessageContentType =
   | 'case-search'
   | 'case-result'
   | 'case-interview'
-  | 'case-video';
+  | 'case-video'
+  | 'field-moments-post'
+  | 'field-ai-analysis'
+  | 'field-reply-preview'
+  | 'field-customer-profile'
+  | 'field-needs-analysis'
+  | 'field-sales-script'
+  | 'field-gap-diagnosis'
+  | 'field-product-plans'
+  | 'field-commission'
+  | 'field-materials';
 
 export interface Message {
   id: string;
@@ -38,6 +48,49 @@ export interface QuickReply {
   icon?: string;
 }
 
+export interface WeChatChatMessage {
+  sender: 'wangge' | 'xiaoli';
+  content: string;
+  contentType?: 'text' | 'image' | 'file';
+  timestamp?: string;
+}
+
+export interface WeChatMoment {
+  author: string;
+  avatar?: string;
+  content: string;
+  images?: string[];
+  imageUrls?: string[];
+  time: string;
+  likes?: string[];
+  comments?: Array<{ author: string; content: string }>;
+}
+
+export interface WeChatScreenshotHelper {
+  screenshot: string;
+  analysis: string;
+  generatedReply: string;
+  visible: boolean;
+}
+
+export interface WeChatEvent {
+  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder';
+  data: unknown;
+}
+
+export interface FollowUpReminder {
+  title: string;
+  schedule: Array<{ date: string; action: string }>;
+  summary?: string;
+}
+
+export interface WeChatState {
+  currentView: 'chat' | 'moments';
+  chatMessages: WeChatChatMessage[];
+  moments: WeChatMoment[];
+  screenshotHelper: WeChatScreenshotHelper | null;
+}
+
 export interface ScenarioStep {
   aiMessages: Array<{
     type: MessageContentType;
@@ -45,6 +98,7 @@ export interface ScenarioStep {
     speechText?: string;
     data?: Record<string, unknown>;
     delay?: number;
+    wechatEvents?: WeChatEvent[];
   }>;
   quickReplies?: QuickReply[];
   quickReplyDelay?: number;

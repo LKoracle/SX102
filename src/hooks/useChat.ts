@@ -1,13 +1,12 @@
-import { useState, useCallback, useRef } from 'react';
-import type { Message, ChatState, QuickReply } from '../types';
-import { scenarios, backofficeScenarios } from '../data/scenarios';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import type { Message, ChatState, QuickReply, Scenario, WeChatEvent } from '../types';
 
 let messageIdCounter = 0;
 function generateId() {
   return `msg-${Date.now()}-${++messageIdCounter}`;
 }
 
-export function useChat() {
+export function useChat(activeScenarios: Scenario[]) {
   const [state, setState] = useState<ChatState>({
     messages: [],
     isTyping: false,
@@ -22,11 +21,24 @@ export function useChat() {
   const sessionRef = useRef(0);
   const speakFnRef = useRef<((text: string) => void) | null>(null);
   const enqueueSpeakFnRef = useRef<((text: string) => void) | null>(null);
+  const scenariosRef = useRef<Scenario[]>(activeScenarios);
+  const wechatEventFnRef = useRef<((events: WeChatEvent[]) => void) | null>(null);
+
+  useEffect(() => {
+    scenariosRef.current = activeScenarios;
+  }, [activeScenarios]);
 
   const registerSpeak = useCallback(
     (fn: (text: string) => void, enqueueFn: (text: string) => void) => {
       speakFnRef.current = fn;
       enqueueSpeakFnRef.current = enqueueFn;
+    },
+    []
+  );
+
+  const registerWeChatEvent = useCallback(
+    (fn: (events: WeChatEvent[]) => void) => {
+      wechatEventFnRef.current = fn;
     },
     []
   );
@@ -62,7 +74,7 @@ export function useChat() {
 
   const playScenarioStep = useCallback(
     (scenarioId: string, stepIndex: number) => {
-      const scenario = scenarios.find((s) => s.id === scenarioId);
+      const scenario = scenariosRef.current.find((s) => s.id === scenarioId);
       if (!scenario || stepIndex >= scenario.steps.length) return;
 
       const step = scenario.steps[stepIndex];
@@ -113,6 +125,11 @@ export function useChat() {
             enqueueSpeakFnRef.current(msg.speechText);
           }
 
+          // Fire WeChat events if present on this message
+          if (msg.wechatEvents && msg.wechatEvents.length > 0 && wechatEventFnRef.current) {
+            wechatEventFnRef.current(msg.wechatEvents);
+          }
+
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {
               if (sessionRef.current !== currentSession) return;
@@ -155,7 +172,7 @@ export function useChat() {
         // Show welcome quick replies
         const t = window.setTimeout(() => {
           setQuickReplies(
-            scenarios.map((s) => ({
+            scenariosRef.current.map((s) => ({
               label: `${s.icon} ${s.name}`,
               value: s.id,
             }))
@@ -167,7 +184,7 @@ export function useChat() {
 
       const { currentScenario, currentStep } = state;
       if (currentScenario) {
-        const scenario = scenarios.find((s) => s.id === currentScenario);
+        const scenario = scenariosRef.current.find((s) => s.id === currentScenario);
         if (scenario) {
           const nextStep = currentStep + 1;
           if (nextStep < scenario.steps.length) {
@@ -187,7 +204,7 @@ export function useChat() {
                 currentStep: 0,
               }));
               setQuickReplies(
-                backofficeScenarios.map((s) => ({
+                scenariosRef.current.map((s) => ({
                   label: `${s.icon} ${s.name}`,
                   value: s.id,
                 }))
@@ -210,7 +227,7 @@ export function useChat() {
       // Do this BEFORE any scenario-matching so that words like "拜访" typed
       // during post-visit don't accidentally restart the pre-visit scenario.
       if (state.currentScenario) {
-        const scenario = scenarios.find((s) => s.id === state.currentScenario);
+        const scenario = scenariosRef.current.find((s) => s.id === state.currentScenario);
         if (scenario) {
           const nextStep = state.currentStep + 1;
           if (nextStep < scenario.steps.length) {
@@ -221,10 +238,7 @@ export function useChat() {
       }
 
       // Not in a scenario – check if user text explicitly names one.
-      // Only match when the user's text contains the full scenario name or
-      // description; drop the reverse check (s.name.includes(text)) which
-      // was too broad and caused short words to hijack the active scenario.
-      const matchedScenario = scenarios.find(
+      const matchedScenario = scenariosRef.current.find(
         (s) => text.includes(s.name) || text.includes(s.description)
       );
 
@@ -245,7 +259,7 @@ export function useChat() {
         });
         setTyping(false);
         setQuickReplies(
-          backofficeScenarios.map((s) => ({
+          scenariosRef.current.map((s) => ({
             label: `${s.icon} ${s.name}`,
             value: s.id,
           }))
@@ -283,29 +297,41 @@ export function useChat() {
     [clearTimeouts, playScenarioStep]
   );
 
-  const initChat = useCallback(() => {
+  const initChat = useCallback((welcomeContent?: string, welcomeSpeech?: string) => {
+    clearTimeouts();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    sessionRef.current += 1;
+
+    const content = welcomeContent ?? '郑晓您好！我是您的AI智能助理\n\n本月代理人业绩追踪已自动更新，以下是您管辖的代理人概览。\n\n📌 重点关注：\n• 李平安 FYC达成率持续下滑（38%）\n• 王丽华 活动量偏低需关注\n\n请选择您需要的服务：';
+    const speech = welcomeSpeech ?? '郑晓您好！本月代理人业绩已更新，李平安达成率持续下滑，建议重点关注。';
+
     const welcomeMsg: Message = {
       id: generateId(),
       role: 'ai',
       type: 'text',
-      content:
-        '郑晓您好！我是您的AI智能助理\n\n本月代理人业绩追踪已自动更新，以下是您管辖的代理人概览。\n\n📌 重点关注：\n• 李平安 FYC达成率持续下滑（38%）\n• 王丽华 活动量偏低需关注\n\n请选择您需要的服务：',
-      speechText: '郑晓您好！本月代理人业绩已更新，李平安达成率持续下滑，建议重点关注。',
+      content,
+      speechText: speech,
       timestamp: Date.now(),
     };
 
-    setState((prev) => ({
-      ...prev,
+    setState({
       messages: [welcomeMsg],
-      quickReplies: backofficeScenarios.map((s) => ({
+      isTyping: false,
+      currentScenario: null,
+      currentStep: 0,
+      quickReplies: scenariosRef.current.map((s) => ({
         label: `${s.icon} ${s.name}`,
         value: s.id,
       })),
-    }));
+      isListening: false,
+      isSpeaking: false,
+    });
     if (welcomeMsg.speechText && speakFnRef.current) {
       speakFnRef.current(welcomeMsg.speechText);
     }
-  }, []);
+  }, [clearTimeouts]);
 
   return {
     ...state,
@@ -316,5 +342,6 @@ export function useChat() {
     resetAndStartScenario,
     initChat,
     registerSpeak,
+    registerWeChatEvent,
   };
 }
