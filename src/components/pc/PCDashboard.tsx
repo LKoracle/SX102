@@ -162,21 +162,11 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
     }
   };
 
-  const agents = [
-    {
-      id: 'management', name: '经营管理智能体', icon: '🧠', color: '#3B82F6',
-      scenarios: [
-        { id: 'inspection-radar' as ScenarioId, name: '智能巡检雷达', icon: '📡', tag: '每日自动巡检' },
-        { id: 'interview' as ScenarioId, name: '智能面谈全流程', icon: '💬', tag: '动态策略树' },
-        { id: 'tracking' as ScenarioId, name: '周五进度追踪', icon: '📊', tag: 'AI外呼+闭环' },
-      ],
-    },
-    {
-      id: 'case-mining', name: '内容创作智能体', icon: '🏆', color: '#047857',
-      scenarios: [
-        { id: 'operations' as ScenarioId, name: '周五自动化运营', icon: '🤖', tag: '人机对话驱动' },
-      ],
-    },
+  const sidebarItems: { id: ScenarioId; name: string; icon: string; tag: string; color: string }[] = [
+    { id: 'inspection-radar', name: '每日智能巡检雷达', icon: '📡', tag: '每日自动巡检', color: '#3B82F6' },
+    { id: 'interview', name: '智能面谈、任务分发', icon: '💬', tag: '动态策略树', color: '#F59E0B' },
+    { id: 'operations', name: '案例挖掘、素材生成', icon: '🏆', tag: '人机对话驱动', color: '#047857' },
+    { id: 'tracking', name: '进度追踪、落后跟进', icon: '📊', tag: 'AI外呼+闭环', color: '#7C3AED' },
   ];
 
   return (
@@ -193,15 +183,13 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
         </div>
         <div className="pc-header-center">
           <span className="pc-breadcrumb">
-            <span className="pc-breadcrumb-agent">
-              {activeScenario === 'operations' ? '内容创作智能体' : '经营管理智能体'}
-            </span>
+            <span className="pc-breadcrumb-agent">平安DO</span>
             <span className="pc-breadcrumb-sep">›</span>
             <span className="pc-breadcrumb-scenario">
-              {activeScenario === 'inspection-radar' && '智能巡检雷达'}
-              {activeScenario === 'interview' && '智能面谈全流程'}
-              {activeScenario === 'operations' && '周五自动化运营'}
-              {activeScenario === 'tracking' && '周五进度追踪'}
+              {activeScenario === 'inspection-radar' && '每日智能巡检雷达'}
+              {activeScenario === 'interview' && '智能面谈、任务分发'}
+              {activeScenario === 'operations' && '案例挖掘、素材生成'}
+              {activeScenario === 'tracking' && '进度追踪、落后跟进'}
             </span>
           </span>
         </div>
@@ -222,33 +210,19 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
       <div className="pc-body">
         {/* ── Sidebar ── */}
         <aside className="pc-sidebar">
-          <div className="pc-sidebar-section-label">AI 智能体</div>
-          {agents.map((agent) => (
-            <div key={agent.id} className="pc-agent-group">
-              <div className="pc-agent-group-header">
-                <span className="pc-agent-icon-wrap" style={{ background: agent.color + '18' }}>
-                  {agent.icon}
-                </span>
-                <span className="pc-agent-name">{agent.name}</span>
+          <div className="pc-sidebar-section-label">AI 场景</div>
+          {sidebarItems.map((item) => (
+            <button key={item.id}
+              className={`pc-scenario-btn ${activeScenario === item.id ? 'pc-scenario-btn-active' : ''}`}
+              style={{ borderLeftColor: item.color }}
+              onClick={() => switchScenario(item.id)}>
+              <span className="pc-scenario-btn-icon">{item.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="pc-scenario-btn-name">{item.name}</div>
+                <div className="pc-scenario-btn-tag">{item.tag}</div>
               </div>
-              {agent.scenarios.length > 0 ? (
-                agent.scenarios.map((sc) => (
-                  <button key={sc.id}
-                    className={`pc-scenario-btn ${activeScenario === sc.id ? 'pc-scenario-btn-active' : ''}`}
-                    style={{ borderLeftColor: agent.color }}
-                    onClick={() => switchScenario(sc.id)}>
-                    <span className="pc-scenario-btn-icon">{sc.icon}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div className="pc-scenario-btn-name">{sc.name}</div>
-                      <div className="pc-scenario-btn-tag">{sc.tag}</div>
-                    </div>
-                    {activeScenario === sc.id && <span className="pc-scenario-active-dot" style={{ background: agent.color }} />}
-                  </button>
-                ))
-              ) : (
-                <div className="pc-scenario-coming-soon">更多场景即将上线</div>
-              )}
-            </div>
+              {activeScenario === item.id && <span className="pc-scenario-active-dot" style={{ background: item.color }} />}
+            </button>
           ))}
           <div className="pc-sidebar-footer">
             <div className="pc-sidebar-footer-agent-list">

@@ -620,6 +620,7 @@ export function ScenarioOperations({ onBack }: Props) {
                 {[...Array(24)].map((_, i) => <span key={i} className="sc-wave-bar sc-vr-wave-bar" style={{ animationDelay: `${i * 0.06}s` }} />)}
               </div>
               <div className="sc-vr-hint">请说出您的指令…</div>
+              <div className="sc-vr-prompt-hint">{voiceCmd === 1 ? CMD1 : CMD2}</div>
             </div>
             <div className="sc-vr-text-section">
               <div className="sc-vr-label">语音转文字</div>
