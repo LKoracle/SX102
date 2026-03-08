@@ -3337,6 +3337,148 @@ html, body, #root {
   color: #22C55E;
 }
 
+/* ══ Call Recording Modal ══ */
+.sc-call-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: narrator-fade-in 0.25s ease;
+}
+.sc-call-modal {
+  width: 520px;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sc-call-modal-header {
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sc-call-modal-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.sc-call-modal-rec-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #EF4444;
+  animation: sc-rec-blink 1s ease infinite;
+}
+@keyframes sc-rec-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.sc-call-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+.sc-call-modal-timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.sc-call-modal-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+.sc-wave-bar-modal {
+  width: 3px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.6);
+  animation: sc-wave 0.8s ease infinite alternate;
+}
+.sc-call-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 180px;
+  max-height: 50vh;
+}
+.sc-dialog-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.sc-dialog-ai { justify-content: flex-start; }
+.sc-dialog-person { justify-content: flex-end; flex-direction: row-reverse; }
+.sc-dialog-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.sc-dialog-bubble {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #F1F5F9;
+}
+.sc-dialog-person .sc-dialog-bubble {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+}
+.sc-dialog-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94A3B8;
+  margin-bottom: 4px;
+}
+.sc-dialog-text {
+  font-size: 14px;
+  color: #1E293B;
+  line-height: 1.6;
+}
+.sc-dialog-typing-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.sc-call-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  justify-content: center;
+}
+.sc-call-end-btn {
+  background: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sc-call-end-btn:hover { background: #DC2626; }
+
 /* Feedback (Tracking) */
 .sc-feedback-list {
   display: flex;

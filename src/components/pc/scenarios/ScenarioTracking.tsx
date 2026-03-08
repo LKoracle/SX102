@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNarrator, NarratorSubtitle } from '../Narrator';
+import { useSpeech } from '../../../hooks/useSpeech';
 
 interface Props { onBack: () => void; }
 
@@ -14,6 +15,33 @@ const R1 = [
 const R2 = [
   '语音识别完成，正在解析指令… 识别到关键意图：①筛选条件=首周主管钻石挂零；②动作=组织主管检视会。正在调取全区主管首周钻石数据… 正在拉取相关人员日历空闲时段…',
   '数据匹配完成：启明部主管刘志兴首周钻石挂零 → 符合条件 → 已向王芯、刘志兴发送检视会议邀请 → 正在自动生成检视会议PPT…',
+];
+
+// ── 两通外呼的对话脚本 ──
+interface DialogLine { role: 'ai' | 'person'; text: string; }
+
+const CALL_SCRIPTS: { name: string; dept: string; lines: DialogLine[] }[] = [
+  {
+    name: '张宁经理', dept: '启阳部',
+    lines: [
+      { role: 'ai', text: '张宁经理您好，这里是平安营业区AI助手，受赵虎安排，跟您做本月钻石占比的进度追踪。' },
+      { role: 'person', text: '好的，你说。' },
+      { role: 'ai', text: '目前启阳部月钻石占比排名倒数第二，主要差距在新人出单率偏低，想了解一下您这边的情况和计划。' },
+      { role: 'person', text: '确实最近新人比较多，辅导没跟上，下周我准备每天加一个小时做新人专项辅导。' },
+      { role: 'ai', text: '好的，已记录。那咱们约定下周五再做一次回访确认进展，可以吗？' },
+      { role: 'person', text: '没问题。' },
+    ],
+  },
+  {
+    name: '王芯经理', dept: '启明部',
+    lines: [
+      { role: 'ai', text: '王芯经理您好，受赵虎安排做月钻石占比追踪。启明部目前排名末位，主管刘志兴首周钻石挂零，想了解下您的应对计划。' },
+      { role: 'person', text: '刘志兴最近状态确实不好，我已经约他明天到部里面谈。' },
+      { role: 'ai', text: '了解。刘志兴目前出勤和活动量都明显下滑，面谈时建议重点关注他的活动量恢复计划。' },
+      { role: 'person', text: '好，我会重点抓这块。' },
+      { role: 'ai', text: '收到，王芯经理这边标注为高风险，后续会持续跟踪，辛苦了。' },
+    ],
+  },
 ];
 
 const PPT_SLIDES = [
@@ -42,15 +70,117 @@ export function ScenarioTracking({ onBack }: Props) {
   const [r2Lines, setR2Lines] = useState(0);
   const [pptStep, setPptStep] = useState(0);
   const [pptConfirmed, setPptConfirmed] = useState(false);
-  const [micReady, setMicReady] = useState(1); // 1=ready for cmd1, 2=ready for cmd2, 0=not ready
+  const [micReady, setMicReady] = useState(1);
   const [typed1, setTyped1] = useState(0);
   const [typed2, setTyped2] = useState(0);
+
+  // ── Call modal state ──
+  const [callModalIdx, setCallModalIdx] = useState(-1);  // -1=closed, 0=first call, 1=second call
+  const [dialogIdx, setDialogIdx] = useState(0);          // how many lines revealed
+  const [callsDone, setCallsDone] = useState<boolean[]>([false, false]);
+
   const bodyRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const dialogTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const dialogCancelledRef = useRef(false);
   const { narratorText, speak } = useNarrator();
+  const speech = useSpeech();
 
   const scroll = () => setTimeout(() => { if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight; }, 80);
+
+  // ── Auto-open first call modal when callStep = 1 ──
+  useEffect(() => {
+    if (callStep === 1 && callModalIdx === -1) {
+      setCallModalIdx(0);
+      setDialogIdx(0);
+    }
+  }, [callStep]);
+
+  // ── Auto-play dialogue lines — wait for AI speech to finish before next line ──
+  useEffect(() => {
+    if (callModalIdx < 0) return;
+    const script = CALL_SCRIPTS[callModalIdx];
+    if (!script) return;
+
+    setDialogIdx(0);
+    dialogTimerRef.current.forEach(clearTimeout);
+    dialogTimerRef.current = [];
+    dialogCancelledRef.current = false;
+
+    // Play lines sequentially: show line → if AI, speak & wait for speech end → pause → next
+    const playLine = (i: number) => {
+      if (dialogCancelledRef.current || i >= script.lines.length) return;
+      const line = script.lines[i];
+
+      // Show this line
+      setDialogIdx(i + 1);
+
+      if (line.role === 'ai') {
+        // Speak AI line, then wait for speech to finish before next
+        speech.speak(line.text);
+        const pollDone = () => {
+          if (dialogCancelledRef.current) return;
+          const t = setTimeout(() => {
+            if (dialogCancelledRef.current) return;
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+              pollDone();
+            } else {
+              // Speech done — brief pause, then next line
+              const t2 = setTimeout(() => playLine(i + 1), 800);
+              dialogTimerRef.current.push(t2);
+            }
+          }, 300);
+          dialogTimerRef.current.push(t);
+        };
+        // Start polling after a small initial delay
+        const t0 = setTimeout(pollDone, 500);
+        dialogTimerRef.current.push(t0);
+      } else {
+        // Person line: just a pause before next
+        const t = setTimeout(() => playLine(i + 1), 1200);
+        dialogTimerRef.current.push(t);
+      }
+    };
+
+    // Start first line after 800ms
+    const tStart = setTimeout(() => playLine(0), 800);
+    dialogTimerRef.current.push(tStart);
+
+    return () => {
+      dialogCancelledRef.current = true;
+      dialogTimerRef.current.forEach(clearTimeout);
+    };
+  }, [callModalIdx]);
+
+  // ── End call handler ──
+  const handleEndCall = () => {
+    dialogCancelledRef.current = true;
+    dialogTimerRef.current.forEach(clearTimeout);
+    speech.stopSpeaking();
+    const idx = callModalIdx;
+    const newDone = [...callsDone];
+    newDone[idx] = true;
+    setCallsDone(newDone);
+
+    if (idx === 0 && !newDone[1]) {
+      // Open second call
+      setCallModalIdx(1);
+      setDialogIdx(0);
+    } else {
+      // All calls done
+      setCallModalIdx(-1);
+      setCallStep(2);
+      scroll();
+      // Trigger next step after brief delay
+      timersRef.current.push(
+        setTimeout(() => {
+          setStep(4); scroll(); setMicReady(2);
+          speak('追踪已完成。张宁经理承诺下周加强新人辅导，王芯经理已约刘志兴明日面谈。需要注意，王芯经理标注为高风险，建议重点关注。');
+        }, 500)
+      );
+    }
+  };
 
   const handleMicClick = () => {
     if (micReady === 1) {
@@ -70,8 +200,7 @@ export function ScenarioTracking({ onBack }: Props) {
         setTimeout(() => { if (typingRef.current) clearInterval(typingRef.current); setTyped1(CMD1.length); setStep(2); scroll(); }, 4700),
         setTimeout(() => { setStep(3); setR1Lines(1); scroll(); }, 5700),
         setTimeout(() => { setR1Lines(2); setCallStep(1); scroll(); }, 7700),
-        setTimeout(() => { setCallStep(2); scroll(); }, 10400),
-        setTimeout(() => { setStep(4); scroll(); setMicReady(2); speak('追踪已完成。张宁经理承诺下周加强新人辅导，王芯经理已约刘志兴明日面谈。需要注意，王芯经理标注为高风险，建议重点关注。'); }, 10900),
+        // callStep=1 triggers modal via useEffect — no more auto-complete timers
       ];
     } else if (micReady === 2) {
       setMicReady(0);
@@ -101,6 +230,9 @@ export function ScenarioTracking({ onBack }: Props) {
   };
 
   const handleConfirmPPT = () => { setPptConfirmed(true); scroll(); speak('好的，会议邀请已发送至王芯和刘志兴，PPT已同步至会议附件，时间节点已写入AI日历。'); };
+
+  // Current call script for modal
+  const currentScript = callModalIdx >= 0 ? CALL_SCRIPTS[callModalIdx] : null;
 
   return (
     <div className="sc-body-outer">
@@ -172,11 +304,10 @@ export function ScenarioTracking({ onBack }: Props) {
                 {callStep === 1 && <span className="pc-rp-live-badge">● 通话中</span>}
                 {callStep === 2 && <span className="pc-rp-done-badge">✓ 通话完成</span>}
               </div>
-              {[
-                { name: '张宁经理', dept: '启阳部' },
-                { name: '王芯经理', dept: '启明部' },
-              ].map((person, i) => (
-                <div key={i} className={`sc-call-row ${callStep === 2 ? 'sc-call-done' : ''}`}>
+              {CALL_SCRIPTS.map((person, i) => (
+                <div key={i} className={`sc-call-row ${callsDone[i] ? 'sc-call-done' : ''}`}
+                     onClick={() => { if (callStep === 1 && !callsDone[i]) { setCallModalIdx(i); setDialogIdx(0); } }}
+                     style={{ cursor: callStep === 1 && !callsDone[i] ? 'pointer' : 'default' }}>
                   <div className="sc-call-info">
                     <span className="sc-call-icon">☎️</span>
                     <div>
@@ -184,18 +315,72 @@ export function ScenarioTracking({ onBack }: Props) {
                       <div className="sc-call-dept">{person.dept}</div>
                     </div>
                   </div>
-                  {callStep === 1 ? (
+                  {!callsDone[i] && callStep === 1 ? (
                     <div className="sc-call-waveform">
                       {[...Array(8)].map((_, j) => (
                         <span key={j} className="sc-wave-bar sc-wave-bar-call" style={{ animationDelay: `${(i * 0.3 + j * 0.1)}s` }} />
                       ))}
                       <span className="sc-call-status-label">通话中…</span>
                     </div>
-                  ) : (
+                  ) : callsDone[i] ? (
                     <span className="sc-call-done-badge">✓ 已完成</span>
-                  )}
+                  ) : null}
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* ── Call Recording Modal ── */}
+          {callModalIdx >= 0 && currentScript && (
+            <div className="sc-call-modal-overlay">
+              <div className="sc-call-modal">
+                <div className="sc-call-modal-header">
+                  <div className="sc-call-modal-status">
+                    <span className="sc-call-modal-rec-dot" />
+                    <span>录音中</span>
+                  </div>
+                  <div className="sc-call-modal-title">
+                    AI外呼 · {currentScript.name}（{currentScript.dept}）
+                  </div>
+                  <div className="sc-call-modal-timer">
+                    <span className="sc-call-modal-wave">
+                      {[...Array(6)].map((_, i) => <span key={i} className="sc-wave-bar sc-wave-bar-modal" style={{ animationDelay: `${i * 0.12}s` }} />)}
+                    </span>
+                  </div>
+                </div>
+                <div className="sc-call-modal-body">
+                  {currentScript.lines.slice(0, dialogIdx).map((line, i) => (
+                    <div key={i} className={`sc-dialog-row sc-dialog-${line.role} pc-fade-in-up`}>
+                      <span className="sc-dialog-avatar">
+                        {line.role === 'ai' ? '🤖' : '👤'}
+                      </span>
+                      <div className="sc-dialog-bubble">
+                        <div className="sc-dialog-label">
+                          {line.role === 'ai' ? 'AI助手' : currentScript.name}
+                        </div>
+                        <div className="sc-dialog-text">{line.text}</div>
+                      </div>
+                    </div>
+                  ))}
+                  {dialogIdx < currentScript.lines.length && (
+                    <div className="sc-dialog-typing-row pc-fade-in">
+                      <span className="sc-dialog-avatar">
+                        {currentScript.lines[dialogIdx].role === 'ai' ? '🤖' : '👤'}
+                      </span>
+                      <div className="sc-dialog-typing-dots">
+                        <span className="pc-dot-pulse" />
+                        <span className="pc-dot-pulse" style={{ animationDelay: '0.22s' }} />
+                        <span className="pc-dot-pulse" style={{ animationDelay: '0.44s' }} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="sc-call-modal-footer">
+                  <button className="sc-call-end-btn" onClick={handleEndCall}>
+                    📞 结束通话
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
