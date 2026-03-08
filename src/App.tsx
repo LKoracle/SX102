@@ -6,6 +6,7 @@ import { QuickReplies } from './components/QuickReplies';
 import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
 import { WeChatSimulator } from './components/WeChatSimulator';
+import { PCDashboard } from './components/pc/PCDashboard';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
@@ -354,6 +355,11 @@ function App() {
     );
   }
 
+  // PC Dashboard for internal staff (backoffice) mode
+  if (mode === 'backoffice') {
+    return <PCDashboard onModeToggle={handleModeToggle} />;
+  }
+
   return (
     <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
       {/* Left Sidebar Navigation */}
@@ -365,7 +371,7 @@ function App() {
           </div>
         </div>
 
-        <div className="sidebar-label">{mode === 'backoffice' ? '内勤场景' : '外勤场景'}</div>
+        <div className="sidebar-label">外勤场景</div>
 
         <nav className="sidebar-nav">
           {currentModules.map((mod) => (
@@ -394,7 +400,7 @@ function App() {
         </nav>
 
         <div className="sidebar-footer">
-          <p>{mode === 'backoffice' ? '智能辅导系统' : '智能销售助手'}</p>
+          <p>智能销售助手</p>
           <p>点击场景开始演示</p>
         </div>
 
@@ -402,9 +408,9 @@ function App() {
         <button
           className="mode-toggle-tab"
           onClick={handleModeToggle}
-          title={mode === 'backoffice' ? '切换到外勤场景' : '切换到内勤场景'}
+          title="切换到内勤场景"
         >
-          {mode === 'backoffice' ? '外勤' : '内勤'}
+          内勤
         </button>
       </div>
 
