@@ -14,7 +14,32 @@ const SUMMARY_REASONING = [
   '同时基于面谈共识自动拆解为可执行任务，分配责任人，设定追踪时间节点…',
 ];
 
-type Phase = 'reasoning' | 'strategy' | 'sum-reasoning' | 'minutes' | 'sent';
+type Phase = 'reasoning' | 'strategy' | 'recording' | 'sum-reasoning' | 'minutes' | 'dispatching' | 'sent';
+
+// Enterprise WeChat private chat dispatch — two sequential conversations
+interface DispatchChat {
+  name: string; avatar: string; color: string; dept: string;
+  msgs: { sender: 'ai' | 'person'; text: string; isTask?: boolean }[];
+}
+
+const DISPATCH_CHATS: DispatchChat[] = [
+  {
+    name: '张仟', avatar: '张', color: '#3B82F6', dept: '阳光部 · 部经理',
+    msgs: [
+      { sender: 'ai', text: '张仟经理您好，以下是面谈闭环任务，请查收：', },
+      { sender: 'ai', text: '📋 任务清单：\n① 对近期未参会属员进行逐一摸底（本周三前）\n② 完成全员客户KYC盘点，建立拜访计划表（本周五前）', isTask: true },
+      { sender: 'person', text: '收到，我马上安排。' },
+    ],
+  },
+  {
+    name: '李平安', avatar: '李', color: '#07C160', dept: '朝阳部 · 部经理',
+    msgs: [
+      { sender: 'ai', text: '李平安经理您好，有一项跨区协同任务需要您支持：' },
+      { sender: 'ai', text: '📋 协同任务：\n带队入场阳光部进行1VN实战分享与现场带教（本周四）\n⚡ 多智能体协同 · 已同步至您的工作台', isTask: true },
+      { sender: 'person', text: '好的，周四我带团队过来。' },
+    ],
+  },
+];
 
 export function ScenarioInterview({ onBack }: Props) {
   const [phase, setPhase] = useState<Phase>('reasoning');
@@ -22,6 +47,13 @@ export function ScenarioInterview({ onBack }: Props) {
   const [modulesVisible, setModulesVisible] = useState(0);
   const [sumStep, setSumStep] = useState(0);
   const [minutesStep, setMinutesStep] = useState(0);
+  const [recordSeconds, setRecordSeconds] = useState(0);
+  const [dispatchStep, setDispatchStep] = useState(0);
+  const [chatIdx, setChatIdx] = useState(0);    // 0=张仟, 1=李平安
+  const [msgIdx, setMsgIdx] = useState(0);       // how many msgs visible in current chat
+  const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const dispatchTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const wxBodyRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const { narratorText, speak } = useNarrator();
 
@@ -52,6 +84,69 @@ export function ScenarioInterview({ onBack }: Props) {
     return () => timers.forEach(clearTimeout);
   }, [phase]);
 
+  // Start recording phase
+  const startRecording = () => {
+    setPhase('recording');
+    setRecordSeconds(0);
+    speak('面谈录音已启动，此处略过区经理与部经理的面谈录音细节，请点击结束录音。');
+    recordTimerRef.current = setInterval(() => {
+      setRecordSeconds(s => s + 1);
+    }, 1000);
+  };
+
+  const stopRecording = () => {
+    if (recordTimerRef.current) clearInterval(recordTimerRef.current);
+    recordTimerRef.current = null;
+    setPhase('sum-reasoning');
+    setSumStep(0);
+  };
+
+  // Start enterprise WeChat dispatch popup — sequential private chats
+  const startDispatch = () => {
+    setPhase('dispatching');
+    setChatIdx(0);
+    setMsgIdx(0);
+    dispatchTimerRef.current.forEach(clearTimeout);
+    dispatchTimerRef.current = [];
+    // Drip-feed messages for chat 0 (张仟)
+    const chat0 = DISPATCH_CHATS[0];
+    chat0.msgs.forEach((_, i) => {
+      const t = setTimeout(() => {
+        setMsgIdx(i + 1);
+        setTimeout(() => { if (wxBodyRef.current) wxBodyRef.current.scrollTop = wxBodyRef.current.scrollHeight; }, 80);
+      }, 800 + i * 1200);
+      dispatchTimerRef.current.push(t);
+    });
+    // Switch to chat 1 (李平安) after chat 0 is done
+    const switchTime = 800 + chat0.msgs.length * 1200 + 800;
+    const chat1 = DISPATCH_CHATS[1];
+    const tSwitch = setTimeout(() => {
+      setChatIdx(1);
+      setMsgIdx(0);
+    }, switchTime);
+    dispatchTimerRef.current.push(tSwitch);
+    // Drip-feed messages for chat 1
+    chat1.msgs.forEach((_, i) => {
+      const t = setTimeout(() => {
+        setMsgIdx(i + 1);
+        setTimeout(() => { if (wxBodyRef.current) wxBodyRef.current.scrollTop = wxBodyRef.current.scrollHeight; }, 80);
+      }, switchTime + 600 + i * 1200);
+      dispatchTimerRef.current.push(t);
+    });
+    // After all done, close and mark sent
+    const tEnd = setTimeout(() => {
+      setPhase('sent');
+      speak('下发成功。任务已通过企微发送给张仟，协同任务已同步至朝阳部李平安，追踪时间节点已写入AI日历。');
+    }, switchTime + 600 + chat1.msgs.length * 1200 + 800);
+    dispatchTimerRef.current.push(tEnd);
+  };
+
+  const closeDispatch = () => {
+    dispatchTimerRef.current.forEach(clearTimeout);
+    setPhase('sent');
+    speak('下发成功。任务已通过企微发送给张仟，协同任务已同步至朝阳部李平安，追踪时间节点已写入AI日历。');
+  };
+
   // Summary reasoning
   useEffect(() => {
     if (phase !== 'sum-reasoning') return;
@@ -76,10 +171,7 @@ export function ScenarioInterview({ onBack }: Props) {
     return () => timers.forEach(clearTimeout);
   }, [phase]);
 
-  // Speak when sent
-  useEffect(() => {
-    if (phase === 'sent') speak('下发成功。任务已通过企微发送给张仟，协同任务已同步至朝阳部李平安，追踪时间节点已写入AI日历。');
-  }, [phase]);
+  // Speak handled in startDispatch callback — no separate sent useEffect needed
 
   return (
     <div className="sc-body" ref={bodyRef}>
@@ -102,7 +194,7 @@ export function ScenarioInterview({ onBack }: Props) {
       <div className="sc-context-card">
         <div className="sc-context-tag">面谈对象</div>
         <div className="sc-context-main">阳光部 · 部经理 张仟</div>
-        <div className="sc-context-sub">根因：士气塌方 → 出勤率↓ &nbsp;·&nbsp; 盘客缺失 → 1V1↓ &nbsp;·&nbsp; 渠道堵塞 → 1VN↓</div>
+        <div className="sc-context-sub">根因：士气低迷 → 出勤率↓ &nbsp;·&nbsp; 盘客缺失 → 1V1↓ &nbsp;·&nbsp; 渠道堵塞 → 1VN↓</div>
       </div>
 
       {/* AI Reasoning */}
@@ -134,7 +226,7 @@ export function ScenarioInterview({ onBack }: Props) {
       )}
 
       {/* Strategy Panel */}
-      {(phase === 'strategy' || phase === 'sum-reasoning' || phase === 'minutes' || phase === 'sent') && (
+      {(phase === 'strategy' || phase === 'recording' || phase === 'sum-reasoning' || phase === 'minutes' || phase === 'sent') && (
         <div className="sc-strategy-panel">
           <div className="sc-strategy-title">
             <span>📋</span><span>阳光部张仟 · 精准面谈策略</span>
@@ -200,15 +292,37 @@ export function ScenarioInterview({ onBack }: Props) {
           )}
 
           {modulesVisible >= 3 && phase === 'strategy' && (
-            <button className="pc-cta-btn pc-diag-section-reveal" onClick={() => { setPhase('sum-reasoning'); setSumStep(0); }}>
-              <span>📝</span> 一键总结面谈
+            <button className="pc-cta-btn pc-diag-section-reveal" onClick={startRecording}>
+              <span>🎙️</span> 开启面谈录音
             </button>
           )}
         </div>
       )}
 
+      {/* Recording overlay */}
+      {phase === 'recording' && (
+        <div className="sc-recording-panel pc-fade-in">
+          <div className="sc-recording-header">
+            <span className="sc-call-modal-rec-dot" />
+            <span className="sc-recording-title">区经理面谈录音中</span>
+            <span className="sc-recording-timer">
+              {String(Math.floor(recordSeconds / 60)).padStart(2, '0')}:{String(recordSeconds % 60).padStart(2, '0')}
+            </span>
+          </div>
+          <div className="sc-recording-body">
+            <div className="sc-recording-wave">
+              {[...Array(20)].map((_, i) => <span key={i} className="sc-wave-bar sc-wave-bar-rec" style={{ animationDelay: `${i * 0.08}s` }} />)}
+            </div>
+            <div className="sc-recording-note">此处略过区经理与部经理的面谈录音细节</div>
+          </div>
+          <button className="sc-recording-stop-btn" onClick={stopRecording}>
+            ⏹ 结束录音，一键总结面谈
+          </button>
+        </div>
+      )}
+
       {/* Summary Reasoning */}
-      {(phase === 'sum-reasoning' || phase === 'minutes' || phase === 'sent') && sumStep > 0 && (
+      {(phase === 'sum-reasoning' || phase === 'minutes' || phase === 'dispatching' || phase === 'sent') && sumStep > 0 && (
         <div className="pc-reasoning-panel pc-fade-in">
           <div className="pc-rp-header">
             <span className="pc-rp-icon">🧠</span>
@@ -231,7 +345,7 @@ export function ScenarioInterview({ onBack }: Props) {
       )}
 
       {/* Minutes */}
-      {(phase === 'minutes' || phase === 'sent') && (
+      {(phase === 'minutes' || phase === 'dispatching' || phase === 'sent') && (
         <div className="sc-minutes-panel">
           <div className="sc-strategy-title">
             <span>📄</span><span>面谈纪要</span><span className="sc-badge">AI 自动生成</span>
@@ -240,7 +354,7 @@ export function ScenarioInterview({ onBack }: Props) {
           {minutesStep >= 1 && (
             <div className="sc-minutes-section pc-diag-section-reveal">
               <div className="sc-minutes-label">核心卡点反馈 <span className="sc-ai-note">AI基于对话语义自动提炼</span></div>
-              <div className="sc-minutes-item"><span className="sc-dot-red" />连续两周零出单 → 士气塌方 → 早会出勤率跌至30%以下</div>
+              <div className="sc-minutes-item"><span className="sc-dot-red" />连续两周零出单 → 士气低迷 → 早会出勤率跌至30%以下</div>
               <div className="sc-minutes-item"><span className="sc-dot-red" />缺乏盘客方法 → 属员不知道拜访谁/聊什么 → 1V1+1VN双低</div>
             </div>
           )}
@@ -277,10 +391,67 @@ export function ScenarioInterview({ onBack }: Props) {
           )}
 
           {minutesStep >= 4 && phase === 'minutes' && (
-            <button className="pc-cta-btn pc-diag-section-reveal" onClick={() => setPhase('sent')}>
+            <button className="pc-cta-btn pc-diag-section-reveal" onClick={startDispatch}>
               <span>📨</span> 一键下发指令
             </button>
           )}
+
+          {/* Enterprise WeChat Private Chat Dispatch Popup */}
+          {phase === 'dispatching' && (() => {
+            const chat = DISPATCH_CHATS[chatIdx];
+            return (
+              <div className="wx-popup-overlay">
+                <div className="wx-popup-bg" onClick={closeDispatch} />
+                <div className="wx-popup-frame">
+                  <div className="wx-popup-header">
+                    <span className="wx-popup-back" onClick={closeDispatch}>‹</span>
+                    <div className="wx-popup-title">
+                      <div>{chat.name}</div>
+                      <div className="wx-popup-subtitle">{chat.dept}</div>
+                    </div>
+                    <span className="wx-popup-more">⋯</span>
+                  </div>
+                  <div className="wx-popup-body" ref={wxBodyRef}>
+                    <div className="wx-popup-time-sep">
+                      {new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                    {chat.msgs.slice(0, msgIdx).map((msg, i) => {
+                      const isSelf = msg.sender === 'ai';
+                      return (
+                        <div key={`${chatIdx}-${i}`} className={`wx-popup-msg pc-fade-in-up ${isSelf ? 'wx-popup-msg-self' : ''}`}>
+                          {!isSelf && (
+                            <div className="wx-popup-avatar" style={{ background: chat.color }}>{chat.avatar}</div>
+                          )}
+                          <div className="wx-popup-msg-body">
+                            {!isSelf && <div className="wx-popup-sender">{chat.name}</div>}
+                            <div className={`wx-popup-bubble ${isSelf ? 'wx-popup-bubble-self' : ''} ${msg.isTask ? 'wx-dispatch-task-bubble' : ''}`} style={{ whiteSpace: 'pre-line' }}>
+                              {msg.text}
+                            </div>
+                          </div>
+                          {isSelf && (
+                            <div className="wx-popup-avatar" style={{ background: '#3B82F6' }}>AI</div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {msgIdx < chat.msgs.length && (
+                      <div className="wx-popup-typing pc-fade-in">
+                        <span className="pc-dot-pulse" />
+                        <span className="pc-dot-pulse" style={{ animationDelay: '0.22s' }} />
+                        <span className="pc-dot-pulse" style={{ animationDelay: '0.44s' }} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="wx-popup-input-bar">
+                    <span style={{ fontSize: 16 }}>🎤</span>
+                    <div className="wx-popup-input-field">输入消息...</div>
+                    <span style={{ fontSize: 16 }}>😊</span>
+                    <span style={{ fontSize: 16 }}>＋</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {phase === 'sent' && (
             <div className="sc-sent-confirm pc-fade-in">

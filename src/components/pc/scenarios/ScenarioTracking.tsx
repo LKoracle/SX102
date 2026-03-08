@@ -73,6 +73,10 @@ export function ScenarioTracking({ onBack }: Props) {
   const [micReady, setMicReady] = useState(1);
   const [typed1, setTyped1] = useState(0);
   const [typed2, setTyped2] = useState(0);
+  // Voice recognition overlay
+  const [voiceOverlay, setVoiceOverlay] = useState(false);
+  const [voiceCmd, setVoiceCmd] = useState(0); // which command is being recorded (1 or 2)
+  const [voiceText, setVoiceText] = useState(''); // real recognized text from user speech
 
   // ── Call modal state ──
   const [callModalIdx, setCallModalIdx] = useState(-1);  // -1=closed, 0=first call, 1=second call
@@ -82,6 +86,7 @@ export function ScenarioTracking({ onBack }: Props) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recognitionRef = useRef<any>(null);
   const dialogTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const dialogCancelledRef = useRef(false);
   const { narratorText, speak } = useNarrator();
@@ -182,54 +187,76 @@ export function ScenarioTracking({ onBack }: Props) {
     }
   };
 
+  // Start real speech recognition — capture recognized text into voiceText
+  const startRecognition = (durationMs: number) => {
+    try {
+      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SR) return;
+      const recognition = new SR();
+      recognition.lang = 'zh-CN';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognitionRef.current = recognition;
+      recognition.onresult = (e: any) => {
+        let transcript = '';
+        for (let i = 0; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+        }
+        setVoiceText(transcript);
+      };
+      recognition.start();
+      setTimeout(() => { try { recognition.stop(); } catch { /* */ } }, durationMs);
+    } catch { /* browser may not support */ }
+  };
+
   const handleMicClick = () => {
     if (micReady === 1) {
       setMicReady(0);
-      setStep(1);
-      setTyped1(0);
-      scroll();
-      const iv1 = Math.floor(4400 / CMD1.length);
-      let c1 = 0;
-      if (typingRef.current) clearInterval(typingRef.current);
-      typingRef.current = setInterval(() => {
-        c1++;
-        setTyped1(c1);
-        if (c1 >= CMD1.length && typingRef.current) clearInterval(typingRef.current);
-      }, iv1);
-      timersRef.current = [
-        setTimeout(() => { if (typingRef.current) clearInterval(typingRef.current); setTyped1(CMD1.length); setStep(2); scroll(); }, 4700),
-        setTimeout(() => { setStep(3); setR1Lines(1); scroll(); }, 5700),
-        setTimeout(() => { setR1Lines(2); setCallStep(1); scroll(); }, 7700),
-        // callStep=1 triggers modal via useEffect — no more auto-complete timers
-      ];
+      setVoiceOverlay(true);
+      setVoiceCmd(1);
+      setVoiceText('');
+      startRecognition(30000);
     } else if (micReady === 2) {
       setMicReady(0);
-      setStep(5);
-      setTyped2(0);
+      setVoiceOverlay(true);
+      setVoiceCmd(2);
+      setVoiceText('');
+      startRecognition(30000);
+    }
+  };
+
+  // User clicks "完成" on the voice overlay — close overlay and proceed with preset text
+  const handleVoiceDone = () => {
+    setVoiceOverlay(false);
+    try { if (recognitionRef.current) recognitionRef.current.stop(); } catch { /* */ }
+    if (voiceCmd === 1) {
+      setStep(1); setTyped1(CMD1.length);
       scroll();
-      const iv2 = Math.floor(4200 / CMD2.length);
-      let c2 = 0;
-      if (typingRef.current) clearInterval(typingRef.current);
-      typingRef.current = setInterval(() => {
-        c2++;
-        setTyped2(c2);
-        if (c2 >= CMD2.length && typingRef.current) clearInterval(typingRef.current);
-      }, iv2);
+      timersRef.current = [
+        setTimeout(() => { setStep(2); scroll(); }, 500),
+        setTimeout(() => { setStep(3); setR1Lines(1); scroll(); }, 1500),
+        setTimeout(() => { setR1Lines(2); scroll(); speak('数据排名完成，月钻石占比末位2名为张宁经理和王芯经理，是否启动AI外呼任务？'); }, 3500),
+      ];
+    } else if (voiceCmd === 2) {
+      setStep(5); setTyped2(CMD2.length);
+      scroll();
       timersRef.current = [
         ...timersRef.current,
-        setTimeout(() => { if (typingRef.current) clearInterval(typingRef.current); setTyped2(CMD2.length); setStep(6); scroll(); }, 4500),
-        setTimeout(() => { setStep(7); setR2Lines(1); scroll(); }, 5500),
-        setTimeout(() => { setR2Lines(2); scroll(); }, 7500),
-        setTimeout(() => { setStep(8); setPptStep(1); scroll(); speak('主管检视会材料已准备好。PPT共6页，包含核心指标排名、优秀案例、缺口分析和下一步工作要求，请您确认。'); }, 9000),
-        setTimeout(() => { setPptStep(2); scroll(); }, 9600),
-        setTimeout(() => { setPptStep(3); scroll(); }, 10200),
-        setTimeout(() => { setPptStep(4); scroll(); }, 10800),
-        setTimeout(() => { setPptStep(5); scroll(); }, 11400),
+        setTimeout(() => { setStep(6); scroll(); }, 500),
+        setTimeout(() => { setStep(7); setR2Lines(1); scroll(); }, 1500),
+        setTimeout(() => { setR2Lines(2); scroll(); }, 3500),
+        setTimeout(() => { setStep(8); setPptStep(1); scroll(); speak('主管检视会材料已准备好。PPT共6页，包含核心指标排名、优秀案例、缺口分析和下一步工作要求，请您确认。'); }, 5000),
+        setTimeout(() => { setPptStep(2); scroll(); }, 5600),
+        setTimeout(() => { setPptStep(3); scroll(); }, 6200),
+        setTimeout(() => { setPptStep(4); scroll(); }, 6800),
+        setTimeout(() => { setPptStep(5); scroll(); }, 7400),
       ];
     }
   };
 
   const handleConfirmPPT = () => { setPptConfirmed(true); scroll(); speak('好的，会议邀请已发送至王芯和刘志兴，PPT已同步至会议附件，时间节点已写入AI日历。'); };
+
+  const handleConfirmCall = () => { setCallStep(1); scroll(); };
 
   // Current call script for modal
   const currentScript = callModalIdx >= 0 ? CALL_SCRIPTS[callModalIdx] : null;
@@ -259,19 +286,7 @@ export function ScenarioTracking({ onBack }: Props) {
           {step >= 1 && (
             <div className="sc-chat-row sc-chat-user pc-fade-in-up">
               <div className="sc-chat-bubble-user">
-                {step === 1 ? (
-                  <div className="sc-voice-active">
-                    <span className="sc-mic-icon">🎙️</span>
-                    <div className="sc-waveform">
-                      {[...Array(12)].map((_, i) => <span key={i} className="sc-wave-bar" style={{ animationDelay: `${i * 0.08}s` }} />)}
-                    </div>
-                    {typed1 > 0 && (
-                      <div className="sc-voice-typing">{CMD1.slice(0, typed1)}<span className="sc-typing-cursor" /></div>
-                    )}
-                  </div>
-                ) : (
-                  <span className="sc-voice-text">{CMD1}</span>
-                )}
+                <span className="sc-voice-text">{CMD1}</span>
               </div>
               <span className="sc-avatar-user">我</span>
             </div>
@@ -292,6 +307,11 @@ export function ScenarioTracking({ onBack }: Props) {
                   </div>
                 ))}
               </div>
+              {r1Lines >= 2 && callStep === 0 && (
+                <button className="pc-cta-btn pc-diag-section-reveal" style={{ marginTop: 12, fontSize: 13 }} onClick={handleConfirmCall}>
+                  <span>☎️</span> 确认，启动AI外呼
+                </button>
+              )}
             </div>
           )}
 
@@ -441,19 +461,7 @@ export function ScenarioTracking({ onBack }: Props) {
           {step >= 5 && (
             <div className="sc-chat-row sc-chat-user pc-fade-in-up">
               <div className="sc-chat-bubble-user">
-                {step === 5 ? (
-                  <div className="sc-voice-active">
-                    <span className="sc-mic-icon">🎙️</span>
-                    <div className="sc-waveform">
-                      {[...Array(12)].map((_, i) => <span key={i} className="sc-wave-bar" style={{ animationDelay: `${i * 0.08}s` }} />)}
-                    </div>
-                    {typed2 > 0 && (
-                      <div className="sc-voice-typing">{CMD2.slice(0, typed2)}<span className="sc-typing-cursor" /></div>
-                    )}
-                  </div>
-                ) : (
-                  <span className="sc-voice-text">{CMD2}</span>
-                )}
+                <span className="sc-voice-text">{CMD2}</span>
               </div>
               <span className="sc-avatar-user">我</span>
             </div>
@@ -565,6 +573,38 @@ export function ScenarioTracking({ onBack }: Props) {
             <button className="sc-input-mic-btn" onClick={handleMicClick}>
               <span className="sc-input-mic-icon">🎙️</span>
               <span className="sc-input-mic-pulse" />
+            </button>
+          </div>
+        </div>
+      )}
+      {/* ── Voice Recognition Overlay ── */}
+      {voiceOverlay && (
+        <div className="sc-vr-overlay">
+          <div className="sc-vr-panel">
+            <div className="sc-vr-header">
+              <span className="sc-call-modal-rec-dot" />
+              <span className="sc-vr-header-text">语音识别中…</span>
+            </div>
+            <div className="sc-vr-wave-section">
+              <div className="sc-vr-wave-ring">
+                <div className="sc-vr-wave-ring-inner">
+                  <span className="sc-vr-mic-icon">🎙️</span>
+                </div>
+              </div>
+              <div className="sc-vr-waveform">
+                {[...Array(24)].map((_, i) => <span key={i} className="sc-wave-bar sc-vr-wave-bar" style={{ animationDelay: `${i * 0.06}s` }} />)}
+              </div>
+              <div className="sc-vr-hint">请说出您的指令…</div>
+            </div>
+            <div className="sc-vr-text-section">
+              <div className="sc-vr-label">语音转文字</div>
+              <div className="sc-vr-text">
+                {voiceText || <span className="sc-vr-placeholder">正在聆听…</span>}
+                {voiceText && <span className="sc-typing-cursor" />}
+              </div>
+            </div>
+            <button className="sc-vr-done-btn" onClick={handleVoiceDone}>
+              ✓ 完成
             </button>
           </div>
         </div>

@@ -14,7 +14,7 @@ interface PCDashboardProps {
 const REASONING_LINES = [
   '正在并行执行——扫描 8 个营业部 × 12 项指标 = 96 个数据点，交叉比对基准线、环比、同比…',
   '发现异常簇：阳光部人均FYC和有效活动率同时偏离基准线，且连续5日下滑无回弹迹象——判定为"结构性异常"而非波动噪声',
-  '进一步关联分析：该部出勤率、1V1扫码量、1VN参与率三项行为指标均同步下降 → 判断为"团队行为塔基崩溃"而非单一指标波动',
+  '进一步关联分析：该部出勤率、1V1扫码量、1VN参与率三项行为指标均同步下降 → 判断为"团队行为全面失活"而非单一指标波动',
 ];
 
 const DRAWER_THOUGHTS = [
@@ -35,6 +35,34 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
   const [activeScenario, setActiveScenario] = useState<ScenarioId>('inspection-radar');
   const drawerBodyRef = useRef<HTMLDivElement>(null);
   const { narratorText, speak, stop } = useNarrator();
+
+  // Subtle alert beep using Web Audio API
+  const playAlertBeep = () => {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.6);
+      // Second softer beep
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.type = 'sine';
+      osc2.frequency.value = 660;
+      gain2.gain.setValueAtTime(0.08, ctx.currentTime + 0.15);
+      gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
+      osc2.start(ctx.currentTime + 0.15);
+      osc2.stop(ctx.currentTime + 0.7);
+    } catch { /* ignore if AudioContext unavailable */ }
+  };
 
   // Live clock
   useEffect(() => {
@@ -81,7 +109,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
     const t1 = setTimeout(() => setReasoningLines([REASONING_LINES[0]]), 400);
     const t2 = setTimeout(() => setReasoningLines(REASONING_LINES.slice(0, 2)), 2800);
     const t3 = setTimeout(() => setReasoningLines(REASONING_LINES), 5200);
-    const t4 = setTimeout(() => { setShowAlertBadge(true); setPhase('alert'); speak('赵虎，检测到阳光部出现结构性异常，人均FYC跌破红线，有效活动率仅17%，连续5日下滑无回弹，建议立即查看诊断报告。'); }, 7200);
+    const t4 = setTimeout(() => { setShowAlertBadge(true); setPhase('alert'); playAlertBeep(); speak('赵虎，检测到阳光部出现结构性异常，人均FYC跌破红线，有效活动率仅17%，连续5日下滑无回弹，建议立即查看诊断报告。'); }, 7200);
     return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, [phase]);
 
@@ -93,7 +121,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
       setTimeout(() => setDrawerStep(2), 1200),  // thought 2
       setTimeout(() => setDrawerStep(3), 2100),  // thought 3
       setTimeout(() => setDrawerStep(4), 3000),  // thought 4 — all thoughts done
-      setTimeout(() => { setDrawerStep(5); speak('诊断报告已生成。阳光部存在团队行为塔基崩溃问题，自愈概率低于5%，建议从士气重建和外部标杆借力两个方向同时介入。'); }, 3700),  // collapse → section 1 slides in
+      setTimeout(() => { setDrawerStep(5); speak('诊断报告已生成。阳光部存在团队行为全面失活问题，自愈概率低于5%，建议从士气重建和外部标杆借力两个方向同时介入。'); }, 3700),  // collapse → section 1 slides in
       setTimeout(() => setDrawerStep(6), 4200),  // section 2
       setTimeout(() => setDrawerStep(7), 4700),  // section 3
       setTimeout(() => setDrawerStep(8), 5200),  // section 4
@@ -136,7 +164,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
 
   const agents = [
     {
-      id: 'management', name: '管理智能体', icon: '🧠', color: '#3B82F6',
+      id: 'management', name: '经营管理智能体', icon: '🧠', color: '#3B82F6',
       scenarios: [
         { id: 'inspection-radar' as ScenarioId, name: '智能巡检雷达', icon: '📡', tag: '每日自动巡检' },
         { id: 'interview' as ScenarioId, name: '智能面谈全流程', icon: '💬', tag: '动态策略树' },
@@ -144,12 +172,11 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
       ],
     },
     {
-      id: 'case-mining', name: '案例挖掘智能体', icon: '🏆', color: '#047857',
+      id: 'case-mining', name: '内容创作智能体', icon: '🏆', color: '#047857',
       scenarios: [
         { id: 'operations' as ScenarioId, name: '周五自动化运营', icon: '🤖', tag: '人机对话驱动' },
       ],
     },
-    { id: 'content-creation', name: '内容创作智能体', icon: '✍️', color: '#7C3AED', scenarios: [] as { id: ScenarioId; name: string; icon: string; tag: string }[] },
   ];
 
   return (
@@ -167,7 +194,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
         <div className="pc-header-center">
           <span className="pc-breadcrumb">
             <span className="pc-breadcrumb-agent">
-              {activeScenario === 'operations' ? '案例挖掘智能体' : '管理智能体'}
+              {activeScenario === 'operations' ? '内容创作智能体' : '经营管理智能体'}
             </span>
             <span className="pc-breadcrumb-sep">›</span>
             <span className="pc-breadcrumb-scenario">
@@ -439,7 +466,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
             <div className="pc-drawer-header">
               <div>
                 <div className="pc-drawer-title">异常诊断报告</div>
-                <div className="pc-drawer-sub">管理智能体 · AI 实时生成</div>
+                <div className="pc-drawer-sub">经营管理智能体 · AI 实时生成</div>
               </div>
               <button className="pc-drawer-close" onClick={() => setDrawerOpen(false)}>✕</button>
             </div>
@@ -567,7 +594,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
                         <span className="pc-layer-num">④</span>根因推断
                       </div>
                       <div className="pc-cause-chain-row">
-                        {['连续未出单', '士气塌方', '出勤下降', '基础动作量下降', '业绩进一步下滑'].map(
+                        {['连续未出单', '士气低迷', '出勤下降', '基础动作量下降', '业绩进一步下滑'].map(
                           (node, i, arr) => (
                             <span key={i} className="pc-cause-inline">
                               <span className="pc-cause-node">{node}</span>
