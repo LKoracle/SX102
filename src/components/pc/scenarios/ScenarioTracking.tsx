@@ -113,7 +113,7 @@ export function ScenarioTracking({ onBack }: Props) {
     dialogTimerRef.current = [];
     dialogCancelledRef.current = false;
 
-    // Play lines sequentially: show line → if AI, speak & wait for speech end → pause → next
+    // Play lines sequentially: show line → speak (AI=female, person=male) → wait for speech end → pause → next
     const playLine = (i: number) => {
       if (dialogCancelledRef.current || i >= script.lines.length) return;
       const line = script.lines[i];
@@ -122,30 +122,32 @@ export function ScenarioTracking({ onBack }: Props) {
       setDialogIdx(i + 1);
 
       if (line.role === 'ai') {
-        // Speak AI line, then wait for speech to finish before next
         speech.speak(line.text);
-        const pollDone = () => {
-          if (dialogCancelledRef.current) return;
-          const t = setTimeout(() => {
-            if (dialogCancelledRef.current) return;
-            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-              pollDone();
-            } else {
-              // Speech done — brief pause, then next line
-              const t2 = setTimeout(() => playLine(i + 1), 800);
-              dialogTimerRef.current.push(t2);
-            }
-          }, 300);
-          dialogTimerRef.current.push(t);
-        };
-        // Start polling after a small initial delay
-        const t0 = setTimeout(pollDone, 500);
-        dialogTimerRef.current.push(t0);
       } else {
-        // Person line: just a pause before next
-        const t = setTimeout(() => playLine(i + 1), 1200);
-        dialogTimerRef.current.push(t);
+        // 张宁(callModalIdx=0) → speakMale2, 王芯(callModalIdx=1) → speakMale
+        if (callModalIdx === 0) {
+          speech.speakMale2(line.text);
+        } else {
+          speech.speakMale(line.text);
+        }
       }
+
+      const pollDone = () => {
+        if (dialogCancelledRef.current) return;
+        const t = setTimeout(() => {
+          if (dialogCancelledRef.current) return;
+          if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+            pollDone();
+          } else {
+            const pause = line.role === 'ai' ? 800 : 600;
+            const t2 = setTimeout(() => playLine(i + 1), pause);
+            dialogTimerRef.current.push(t2);
+          }
+        }, 300);
+        dialogTimerRef.current.push(t);
+      };
+      const t0 = setTimeout(pollDone, 500);
+      dialogTimerRef.current.push(t0);
     };
 
     // Start first line after 800ms

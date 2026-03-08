@@ -7,6 +7,8 @@ interface UseSpeechReturn {
   startListening: () => void;
   stopListening: () => void;
   speak: (text: string) => void;
+  speakMale: (text: string) => void;
+  speakMale2: (text: string) => void;
   enqueueSpeak: (text: string) => void;
   narrate: (text: string, onEnd?: () => void) => void;
   stopSpeaking: () => void;
@@ -26,35 +28,44 @@ const getSpeechRecognition = (): (new () => any) | null => {
 };
 
 /**
- * Pick a male Chinese voice for narrator/旁白.
- * Prefers Azure neural male voices exposed by Chrome/Edge.
- * Falls back to any zh voice that is not the best female voice.
+ * Pick a male Chinese voice for person/client lines.
+ * @param skip — number of matches to skip (0 = first male voice, 1 = second male voice)
+ * Works with both English voice names (Yunxi) and Chinese localized names (云希).
+ * On Edge, non-local voices are Azure Neural = high quality.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function pickMaleZhVoice(): SpeechSynthesisVoice | null {
+export function pickMaleZhVoice(skip = 0): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
-  // Prefer Mandarin (zh-CN); only fall back to other zh variants if no CN voice exists
   const allZh = voices.filter((v) => v.lang.startsWith('zh'));
   const zhCN = allZh.filter((v) => v.lang.replace('_', '-').startsWith('zh-CN'));
   const zhVoices = zhCN.length > 0 ? zhCN : allZh;
   if (zhVoices.length === 0) return null;
 
-  const maleNames = ['Yunxi', 'Yunyang', 'Yunjian', 'Yunfeng', 'Yunhao'];
-  const qualityTags = ['Natural', 'Premium', 'Enhanced', 'Neural'];
+  // Male voice keywords — English + Chinese localized names
+  // Grouped in pairs: each pair = one voice identity (English name, Chinese name)
+  const maleNames = ['Yunxi', '云希', 'Yunyang', '云扬', 'Yunjian', '云健', 'Yunfeng', '云枫', 'Yunhao', '云皓', 'Kangkang', '康康'];
+  const qualityTags = ['Natural', 'Premium', 'Enhanced', 'Neural', '自然', '在线'];
 
-  // 1st pass: Natural / Premium variant of a known male voice (best quality)
+  // Collect all distinct high-quality male voices found
+  const found: SpeechSynthesisVoice[] = [];
+  const seen = new Set<string>();
+
+  // 1st pass: high-quality male voices
   for (const name of maleNames) {
-    const premium = zhVoices.find(
-      (v) => v.name.includes(name) && qualityTags.some((t) => v.name.includes(t))
+    const match = zhVoices.find(
+      (v) => v.name.includes(name) && !seen.has(v.name) && (qualityTags.some((t) => v.name.includes(t)) || !v.localService)
     );
-    if (premium) return premium;
+    if (match) { found.push(match); seen.add(match.name); }
   }
-  // 2nd pass: any known male voice
+  // 2nd pass: any known male voice name (including local)
   for (const name of maleNames) {
-    const match = zhVoices.find((v) => v.name.includes(name));
-    if (match) return match;
+    const match = zhVoices.find((v) => v.name.includes(name) && !seen.has(v.name));
+    if (match) { found.push(match); seen.add(match.name); }
   }
-  // 3rd pass: any non-local (network) voice that isn't the female pick
+
+  if (found.length > skip) return found[skip];
+  if (found.length > 0) return found[0];
+
+  // Fallback: non-local voice that differs from the female pick
   const femaleVoice = pickBestZhVoice();
   const remote = zhVoices.find((v) => !v.localService && v !== femaleVoice);
   if (remote) return remote;
@@ -63,10 +74,8 @@ export function pickMaleZhVoice(): SpeechSynthesisVoice | null {
 }
 
 /**
- * Pick the most natural-sounding Chinese voice available.
- * Prefer voices whose name contains keywords like "Natural", "Premium",
- * "Xiaoxiao", "Yunxi" (Azure neural voices that Chrome/Edge expose),
- * then fall back to any zh voice.
+ * Pick the best female Chinese voice (for AI assistant lines).
+ * Works with both English voice names (Xiaoxiao) and Chinese localized names (晓晓).
  */
 function pickBestZhVoice(): SpeechSynthesisVoice | null {
   const voices = window.speechSynthesis.getVoices();
@@ -75,13 +84,23 @@ function pickBestZhVoice(): SpeechSynthesisVoice | null {
   const zhVoices = zhCN.length > 0 ? zhCN : allZh;
   if (zhVoices.length === 0) return null;
 
-  // Rank by quality keywords (order matters – first match wins)
-  const qualityKeywords = ['Natural', 'Premium', 'Enhanced', 'Neural', 'Xiaoxiao', 'Yunxi', 'Female'];
-  for (const kw of qualityKeywords) {
-    const match = zhVoices.find((v) => v.name.includes(kw));
+  // Female voice keywords — English + Chinese localized names
+  const femaleNames = ['Xiaoxiao', '晓晓', 'Xiaoyi', '晓伊', 'Xiaoxuan', '晓萱'];
+  const qualityTags = ['Natural', 'Premium', 'Enhanced', 'Neural', '自然', '在线'];
+
+  // 1st: high-quality female by name
+  for (const name of femaleNames) {
+    const premium = zhVoices.find(
+      (v) => v.name.includes(name) && (qualityTags.some((t) => v.name.includes(t)) || !v.localService)
+    );
+    if (premium) return premium;
+  }
+  // 2nd: any known female name
+  for (const name of femaleNames) {
+    const match = zhVoices.find((v) => v.name.includes(name));
     if (match) return match;
   }
-  // Prefer non-local (network) voices – they tend to sound better
+  // 3rd: first non-local (network) voice — on Edge these are always high quality
   const remote = zhVoices.find((v) => !v.localService);
   if (remote) return remote;
 
@@ -232,6 +251,79 @@ export function useSpeech(): UseSpeechReturn {
     });
   }, []);
 
+  /** Speak as 王芯经理 — uses zh-TW (台湾国语) female voice for differentiation. */
+  const speakMale = useCallback((text: string) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    window.speechSynthesis.cancel();
+
+    // Pick a zh-TW voice: HsiaoChen/晓辰, HsiaoYu/晓雨, or any zh-TW
+    const voices = window.speechSynthesis.getVoices();
+    const twVoices = voices.filter((v) => {
+      const lang = v.lang.replace('_', '-');
+      return lang.startsWith('zh-TW') || lang.startsWith('zh-Hant');
+    });
+    const twOnline = twVoices.find((v) => !v.localService);
+    const voice = twOnline ?? twVoices[0] ?? pickBestZhVoice();
+
+    const chunks = splitIntoChunks(text);
+    if (chunks.length === 0) return;
+
+    setIsSpeaking(true);
+
+    chunks.forEach((chunk, idx) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
+      utterance.lang = voice?.lang?.startsWith('zh') ? voice.lang : 'zh-TW';
+      utterance.rate = 1.3;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      if (voice) {
+        utterance.voice = voice;
+      }
+
+      if (idx === chunks.length - 1) {
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+      }
+
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
+  /** Speak as 张宁经理 — zh-CN female voice with pitch=0.5, rate=1.3 to simulate male. */
+  const speakMale2 = useCallback((text: string) => {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    window.speechSynthesis.cancel();
+
+    const voice = pickBestZhVoice();
+
+    const chunks = splitIntoChunks(text);
+    if (chunks.length === 0) return;
+
+    setIsSpeaking(true);
+
+    chunks.forEach((chunk, idx) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
+      utterance.lang = 'zh-CN';
+      utterance.rate = 1.3;
+      utterance.pitch = 0.5;
+      utterance.volume = 1.0;
+
+      if (voice && voice.lang.startsWith('zh')) {
+        utterance.voice = voice;
+      }
+
+      if (idx === chunks.length - 1) {
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+      }
+
+      window.speechSynthesis.speak(utterance);
+    });
+  }, []);
+
   /** Queue speech WITHOUT cancelling ongoing utterances. */
   const enqueueSpeak = useCallback((text: string) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
@@ -350,6 +442,8 @@ export function useSpeech(): UseSpeechReturn {
     startListening,
     stopListening,
     speak,
+    speakMale,
+    speakMale2,
     enqueueSpeak,
     narrate,
     stopSpeaking,

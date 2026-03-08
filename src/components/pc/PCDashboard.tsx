@@ -25,7 +25,9 @@ const DRAWER_THOUGHTS = [
 ];
 
 export function PCDashboard({ onModeToggle }: PCDashboardProps) {
+  const [ready, setReady] = useState(false);
   const [phase, setPhase] = useState<DemoPhase>('idle');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [cardsVisible, setCardsVisible] = useState<boolean[]>([false, false, false]);
   const [reasoningLines, setReasoningLines] = useState<string[]>([]);
   const [showAlertBadge, setShowAlertBadge] = useState(false);
@@ -75,11 +77,16 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
     return () => clearInterval(id);
   }, []);
 
-  // Auto-start on mount
+  // Auto-start after user clicks "enter"
   useEffect(() => {
+    if (!ready) return;
+    // Warm up speech synthesis after user gesture
+    const u = new SpeechSynthesisUtterance('');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
     const t = setTimeout(() => setPhase('loading'), 800);
     return () => clearTimeout(t);
-  }, []);
+  }, [ready]);
 
   const restartInspection = () => {
     setCardsVisible([false, false, false]);
@@ -171,6 +178,23 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
 
   return (
     <div className="pc-layout">
+      {/* ── Welcome overlay — ensures user gesture before speech ── */}
+      {!ready && (
+        <div className="pc-welcome-overlay" onClick={() => setReady(true)}>
+          <div className="pc-welcome-card">
+            <div className="pc-welcome-logo">平安DO</div>
+            <div className="pc-welcome-sub">AI 经营管理平台</div>
+            <div className="pc-welcome-user">
+              <div className="pc-welcome-avatar">赵</div>
+              <div>
+                <div className="pc-welcome-name">赵虎</div>
+                <div className="pc-welcome-role">营业区经理</div>
+              </div>
+            </div>
+            <button className="pc-welcome-btn">进入系统</button>
+          </div>
+        </div>
+      )}
       {/* ── Header ── */}
       <header className="pc-header">
         <div className="pc-header-left">
@@ -201,38 +225,51 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
             </span>
           </div>
           <span className="pc-time">{currentTime}</span>
-          <button className="pc-mode-toggle-btn" onClick={onModeToggle}>
-            <span>📱</span>切换到外勤
-          </button>
+          <div className="pc-user-avatar" title="赵虎 · 营业区经理">
+            <span className="pc-user-avatar-img">赵</span>
+            <span className="pc-user-avatar-name">赵虎</span>
+          </div>
         </div>
       </header>
 
       <div className="pc-body">
-        {/* ── Sidebar ── */}
-        <aside className="pc-sidebar">
-          <div className="pc-sidebar-section-label">AI 场景</div>
-          {sidebarItems.map((item) => (
-            <button key={item.id}
-              className={`pc-scenario-btn ${activeScenario === item.id ? 'pc-scenario-btn-active' : ''}`}
-              style={{ borderLeftColor: item.color }}
-              onClick={() => switchScenario(item.id)}>
-              <span className="pc-scenario-btn-icon">{item.icon}</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="pc-scenario-btn-name">{item.name}</div>
-                <div className="pc-scenario-btn-tag">{item.tag}</div>
+        {/* ── Sidebar wrapper ── */}
+        <div className={`pc-sidebar-wrap ${sidebarCollapsed ? 'pc-sidebar-wrap-collapsed' : ''}`}>
+          <aside className={`pc-sidebar ${sidebarCollapsed ? 'pc-sidebar-collapsed' : ''}`}>
+            <div className="pc-sidebar-section-label">AI 场景</div>
+            {sidebarItems.map((item) => (
+              <button key={item.id}
+                className={`pc-scenario-btn ${activeScenario === item.id ? 'pc-scenario-btn-active' : ''}`}
+                style={{ borderLeftColor: item.color }}
+                onClick={() => switchScenario(item.id)}>
+                <span className="pc-scenario-btn-icon">{item.icon}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="pc-scenario-btn-name">{item.name}</div>
+                  <div className="pc-scenario-btn-tag">{item.tag}</div>
+                </div>
+                {activeScenario === item.id && <span className="pc-scenario-active-dot" style={{ background: item.color }} />}
+              </button>
+            ))}
+            <div className="pc-sidebar-footer">
+              <div className="pc-sidebar-footer-agent-list">
+                <span className="pc-sidebar-footer-badge blue">管理</span>
+                <span className="pc-sidebar-footer-badge green">案例</span>
+                <span className="pc-sidebar-footer-badge purple">创作</span>
               </div>
-              {activeScenario === item.id && <span className="pc-scenario-active-dot" style={{ background: item.color }} />}
-            </button>
-          ))}
-          <div className="pc-sidebar-footer">
-            <div className="pc-sidebar-footer-agent-list">
-              <span className="pc-sidebar-footer-badge blue">管理</span>
-              <span className="pc-sidebar-footer-badge green">案例</span>
-              <span className="pc-sidebar-footer-badge purple">创作</span>
+              <div className="pc-sidebar-footer-tip">Multi-Agent 协同平台</div>
+              <button className="pc-mode-toggle-btn" onClick={onModeToggle}>
+                📱 外勤模式
+              </button>
             </div>
-            <div className="pc-sidebar-footer-tip">Multi-Agent 协同平台</div>
-          </div>
-        </aside>
+          </aside>
+          <button
+            className="pc-sidebar-collapse-btn"
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            title={sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'}
+          >
+            <span className={`pc-sidebar-collapse-arrow ${sidebarCollapsed ? 'pc-sidebar-collapse-arrow-right' : ''}`}>◀</span>
+          </button>
+        </div>
 
         {/* ── Main ── */}
         <main className="pc-main" style={{ position: 'relative', overflow: 'hidden' }}>
@@ -258,8 +295,6 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
           <div style={{
             height: '100%', overflowY: 'auto',
             padding: '24px 28px',
-            paddingRight: drawerOpen ? '432px' : '28px',
-            transition: 'padding-right 0.4s ease',
           }}>
             {/* Scene Title */}
             <div className="pc-scene-header">
@@ -425,7 +460,7 @@ export function PCDashboard({ onModeToggle }: PCDashboardProps) {
             className={`pc-ai-fab ${showAlertBadge ? 'pc-ai-fab-alert' : ''} ${phase === 'idle' || phase === 'loading' ? 'pc-ai-fab-dim' : ''}`}
             onClick={phase === 'alert' || phase === 'drawer' ? openDiagnostics : undefined}
             title={showAlertBadge ? '发现异常，点击查看诊断报告' : 'AI 助手'}
-            style={{ right: drawerOpen ? '432px' : '24px', transition: 'right 0.4s ease' }}
+            style={{ right: '24px', transition: 'right 0.4s ease' }}
           >
             <span className="pc-ai-fab-emoji">🤖</span>
             {showAlertBadge && <span className="pc-ai-fab-badge">1</span>}
