@@ -1,13 +1,16 @@
-import { useRef, useEffect } from 'react';
-import type { WeChatChatMessage, WeChatMoment, WeChatScreenshotHelper } from '../types';
+import { useRef, useEffect, useState } from 'react';
+import type { WeChatChatMessage, WeChatMoment, WeChatScreenshotHelper, SmartKeyboardData } from '../types/index';
 
 interface WeChatSimulatorProps {
   currentView: 'chat' | 'moments';
   chatMessages: WeChatChatMessage[];
   moments: WeChatMoment[];
-  screenshotHelper: WeChatScreenshotHelper | null;
+  screenshotHelper: WeChatScreenshotHelper | null;   // keep existing (for backward compat, may not be used)
+  smartKeyboard: SmartKeyboardData | null;             // NEW
+  showFloatBtn: boolean;                               // NEW
   onSwitchView: (view: 'chat' | 'moments') => void;
   onSendReply?: (text: string) => void;
+  onReturnToAssistant?: () => void;                    // NEW - called when float btn clicked
   selfName?: string;
   contactName?: string;
 }
@@ -223,14 +226,226 @@ function WeChatInputBar({ onShowHelper }: { onShowHelper?: () => void }) {
   );
 }
 
+/* ─── Smart Keyboard ─── */
+function SmartKeyboard({
+  data,
+  onSend,
+  onDismiss,
+}: {
+  data: SmartKeyboardData;
+  onSend: (text: string) => void;
+  onDismiss: () => void;
+}) {
+  const [status, setStatus] = useState<'idle' | 'analyzing' | 'ready'>('idle');
+
+  // Auto-start analyzing when component mounts if data is provided
+  useEffect(() => {
+    setStatus('analyzing');
+    const t = setTimeout(() => setStatus('ready'), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const screenshotBtnStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 3,
+    padding: '0 8px',
+    height: 32,
+    borderRadius: 6,
+    border: 'none',
+    fontSize: 12,
+    fontWeight: 500,
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    background: status === 'idle'
+      ? '#e0e0e0'
+      : 'linear-gradient(135deg, #3B82F6, #6366F1)',
+    color: status === 'idle' ? '#555' : '#fff',
+    boxShadow: status !== 'idle'
+      ? '0 0 8px rgba(59,130,246,0.6)'
+      : 'none',
+    animation: status === 'analyzing' ? 'pulse 1.2s ease-in-out infinite' : 'none',
+  };
+
+  const inputRowStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    height: 52,
+    minHeight: 52,
+    padding: '0 10px',
+    background: '#ededed',
+    flexShrink: 0,
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+      {/* AI panel — stacked above input row */}
+      {status !== 'idle' && (
+        <div
+          style={{
+            background: 'rgba(15, 23, 42, 0.95)',
+            borderRadius: '16px 16px 0 0',
+            overflow: 'hidden',
+            flexShrink: 0,
+          }}
+        >
+          {status === 'analyzing' && (
+            <div style={{ padding: '12px 14px 14px' }}>
+              <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: 500, marginBottom: 10 }}>
+                🔍 AI正在分析截图中...
+              </div>
+              {/* Shimmer progress bar */}
+              <div
+                style={{
+                  width: '100%',
+                  height: 6,
+                  borderRadius: 3,
+                  background: 'rgba(255,255,255,0.1)',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    height: '100%',
+                    width: '40%',
+                    borderRadius: 3,
+                    background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.8), rgba(59,130,246,0.9), transparent)',
+                    animation: 'shimmer 1.4s ease-in-out infinite',
+                  }}
+                />
+              </div>
+              <style>{`
+                @keyframes shimmer {
+                  0% { transform: translateX(-150%); }
+                  100% { transform: translateX(350%); }
+                }
+                @keyframes pulse {
+                  0%, 100% { box-shadow: 0 0 6px rgba(59,130,246,0.5); }
+                  50% { box-shadow: 0 0 14px rgba(99,102,241,0.9); }
+                }
+              `}</style>
+            </div>
+          )}
+
+          {status === 'ready' && (
+            <div>
+              {/* Header */}
+              <div
+                style={{
+                  padding: '10px 14px 8px',
+                  borderBottom: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>✨ AI识别结果</div>
+                <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginTop: 3 }}>
+                  识别到: {data.analysis}
+                </div>
+              </div>
+              {/* Script section */}
+              <div style={{ padding: '10px 14px 14px' }}>
+                <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginBottom: 6 }}>💬 推荐话术</div>
+                <div
+                  style={{
+                    color: '#fff',
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    marginBottom: 12,
+                  }}
+                >
+                  "{data.recommendedScript}"
+                </div>
+                <button
+                  onClick={() => onSend(data.recommendedScript)}
+                  style={{
+                    width: '100%',
+                    background: 'linear-gradient(135deg, #3B82F6, #6366F1)',
+                    color: '#fff',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    border: 'none',
+                    borderRadius: 12,
+                    padding: '10px 0',
+                    cursor: 'pointer',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  发 送 话 术
+                </button>
+              </div>
+              <style>{`
+                @keyframes pulse {
+                  0%, 100% { box-shadow: 0 0 6px rgba(59,130,246,0.5); }
+                  50% { box-shadow: 0 0 14px rgba(99,102,241,0.9); }
+                }
+              `}</style>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Input row */}
+      <div style={inputRowStyle}>
+        <button className="wc-input-icon">🎤</button>
+        <div className="wc-input-field" style={{ flex: 1 }}>输入消息...</div>
+        <button style={screenshotBtnStyle} onClick={() => {}}>
+          📸 截屏{status !== 'idle' ? '✨' : ''}
+        </button>
+        <button className="wc-input-icon">😊</button>
+        <button className="wc-input-icon">＋</button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Floating return button ─── */
+function FloatingReturnBtn({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        position: 'absolute',
+        top: 52,  // below status bar
+        right: 10,
+        width: 36,
+        height: 36,
+        borderRadius: '50%',
+        background: 'rgba(29, 78, 216, 0.85)',
+        backdropFilter: 'blur(8px)',
+        border: '1.5px solid rgba(255,255,255,0.3)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 60,
+        cursor: 'pointer',
+        boxShadow: '0 2px 12px rgba(29,78,216,0.4)',
+      }}
+      title="返回万能营销"
+    >
+      <span style={{ fontSize: 16 }}>🏠</span>
+    </button>
+  );
+}
+
 /* ─── Main component ─── */
 export function WeChatSimulator({
   currentView,
   chatMessages,
   moments,
   screenshotHelper,
+  smartKeyboard,
+  showFloatBtn,
   onSwitchView,
   onSendReply,
+  onReturnToAssistant,
   contactName,
 }: WeChatSimulatorProps) {
   // Derive contact name dynamically from messages
@@ -286,15 +501,25 @@ export function WeChatSimulator({
         </>
       )}
 
-      {/* Input bar (only in chat view) */}
+      {/* Smart Keyboard OR regular input bar (only in chat view) */}
       {currentView === 'chat' && (
-        <WeChatInputBar />
+        smartKeyboard ? (
+          <SmartKeyboard
+            data={smartKeyboard}
+            onSend={(text) => {
+              onSendReply?.(text);
+            }}
+            onDismiss={() => {}}
+          />
+        ) : (
+          <WeChatInputBar />
+        )
       )}
 
       {/* Bottom tab bar */}
       <WeChatTabBar current={currentView} onSwitch={onSwitchView} />
 
-      {/* AI Helper panel — slides up from bottom */}
+      {/* AI Helper panel — slides up from bottom (backward compat) */}
       {screenshotHelper && screenshotHelper.visible && (
         <AIHelperPanel
           helper={screenshotHelper}
@@ -302,6 +527,11 @@ export function WeChatSimulator({
           onSend={handleSendReply}
           onDismiss={() => {/* dismissed via wechatEvent from scenario */}}
         />
+      )}
+
+      {/* Float return button */}
+      {showFloatBtn && onReturnToAssistant && (
+        <FloatingReturnBtn onClick={onReturnToAssistant} />
       )}
     </div>
   );

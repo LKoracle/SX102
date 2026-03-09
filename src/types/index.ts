@@ -35,7 +35,9 @@ export type MessageContentType =
   | 'field-invitation'
   | 'field-customer-archive'
   | 'field-insurance-solution'
-  | 'field-sales-logic';
+  | 'field-sales-logic'
+  | 'field-monthly-plan'
+  | 'field-outreach-scripts';
 
 export interface Message {
   id: string;
@@ -79,8 +81,13 @@ export interface WeChatScreenshotHelper {
   visible: boolean;
 }
 
+export interface SmartKeyboardData {
+  analysis: string;
+  recommendedScript: string;
+}
+
 export interface WeChatEvent {
-  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder' | 'switch-to-assistant';
+  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder' | 'switch-to-assistant' | 'show-smart-keyboard' | 'show-float-btn' | 'hide-float-btn';
   data: unknown;
 }
 
@@ -95,6 +102,8 @@ export interface WeChatState {
   chatMessages: WeChatChatMessage[];
   moments: WeChatMoment[];
   screenshotHelper: WeChatScreenshotHelper | null;
+  smartKeyboard: SmartKeyboardData | null;
+  showFloatBtn: boolean;
 }
 
 export interface ScenarioStep {

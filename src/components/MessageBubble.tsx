@@ -35,6 +35,8 @@ import { FieldInvitationCard } from './cards/FieldInvitationCard';
 import { FieldCustomerArchiveCard } from './cards/FieldCustomerArchiveCard';
 import { FieldInsuranceSolutionCard } from './cards/FieldInsuranceSolutionCard';
 import { FieldSalesLogicCard } from './cards/FieldSalesLogicCard';
+import FieldMonthlyPlanCard from './cards/FieldMonthlyPlanCard';
+import FieldOutreachScriptsCard from './cards/FieldOutreachScriptsCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -203,6 +205,10 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldInsuranceSolutionCard data={message.data as Record<string, unknown>} />;
       case 'field-sales-logic':
         return <FieldSalesLogicCard data={message.data as Record<string, unknown>} />;
+      case 'field-monthly-plan':
+        return <FieldMonthlyPlanCard data={message.data as any} />;
+      case 'field-outreach-scripts':
+        return <FieldOutreachScriptsCard data={message.data as any} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

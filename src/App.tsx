@@ -8,7 +8,7 @@ import { WeChatSimulator } from './components/WeChatSimulator';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { fieldScenarios } from './data/fieldScenarios';
-import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder } from './types';
+import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder, SmartKeyboardData } from './types';
 
 // 3 sequential demo steps matching the document script
 const DEMO_STEPS = [
@@ -81,11 +81,13 @@ function App() {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [phoneView, setPhoneView] = useState<'assistant' | 'wechat'>('assistant');
 
-  const [wechatState, setWechatState] = useState<WeChatState>({
+  const [wechatState, setWeChatState] = useState<WeChatState>({
     currentView: 'chat',
     chatMessages: [],
     moments: [],
     screenshotHelper: null,
+    smartKeyboard: null,    // NEW
+    showFloatBtn: false,    // NEW
   });
   const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
 
@@ -93,10 +95,29 @@ function App() {
     events.forEach((evt) => {
       if (evt.type === 'show-followup-reminder') {
         setFollowUpReminder(evt.data as FollowUpReminder);
+        setPhoneView('assistant');
         return;
       }
       if (evt.type === 'switch-to-assistant') {
         setPhoneView('assistant');
+        setWeChatState(prev => ({ ...prev, smartKeyboard: null, showFloatBtn: false }));
+        return;
+      }
+      if (evt.type === 'show-smart-keyboard') {
+        setWeChatState(prev => ({
+          ...prev,
+          smartKeyboard: evt.data as SmartKeyboardData,
+          screenshotHelper: null,  // clear old helper if any
+        }));
+        setPhoneView('wechat');
+        return;
+      }
+      if (evt.type === 'show-float-btn') {
+        setWeChatState(prev => ({ ...prev, showFloatBtn: true }));
+        return;
+      }
+      if (evt.type === 'hide-float-btn') {
+        setWeChatState(prev => ({ ...prev, showFloatBtn: false }));
         return;
       }
       // Switch to WeChat view when there are chat/moment events
@@ -109,7 +130,7 @@ function App() {
       ) {
         setPhoneView('wechat');
       }
-      setWechatState((prev) => {
+      setWeChatState((prev) => {
         switch (evt.type) {
           case 'add-chat':
             return { ...prev, chatMessages: [...prev.chatMessages, evt.data as WeChatChatMessage] };
@@ -232,6 +253,11 @@ function App() {
     [speech]
   );
 
+  const handleReturnToAssistant = useCallback(() => {
+    setPhoneView('assistant');
+    setWeChatState(prev => ({ ...prev, showFloatBtn: false, smartKeyboard: null }));
+  }, []);
+
   return (
     <div
       className="demo-root noise-overlay"
@@ -311,17 +337,24 @@ function App() {
               chatMessages={wechatState.chatMessages}
               moments={wechatState.moments}
               screenshotHelper={wechatState.screenshotHelper}
-              onSwitchView={(v) => setWechatState((prev) => ({ ...prev, currentView: v }))}
+              smartKeyboard={wechatState.smartKeyboard}
+              showFloatBtn={wechatState.showFloatBtn}
+              onReturnToAssistant={handleReturnToAssistant}
+              onSwitchView={(v) => setWeChatState((prev) => ({ ...prev, currentView: v }))}
               onSendReply={(text) => {
-                // When user taps "点击发送" in WeChat AI helper
-                setWechatState((prev) => ({
+                const now = new Date();
+                const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                setWeChatState(prev => ({
                   ...prev,
-                  chatMessages: [
-                    ...prev.chatMessages,
-                    { sender: 'xiaoli', content: text, timestamp: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }) },
-                  ],
-                  screenshotHelper: null,
+                  chatMessages: [...prev.chatMessages, {
+                    sender: 'xiaoli',
+                    content: text,
+                    timestamp: timeStr,
+                  }],
+                  smartKeyboard: null,  // close smart keyboard after sending
                 }));
+                // Advance scenario - treat as quick reply
+                chat.handleQuickReply({ label: text, value: 'send-script' });
               }}
             />
             {/* Quick reply overlay in WeChat panel — so demo can advance even when WeChat is visible */}

@@ -545,17 +545,24 @@ export const fieldScenarios: Scenario[] = [
               estimatedConversion: '2-3人',
               segments: [
                 {
-                  type: '银行存款到期客户', count: 5, icon: '🏦', color: '#F59E0B', bg: '#FFFBEB',
+                  type: '银行存款到期客户',
+                  count: 4,
+                  icon: '🏦',
+                  color: '#F59E0B',
+                  bg: '#FFFBEB',
                   customers: [
                     { name: '陈先生', detail: '存款300万 · 本月到期' },
                     { name: '刘女士', detail: '存款150万 · 本月到期' },
                     { name: '张先生', detail: '存款200万 · 下月到期' },
                     { name: '王总', detail: '存款500万 · 本月到期' },
-                    { name: '赵女士', detail: '存款80万 · 本月到期' },
                   ],
                 },
                 {
-                  type: '旺财余额 > 5万', count: 3, icon: '💰', color: '#10B981', bg: '#ECFDF5',
+                  type: '旺财余额 > 5万',
+                  count: 3,
+                  icon: '💰',
+                  color: '#10B981',
+                  bg: '#ECFDF5',
                   customers: [
                     { name: '李先生', detail: '旺财余额 12万' },
                     { name: '孙女士', detail: '旺财余额 8万' },
@@ -563,7 +570,11 @@ export const fieldScenarios: Scenario[] = [
                   ],
                 },
                 {
-                  type: '资产规模 > 600W', count: 9, icon: '👑', color: '#7C3AED', bg: '#F5F3FF',
+                  type: '资产规模 > 600W',
+                  count: 12,
+                  icon: '👑',
+                  color: '#7C3AED',
+                  bg: '#F5F3FF',
                   customers: [
                     { name: '马总', detail: '资产约1200万' },
                     { name: '林女士', detail: '资产约720万' },
@@ -574,10 +585,18 @@ export const fieldScenarios: Scenario[] = [
                     { name: '沈女士', detail: '资产约780万' },
                     { name: '韩先生', detail: '资产约620万' },
                     { name: '唐总', detail: '资产约2000万' },
+                    { name: '赵女士', detail: '资产约680万' },
+                    { name: '钱总', detail: '资产约1100万' },
+                    { name: '孟先生', detail: '资产约640万' },
                   ],
                 },
                 {
-                  type: '3年前财富产品客户', count: 8, icon: '📈', color: '#3B82F6', bg: '#EFF6FF', isNew: true,
+                  type: '3年前财富产品客户',
+                  count: 8,
+                  icon: '📈',
+                  color: '#3B82F6',
+                  bg: '#EFF6FF',
+                  isNew: true,
                   customers: [
                     { name: '苏先生', detail: '3年前购买·盛世传承' },
                     { name: '谢女士', detail: '3年前购买·金瑞理财' },
@@ -593,9 +612,47 @@ export const fieldScenarios: Scenario[] = [
               aiNote: '4月经营计划已生成，已匹配专属沟通话术和司庆季触客内容，建议优先联系陈先生。',
             },
           },
+          {
+            type: 'field-monthly-plan',
+            content: '',
+            speechText: '4月经营计划已生成，27位重点客户，优先拜访陈先生。AI已为每位客户匹配专属沟通话术和司庆季触客内容。',
+            data: {
+              totalCount: 27,
+              estimatedConversion: '2-3人',
+              estimatedIncome: '约5万元',
+              topContacts: [
+                { rank: 1, name: '陈先生', detail: '存款300万 · 本月到期 · 主动咨询意向强' },
+                { rank: 2, name: '王总', detail: '存款500万 · 本月到期' },
+                { rank: 3, name: '唐总', detail: '资产2000万 · 高净值重点' },
+              ],
+              aiNote: 'AI已为27位客户分别匹配专属沟通话术与司庆季触客内容，可一键发送至微信',
+            },
+          },
         ],
         quickReplies: [
-          { label: '继续', value: 'back-to-menu' },
+          { label: '查看匹配沟通话术与触客内容', value: 'view-outreach-scripts' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'field-outreach-scripts',
+            content: '',
+            speechText: '已生成陈先生专属话术和通用触客模板，建议优先联系陈先生，可一键发送至微信。',
+            data: {
+              totalCount: 27,
+              priorityContact: {
+                name: '陈先生',
+                script: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？',
+                reason: '存款300万本月到期 · 主动咨询意向强',
+              },
+              generalTemplate: '王老师，平安司庆季特别推出了几款专属产品，结合您目前的资产情况，我觉得很适合您，方便的话给您详细介绍一下？',
+              templateCount: 26,
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '一键发送至微信', value: 'back-to-menu' },
         ],
       },
     ],
@@ -608,53 +665,81 @@ export const fieldScenarios: Scenario[] = [
     icon: '📲',
     description: '触客互动',
     steps: [
+      // Step 1: 切换到微信，展示已发话术 + 陈先生回复，智能键盘出现
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '📩 **话术已发送至微信！**\n\n陈先生刚刚回复了，请点击「一键截屏」获取AI跟进建议。',
+            speechText: '话术已成功发送！陈先生已回复，请切换到微信，点击智能键盘的一键截屏按钮获取AI话术建议。',
+            wechatEvents: [
+              { type: 'switch-view', data: 'chat' },
+              {
+                type: 'add-chat',
+                data: {
+                  sender: 'xiaoli',
+                  content: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？',
+                  timestamp: '10:15',
+                },
+              },
+              {
+                type: 'add-chat',
+                data: {
+                  sender: 'chensheng',
+                  senderName: '陈先生',
+                  content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？',
+                  timestamp: '10:18',
+                },
+              },
+              {
+                type: 'show-smart-keyboard',
+                data: {
+                  analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
+                  recommendedScript: '陈先生，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！',
+                },
+              },
+              { type: 'show-float-btn', data: null },
+            ],
+          },
+        ],
+        quickReplies: [],
+      },
+      // Step 2: 话术已发送，回到万能营销，建议邀约活动
       {
         aiMessages: [
           {
             type: 'field-ai-analysis',
-            content: '收到陈先生微信消息，AI已完成实时分析',
-            speechText: '收到陈先生微信咨询，关于资产配置问题，AI分析建议趁热打铁邀请参加活动。',
+            content: '陈先生互动分析完成，AI建议邀请参加财富管理讲座',
+            speechText: '话术已成功发送！基于陈先生的兴趣偏好，AI助手建议邀请他参加本月的财富管理讲座，这是促成转化的最佳时机。',
+            wechatEvents: [
+              { type: 'switch-to-assistant', data: null },
+              { type: 'hide-float-btn', data: null },
+            ],
             data: {
-              incomingMessage: '王芳，最近我在思考资产配置的问题，总感觉自己的钱放在银行太浪费了，有时间给我讲讲？',
+              incomingMessage: '好的，正好最近也在想这些，你什么时候方便详细聊聊？',
               sender: '陈先生',
-              time: '约5分钟前',
+              time: '刚刚',
               analysis: [
-                { label: '问题类型', value: '资产配置咨询' },
-                { label: '客户情绪', value: '主动求助，意向强烈', color: '#10B981' },
-                { label: '意向阶段', value: '成熟期' },
-                { label: '应对建议', value: '趁热打铁，邀请参加线下讲座活动' },
+                { label: '客户状态', value: '意向明确，主动推进' },
+                { label: '互动质量', value: '高意向，回复积极', color: '#10B981' },
+                { label: '推进建议', value: '邀请参加财富管理讲座，加速转化' },
+                { label: '最佳时机', value: '司庆季节点，把握窗口期' },
               ],
             },
-            wechatEvents: [
-              { type: 'set-chat-messages', data: [
-                { sender: 'chensheng', senderName: '陈先生', content: '王芳，最近我在思考资产配置的问题，总感觉自己的钱放在银行太浪费了，有时间给我讲讲？', timestamp: '10:20' },
-              ]},
-              { type: 'switch-view', data: 'chat' },
-              {
-                type: 'show-screenshot-helper',
-                data: {
-                  screenshot: '陈先生的微信咨询截图',
-                  analysis: '识别到资产配置主动咨询，意向强烈，建议邀请参加线下活动',
-                  generatedReply: '陈先生，正好本周六有个专属的财富管理讲座',
-                  visible: true,
-                },
-              },
-            ],
           },
         ],
         quickReplies: [
-          { label: '生成专属活动邀请函', value: 'generate-invitation' },
+          { label: '制作专属活动邀请函', value: 'make-invitation' },
         ],
       },
+      // Step 3: 生成邀请函
       {
         aiMessages: [
           {
             type: 'field-invitation',
             content: 'AI已为陈先生生成专属活动邀请函与邀约文案',
-            speechText: '已结合陈先生的兴趣偏好，生成财富管理讲座的专属邀请函和邀约文案。',
-            wechatEvents: [
-              { type: 'switch-to-assistant', data: null },
-            ],
+            speechText: '已结合陈先生的兴趣偏好，生成财富管理讲座的专属邀请函和邀约文案，可一键发送至微信。',
+            wechatEvents: [],
             data: {
               recipientName: '陈先生',
               eventName: '财富管理讲座活动',
@@ -662,47 +747,90 @@ export const fieldScenarios: Scenario[] = [
               eventDate: '4月15日（周六）14:00',
               eventLocation: '深圳平安金融中心18楼 精英厅',
               personalNote: '结合您近期对资产配置的关注，特别邀请您参与本次专题讲座，届时将有资深专家为您解答养老规划缺口问题。',
-              inviteCopy: '陈先生，上周聊到您在考虑资产配置，正好本周六下午我们有一个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？',
+              inviteCopy: '陈先生，本周六下午我们有个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？',
               senderName: '王芳',
             },
           },
         ],
         quickReplies: [
-          { label: '一键发送给陈先生', value: 'send-invitation' },
+          { label: '一键发送至微信', value: 'send-invitation-wechat' },
         ],
       },
+      // Step 4: 发送邀请函到微信，客户同意，智能键盘再次出现
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ 邀请函与文案已发送给陈先生\n\n📩 **陈先生回复：**\n"好啊，周六下午我有空，到时候见！"\n\n🎉 **活动已顺利举办！**\n活动后您把陈先生分享的信息告诉我，我来帮您**一键整理生成客户档案**。\n\n陈先生反馈：45岁，企业中层，有老有小，近年一直在想怎么把存款用起来，对居家养老服务很感兴趣。',
-            speechText: '陈先生同意参加。活动顺利举办，请告诉我收集到的客户信息，我来生成客户档案。',
+            content: '✅ **邀请函与邀约话术已发送至微信！**\n\n📩 陈先生刚刚回复了，请点击「一键截屏」获取跟进话术。',
+            speechText: '邀请函已成功发送，陈先生已回复同意参加，智能键盘已准备好跟进话术建议。',
             wechatEvents: [
-              { type: 'hide-screenshot-helper', data: null },
+              { type: 'switch-view', data: 'chat' },
               {
                 type: 'add-chat',
-                data: { sender: 'xiaoli', content: '陈先生，上周聊到您在考虑资产配置，正好本周六下午我们有一个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？', timestamp: '10:22' },
+                data: {
+                  sender: 'xiaoli',
+                  content: '陈先生，本周六下午我们有个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？',
+                  timestamp: '10:22',
+                },
               },
               {
                 type: 'add-chat',
-                data: { sender: 'chensheng', senderName: '陈先生', content: '好啊，周六下午我有空，到时候见！', timestamp: '10:25' },
+                data: {
+                  sender: 'xiaoli',
+                  content: '[活动邀请] 财富管理讲座 · 4月15日（周六）14:00 · 平安金融中心18楼',
+                  contentType: 'file',
+                  timestamp: '10:22',
+                },
+              },
+              {
+                type: 'add-chat',
+                data: {
+                  sender: 'chensheng',
+                  senderName: '陈先生',
+                  content: '好啊，周六下午我有空，到时候见！',
+                  timestamp: '10:25',
+                },
+              },
+              {
+                type: 'show-smart-keyboard',
+                data: {
+                  analysis: '客户同意参加活动，情绪积极，适合确认细节并表达期待',
+                  recommendedScript: '太棒了！我到时候提前给您发位置，到了直接找我。讲座结束后咱们单独聊聊您的具体情况，我已经结合您的需求准备了一些方案思路。',
+                },
               },
             ],
           },
         ],
+        quickReplies: [],
+      },
+      // Step 5: 活动后，回到万能营销，语音更新档案
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '🎉 **活动顺利举办！**\n\n陈先生全程参与，对居家养老方向非常感兴趣。\n\n🎤 **请用语音输入**告诉我活动中收集到的信息，我来帮您快速更新客户档案。',
+            speechText: '活动顺利举办！请点击下方按钮，用语音告诉我陈先生在活动中分享的信息，我来帮您更新客户档案。',
+            wechatEvents: [
+              { type: 'switch-to-assistant', data: null },
+              { type: 'hide-float-btn', data: null },
+            ],
+          },
+        ],
         quickReplies: [
-          { label: '一键生成客户档案', value: 'generate-archive' },
+          {
+            label: '🎤 陈先生反馈：45岁，企业中层，有老有小，近年一直在想怎么把存款用起来，对居家养老服务很感兴趣',
+            value: 'voice-input-archive',
+          },
         ],
       },
+      // Step 6: 生成客户档案，确认
       {
         aiMessages: [
           {
             type: 'field-customer-archive',
             content: 'AI已整理生成陈先生客户档案',
-            speechText: '陈先生客户档案已生成。45岁企业中层，关注资产配置与居家养老，下一步建议尽快约定需求分析面谈。',
-            wechatEvents: [
-              { type: 'switch-to-assistant', data: null },
-            ],
+            speechText: '陈先生客户档案已生成。45岁企业中层，关注资产配置与居家养老，下一步建议尽快约定需求分析面谈，准备定制方案。',
+            wechatEvents: [],
             data: {
               customerName: '陈先生',
               age: '45岁',
@@ -718,12 +846,12 @@ export const fieldScenarios: Scenario[] = [
                 '决策型人格，主动咨询意味着意向成熟',
               ],
               nextActions: ['尽快约定需求分析面谈', '准备平安盛盈·居家养老定制方案', '发送同类客户案例参考资料'],
-              archiveTime: '活动后自动生成',
+              archiveTime: '活动后语音更新',
             },
           },
         ],
         quickReplies: [
-          { label: '继续', value: 'back-to-menu' },
+          { label: '确认更新，继续', value: 'back-to-menu' },
         ],
       },
     ],
@@ -842,6 +970,7 @@ export const fieldScenarios: Scenario[] = [
                 type: 'add-chat',
                 data: { sender: 'chensheng', senderName: '陈先生', content: '王芳，你这个方案思路很清晰，我再考虑一下，下周给你答复。', timestamp: '14:45' },
               },
+              { type: 'switch-to-assistant', data: null },
               {
                 type: 'show-followup-reminder',
                 data: {
