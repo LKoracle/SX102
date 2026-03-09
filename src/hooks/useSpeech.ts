@@ -413,6 +413,8 @@ export function useSpeech(): UseSpeechReturn {
     utterance.onerror = () => {
       clearKeepAlive();
       setIsSpeaking(false);
+      // Fire onEnd on error so the scenario starts even if speech is blocked
+      if (narrateSessionRef.current === session) onEnd?.();
     };
 
     window.speechSynthesis.speak(utterance);

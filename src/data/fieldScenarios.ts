@@ -466,6 +466,403 @@ export const fieldScenarios: Scenario[] = [
     ],
   },
 
+  // ==================== 功能⑩ 圈客：盘点客户与经营计划 ====================
+  {
+    id: 'field-customer-planning',
+    name: '圈客经营计划',
+    icon: '🗂️',
+    description: '盘点客户',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '👋 王芳老师，**司庆季**开始了！AI助手结合当下司庆季营销节点，已为您智能盘点重点客户，共推荐 **20位** 重点客户。\n\n根据经验数据，同类型客户转化率接近 **10%**，提醒您尽快预约拜访！是否要为您添加至**4月经营计划**中？',
+            speechText: '王芳老师，司庆季开始了！结合当下司庆季营销节点，为您推荐20位重点客户，转化率接近10%。是否要为您添加至4月经营计划？',
+          },
+          {
+            type: 'field-customer-plan',
+            content: '',
+            data: {
+              title: '司庆季 · 4月重点经营客户',
+              totalCount: 20,
+              conversionRate: '~10%',
+              estimatedConversion: '2人',
+              segments: [
+                {
+                  type: '银行存款到期客户', count: 5, icon: '🏦', color: '#F59E0B', bg: '#FFFBEB',
+                  customers: [
+                    { name: '陈先生', detail: '存款300万 · 本月到期' },
+                    { name: '刘女士', detail: '存款150万 · 本月到期' },
+                    { name: '张先生', detail: '存款200万 · 下月到期' },
+                    { name: '王总', detail: '存款500万 · 本月到期' },
+                    { name: '赵女士', detail: '存款80万 · 本月到期' },
+                  ],
+                },
+                {
+                  type: '旺财余额 > 5万', count: 3, icon: '💰', color: '#10B981', bg: '#ECFDF5',
+                  customers: [
+                    { name: '李先生', detail: '旺财余额 12万' },
+                    { name: '孙女士', detail: '旺财余额 8万' },
+                    { name: '周先生', detail: '旺财余额 6万' },
+                  ],
+                },
+                {
+                  type: '资产规模 > 600W', count: 10, icon: '👑', color: '#7C3AED', bg: '#F5F3FF',
+                  customers: [
+                    { name: '马总', detail: '资产约1200万' },
+                    { name: '林女士', detail: '资产约720万' },
+                    { name: '黄先生', detail: '资产约680万' },
+                    { name: '吴女士', detail: '资产约900万' },
+                    { name: '郑总', detail: '资产约1500万' },
+                    { name: '冯先生', detail: '资产约650万' },
+                    { name: '沈女士', detail: '资产约780万' },
+                    { name: '韩先生', detail: '资产约620万' },
+                    { name: '唐总', detail: '资产约2000万' },
+                    { name: '李明', detail: '资产约640万' },
+                  ],
+                },
+              ],
+              aiNote: '以上客户均在近30天内有明确的资产管理需求信号，司庆季是切入的最佳时机。',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '除了李明之外都添加，并加入3年前购买财富产品的客户', value: 'add-custom-plan' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'field-customer-plan',
+            content: '',
+            data: {
+              title: '司庆季 · 4月重点经营客户（已更新）',
+              totalCount: 20,
+              isUpdated: true,
+              updatedTotal: 27,
+              conversionRate: '~10%',
+              estimatedConversion: '2-3人',
+              segments: [
+                {
+                  type: '银行存款到期客户', count: 5, icon: '🏦', color: '#F59E0B', bg: '#FFFBEB',
+                  customers: [
+                    { name: '陈先生', detail: '存款300万 · 本月到期' },
+                    { name: '刘女士', detail: '存款150万 · 本月到期' },
+                    { name: '张先生', detail: '存款200万 · 下月到期' },
+                    { name: '王总', detail: '存款500万 · 本月到期' },
+                    { name: '赵女士', detail: '存款80万 · 本月到期' },
+                  ],
+                },
+                {
+                  type: '旺财余额 > 5万', count: 3, icon: '💰', color: '#10B981', bg: '#ECFDF5',
+                  customers: [
+                    { name: '李先生', detail: '旺财余额 12万' },
+                    { name: '孙女士', detail: '旺财余额 8万' },
+                    { name: '周先生', detail: '旺财余额 6万' },
+                  ],
+                },
+                {
+                  type: '资产规模 > 600W', count: 9, icon: '👑', color: '#7C3AED', bg: '#F5F3FF',
+                  customers: [
+                    { name: '马总', detail: '资产约1200万' },
+                    { name: '林女士', detail: '资产约720万' },
+                    { name: '黄先生', detail: '资产约680万' },
+                    { name: '吴女士', detail: '资产约900万' },
+                    { name: '郑总', detail: '资产约1500万' },
+                    { name: '冯先生', detail: '资产约650万' },
+                    { name: '沈女士', detail: '资产约780万' },
+                    { name: '韩先生', detail: '资产约620万' },
+                    { name: '唐总', detail: '资产约2000万' },
+                  ],
+                },
+                {
+                  type: '3年前财富产品客户', count: 8, icon: '📈', color: '#3B82F6', bg: '#EFF6FF', isNew: true,
+                  customers: [
+                    { name: '苏先生', detail: '3年前购买·盛世传承' },
+                    { name: '谢女士', detail: '3年前购买·金瑞理财' },
+                    { name: '钱先生', detail: '3年前购买·智汇宝' },
+                    { name: '田总', detail: '3年前购买·盛世传承' },
+                    { name: '潘女士', detail: '3年前购买·金瑞理财' },
+                    { name: '蒋先生', detail: '3年前购买·稳盈增利' },
+                    { name: '何女士', detail: '3年前购买·智汇宝' },
+                    { name: '贾先生', detail: '3年前购买·盛世传承' },
+                  ],
+                },
+              ],
+              aiNote: '4月经营计划已生成，已匹配专属沟通话术和司庆季触客内容，建议优先联系陈先生。',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '继续', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
+
+  // ==================== 功能⑪ 触客：微信互动+邀请函+档案 ====================
+  {
+    id: 'field-customer-engagement',
+    name: '触客互动全流程',
+    icon: '📲',
+    description: '触客互动',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'field-ai-analysis',
+            content: '收到陈先生微信消息，AI已完成实时分析',
+            speechText: '收到陈先生微信咨询，关于资产配置问题，AI分析建议趁热打铁邀请参加活动。',
+            data: {
+              incomingMessage: '王芳，最近我在思考资产配置的问题，总感觉自己的钱放在银行太浪费了，有时间给我讲讲？',
+              sender: '陈先生',
+              time: '约5分钟前',
+              analysis: [
+                { label: '问题类型', value: '资产配置咨询' },
+                { label: '客户情绪', value: '主动求助，意向强烈', color: '#10B981' },
+                { label: '意向阶段', value: '成熟期' },
+                { label: '应对建议', value: '趁热打铁，邀请参加线下讲座活动' },
+              ],
+            },
+            wechatEvents: [
+              { type: 'set-chat-messages', data: [
+                { sender: 'chensheng', senderName: '陈先生', content: '王芳，最近我在思考资产配置的问题，总感觉自己的钱放在银行太浪费了，有时间给我讲讲？', timestamp: '10:20' },
+              ]},
+              { type: 'switch-view', data: 'chat' },
+              {
+                type: 'show-screenshot-helper',
+                data: {
+                  screenshot: '陈先生的微信咨询截图',
+                  analysis: '识别到资产配置主动咨询，意向强烈，建议邀请参加线下活动',
+                  generatedReply: '陈先生，正好本周六有个专属的财富管理讲座',
+                  visible: true,
+                },
+              },
+            ],
+          },
+        ],
+        quickReplies: [
+          { label: '生成专属活动邀请函', value: 'generate-invitation' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'field-invitation',
+            content: 'AI已为陈先生生成专属活动邀请函与邀约文案',
+            speechText: '已结合陈先生的兴趣偏好，生成财富管理讲座的专属邀请函和邀约文案。',
+            wechatEvents: [
+              { type: 'switch-to-assistant', data: null },
+            ],
+            data: {
+              recipientName: '陈先生',
+              eventName: '财富管理讲座活动',
+              eventTheme: '「资产配置·养老规划」专题论坛',
+              eventDate: '4月15日（周六）14:00',
+              eventLocation: '深圳平安金融中心18楼 精英厅',
+              personalNote: '结合您近期对资产配置的关注，特别邀请您参与本次专题讲座，届时将有资深专家为您解答养老规划缺口问题。',
+              inviteCopy: '陈先生，上周聊到您在考虑资产配置，正好本周六下午我们有一个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？',
+              senderName: '王芳',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '一键发送给陈先生', value: 'send-invitation' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '✅ 邀请函与文案已发送给陈先生\n\n📩 **陈先生回复：**\n"好啊，周六下午我有空，到时候见！"\n\n🎉 **活动已顺利举办！**\n活动后您把陈先生分享的信息告诉我，我来帮您**一键整理生成客户档案**。\n\n陈先生反馈：45岁，企业中层，有老有小，近年一直在想怎么把存款用起来，对居家养老服务很感兴趣。',
+            speechText: '陈先生同意参加。活动顺利举办，请告诉我收集到的客户信息，我来生成客户档案。',
+            wechatEvents: [
+              { type: 'hide-screenshot-helper', data: null },
+              {
+                type: 'add-chat',
+                data: { sender: 'xiaoli', content: '陈先生，上周聊到您在考虑资产配置，正好本周六下午我们有一个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？', timestamp: '10:22' },
+              },
+              {
+                type: 'add-chat',
+                data: { sender: 'chensheng', senderName: '陈先生', content: '好啊，周六下午我有空，到时候见！', timestamp: '10:25' },
+              },
+            ],
+          },
+        ],
+        quickReplies: [
+          { label: '一键生成客户档案', value: 'generate-archive' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'field-customer-archive',
+            content: 'AI已整理生成陈先生客户档案',
+            speechText: '陈先生客户档案已生成。45岁企业中层，关注资产配置与居家养老，下一步建议尽快约定需求分析面谈。',
+            wechatEvents: [
+              { type: 'switch-to-assistant', data: null },
+            ],
+            data: {
+              customerName: '陈先生',
+              age: '45岁',
+              job: '企业中层管理',
+              family: '家有老小（父母+子女约10岁）',
+              source: '财富管理讲座活动',
+              activityFeedback: '近年一直在想怎么把存款用起来，对居家养老服务非常感兴趣，觉得这个方向很符合自己的需求。',
+              interests: ['资产配置', '养老规划', '居家养老服务', '财富传承'],
+              keyInsights: [
+                '有明确的财富增值需求，存款闲置是核心痛点',
+                '对居家养老服务有浓厚兴趣，符合主推产品方向',
+                '家庭责任重，需要全面保障规划',
+                '决策型人格，主动咨询意味着意向成熟',
+              ],
+              nextActions: ['尽快约定需求分析面谈', '准备平安盛盈·居家养老定制方案', '发送同类客户案例参考资料'],
+              archiveTime: '活动后自动生成',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '继续', value: 'back-to-menu' },
+        ],
+      },
+    ],
+  },
+
+  // ==================== 功能⑫ 访/邀+转：陈先生专属保险方案 ====================
+  {
+    id: 'field-chen-solution',
+    name: '产品方案定制',
+    icon: '🏆',
+    description: '司庆方案',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '💬 **【人】** 帮我给客户陈先生定制一份保险方案。\n\n🤖 **AI分析中...**\n已调取陈先生客户档案，正在进行深度需求分析...',
+            speechText: '收到指令，正在为陈先生进行需求分析和保险方案定制。',
+            wechatEvents: [
+              { type: 'switch-to-assistant', data: null },
+            ],
+          },
+          {
+            type: 'field-insurance-solution',
+            content: '',
+            data: {
+              customerName: '陈先生',
+              age: 45,
+              customerGroup: '社会中坚客群',
+              riskWarnings: ['资产配置失衡', '养老储备不足'],
+              gaps: [
+                { type: '财富缺口', amount: '160万', icon: '💼', color: '#F59E0B' },
+                { type: '养老缺口', amount: '180万', icon: '🏠', color: '#7C3AED' },
+              ],
+              productName: '平安盛盈·居家养老',
+              subProduct: '金尊分红 · 司庆版',
+              annualPremium: '20万',
+              paymentYears: '6年',
+              benefits: [
+                { icon: '📈', text: '现金持续增值' },
+                { icon: '💰', text: '享受分红收益' },
+                { icon: '🏡', text: '居家养老服务' },
+              ],
+              agentIncome: '16,880元',
+              highlight: '促成以上方案后，您可获得收入 16,880元。司庆季专属分红，配置时机正当其时。',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '查看销售话术', value: 'view-sales-logic' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'field-sales-logic',
+            content: 'AI生成陈先生专属销售逻辑话术',
+            speechText: '已生成针对陈先生的销售逻辑话术，分四步推进，从需求共鸣到促成成交。',
+            data: {
+              productName: '平安盛盈·居家养老',
+              steps: [
+                {
+                  step: 1,
+                  title: '需求共鸣',
+                  script: '陈先生，您45岁正是家庭责任最重的阶段，上有父母、下有子女，自己还是家庭的顶梁柱。这个阶段资产保值增值和养老规划是最关键的两件事，您认同吗？',
+                  tip: '先建立共识，让客户点头认可',
+                },
+                {
+                  step: 2,
+                  title: '缺口呈现',
+                  script: '根据我对您情况的分析，目前有两个重要缺口：财富缺口约160万，养老缺口约180万。这两个缺口如果现在不做规划，会随时间越来越难以填补。',
+                  tip: '用数字说话，增强客户紧迫感',
+                },
+                {
+                  step: 3,
+                  title: '方案呈现',
+                  script: '这款平安盛盈·居家养老，年交20万、交6年，可以同时解决这两个缺口：现金持续增值，享受分红收益，还配套专业的居家养老服务，一举三得。',
+                  tip: '方案讲解要简洁，突出三大核心价值',
+                },
+                {
+                  step: 4,
+                  title: '促成成交',
+                  script: '司庆季现在是特殊节点，这款产品的分红收益在这个时间点配置是最划算的。您看，我帮您把受益人和缴费方式先确认一下？',
+                  tip: '顺势推进，借助节点节奏促成决策',
+                },
+              ],
+              keyPoints: [
+                '司庆季时间节点赋予稀缺感，促成时机不可错过',
+                '居家养老服务是差异化卖点，重点强调',
+                '从财富缺口+养老缺口双维度引发客户共鸣',
+              ],
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '发送方案给陈先生', value: 'send-solution' },
+        ],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '✅ **方案已发送给陈先生**\n\n📩 **陈先生回复：**\n"王芳，你这个方案思路很清晰，我再考虑一下，下周给你答复。"\n\n🎯 **总结：**\n在万能营销助手的帮助下，从**司庆季客群盘点** → **触客微信互动** → **活动邀约** → **需求分析** → **方案定制**，客户经营和促成转化效率**明显提升**！\n\n💰 **本次潜在收入：16,880元**',
+            speechText: '方案已发送，陈先生表示下周给答复。在万能营销的帮助下，客户经营效率明显提升，本次潜在收入16880元。',
+            wechatEvents: [
+              { type: 'switch-view', data: 'chat' },
+              {
+                type: 'add-chat',
+                data: { sender: 'xiaoli', content: '陈先生，根据您的情况我为您定制了这份方案，请查收👇', timestamp: '14:30' },
+              },
+              {
+                type: 'add-chat',
+                data: { sender: 'xiaoli', content: '[文件] 陈先生专属保险方案_平安盛盈.pdf', contentType: 'file', timestamp: '14:30' },
+              },
+              {
+                type: 'add-chat',
+                data: { sender: 'chensheng', senderName: '陈先生', content: '王芳，你这个方案思路很清晰，我再考虑一下，下周给你答复。', timestamp: '14:45' },
+              },
+              {
+                type: 'show-followup-reminder',
+                data: {
+                  title: 'AI自动跟进提醒已设置',
+                  schedule: [
+                    { date: '📅 3天后（周四）', action: '主动询问陈先生的考虑进展' },
+                    { date: '📅 5天后（周六）', action: '若未回复，发送居家养老服务案例' },
+                    { date: '📅 7天后（下周一）', action: '提议约定线下需求分析面谈' },
+                  ],
+                  summary: '方案定制完成，陈先生已进入决策阶段。保持适度跟进，预计下周可推进至签约环节。',
+                },
+              },
+            ],
+          },
+        ],
+        quickReplies: [
+        ],
+      },
+    ],
+  },
+
   // ==================== 功能⑨ 讲解素材生成 ====================
   {
     id: 'field-presentation-gen',

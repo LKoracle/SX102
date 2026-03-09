@@ -30,6 +30,11 @@ import { FieldGapDiagnosisCard } from './cards/FieldGapDiagnosisCard';
 import { FieldProductPlansCard } from './cards/FieldProductPlansCard';
 import { FieldCommissionCard } from './cards/FieldCommissionCard';
 import { FieldMaterialsCard } from './cards/FieldMaterialsCard';
+import { FieldCustomerPlanCard } from './cards/FieldCustomerPlanCard';
+import { FieldInvitationCard } from './cards/FieldInvitationCard';
+import { FieldCustomerArchiveCard } from './cards/FieldCustomerArchiveCard';
+import { FieldInsuranceSolutionCard } from './cards/FieldInsuranceSolutionCard';
+import { FieldSalesLogicCard } from './cards/FieldSalesLogicCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -188,6 +193,16 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldCommissionCard data={message.data as Record<string, unknown>} />;
       case 'field-materials':
         return <FieldMaterialsCard data={message.data as Record<string, unknown>} />;
+      case 'field-customer-plan':
+        return <FieldCustomerPlanCard data={message.data as Record<string, unknown>} />;
+      case 'field-invitation':
+        return <FieldInvitationCard data={message.data as Record<string, unknown>} />;
+      case 'field-customer-archive':
+        return <FieldCustomerArchiveCard data={message.data as Record<string, unknown>} />;
+      case 'field-insurance-solution':
+        return <FieldInsuranceSolutionCard data={message.data as Record<string, unknown>} />;
+      case 'field-sales-logic':
+        return <FieldSalesLogicCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

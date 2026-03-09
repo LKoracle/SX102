@@ -7,54 +7,96 @@ interface WeChatSimulatorProps {
   moments: WeChatMoment[];
   screenshotHelper: WeChatScreenshotHelper | null;
   onSwitchView: (view: 'chat' | 'moments') => void;
+  onSendReply?: (text: string) => void;
+  selfName?: string;
+  contactName?: string;
 }
 
-function WeChatHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+/* ─── WeChat top status bar ─── */
+function StatusBar() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = now.getMinutes().toString().padStart(2, '0');
   return (
-    <div className="wechat-header">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-        <span style={{ fontSize: 16, color: '#000', opacity: 0.6 }}>‹</span>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#000' }}>{title}</div>
-          {subtitle && <div style={{ fontSize: 10, color: '#999' }}>{subtitle}</div>}
-        </div>
-        <span style={{ fontSize: 14, color: '#000', opacity: 0.5 }}>⋯</span>
+    <div className="wc-status-bar">
+      <span className="wc-status-time">{h}:{m}</span>
+      <div className="wc-status-icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
       </div>
     </div>
   );
 }
 
-function WeChatNavTabs({ currentView, onSwitch }: { currentView: 'chat' | 'moments'; onSwitch: (v: 'chat' | 'moments') => void }) {
+/* ─── Chat header ─── */
+function ChatHeader({ title }: { title: string }) {
   return (
-    <div className="wechat-nav-tabs">
-      <button
-        className={`wechat-nav-tab ${currentView === 'chat' ? 'active' : ''}`}
-        onClick={() => onSwitch('chat')}
-      >
-        💬 聊天
-      </button>
-      <button
-        className={`wechat-nav-tab ${currentView === 'moments' ? 'active' : ''}`}
-        onClick={() => onSwitch('moments')}
-      >
-        📷 朋友圈
-      </button>
+    <div className="wc-chat-header">
+      <button className="wc-back-btn">‹</button>
+      <div className="wc-chat-header-title">{title}</div>
+      <button className="wc-more-btn">⋯</button>
     </div>
   );
 }
 
-function ChatBubble({ msg }: { msg: WeChatChatMessage }) {
-  const isMe = msg.sender === 'xiaoli';
-  const avatar = isMe ? '🧑‍💼' : '👤';
-  const name = isMe ? '小李' : '王哥';
+/* ─── Moments header ─── */
+function MomentsHeader() {
+  return (
+    <div className="wc-moments-header">
+      <div className="wc-moments-cover" />
+      <div className="wc-moments-profile">
+        <div className="wc-moments-avatar-large">王</div>
+        <div className="wc-moments-name">王芳</div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Bottom tab bar ─── */
+function WeChatTabBar({ current, onSwitch }: { current: 'chat' | 'moments'; onSwitch: (v: 'chat' | 'moments') => void }) {
+  const tabs = [
+    { id: 'chat' as const, icon: '💬', label: '微信' },
+    { id: 'moments' as const, icon: '📷', label: '朋友圈' },
+    { id: 'contacts' as const, icon: '👥', label: '通讯录' },
+    { id: 'me' as const, icon: '👤', label: '我' },
+  ];
+  return (
+    <div className="wc-tab-bar">
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          className={`wc-tab-item ${(tab.id === 'chat' || tab.id === 'moments') && current === tab.id ? 'active' : ''}`}
+          onClick={() => {
+            if (tab.id === 'chat' || tab.id === 'moments') onSwitch(tab.id);
+          }}
+        >
+          <span className="wc-tab-icon">{tab.icon}</span>
+          <span className="wc-tab-label">{tab.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Chat bubble ─── */
+function ChatBubble({ msg, contactName }: { msg: WeChatChatMessage; contactName: string }) {
+  const isMe = msg.sender === 'xiaoli' || msg.sender === 'self';
+  const displayName = isMe ? '王芳' : (msg.senderName || contactName);
+  const initial = displayName.charAt(0);
+  const avatarBg = isMe ? '#07C160' : '#5B8DEF';
 
   return (
-    <div className={`wechat-bubble-row ${isMe ? 'right' : 'left'}`}>
-      {!isMe && <div className="wechat-avatar wangge">{avatar}</div>}
-      <div style={{ maxWidth: '75%' }}>
-        {!isMe && <div style={{ fontSize: 10, color: '#999', marginBottom: 2 }}>{name}</div>}
+    <div className={`wc-bubble-row ${isMe ? 'wc-bubble-right' : 'wc-bubble-left'}`}>
+      {!isMe && (
+        <div className="wc-avatar-circle" style={{ background: avatarBg }}>
+          {initial}
+        </div>
+      )}
+      <div className="wc-bubble-body">
+        {!isMe && <div className="wc-bubble-name">{displayName}</div>}
         {msg.contentType === 'file' ? (
-          <div className="wechat-bubble file">
+          <div className="wc-bubble wc-bubble-file">
             <span style={{ fontSize: 20 }}>📄</span>
             <div>
               <div style={{ fontSize: 11, color: '#333', fontWeight: 500 }}>{msg.content.replace('[文件] ', '')}</div>
@@ -62,93 +104,141 @@ function ChatBubble({ msg }: { msg: WeChatChatMessage }) {
             </div>
           </div>
         ) : (
-          <div className={`wechat-bubble ${isMe ? 'right' : 'left'}`}>
+          <div className={`wc-bubble ${isMe ? 'wc-bubble-me' : 'wc-bubble-other'}`}>
             {msg.content}
           </div>
         )}
-        {msg.timestamp && <div style={{ fontSize: 9, color: '#bbb', marginTop: 2, textAlign: isMe ? 'right' : 'left' }}>{msg.timestamp}</div>}
+        {msg.timestamp && (
+          <div className="wc-bubble-time" style={{ textAlign: isMe ? 'right' : 'left' }}>
+            {msg.timestamp}
+          </div>
+        )}
       </div>
-      {isMe && <div className="wechat-avatar xiaoli">{avatar}</div>}
-    </div>
-  );
-}
-
-function MomentPost({ moment }: { moment: WeChatMoment }) {
-  return (
-    <div className="wechat-moment-item">
-      <div className="wechat-moment-header">
-        <div className="wechat-moment-avatar">{moment.avatar || '👤'}</div>
-        <div className="wechat-moment-author">{moment.author}</div>
-      </div>
-      <div className="wechat-moment-content">{moment.content}</div>
-      {/* Real images */}
-      {moment.imageUrls && moment.imageUrls.length > 0 ? (
-        <div className="wechat-moment-images">
-          {moment.imageUrls.map((url, i) => (
-            <img
-              key={i}
-              src={url}
-              alt={moment.images?.[i] || `图片${i + 1}`}
-              className="wechat-moment-img-placeholder"
-              style={{ objectFit: 'cover' }}
-              loading="lazy"
-            />
-          ))}
-        </div>
-      ) : moment.images && moment.images.length > 0 ? (
-        <div className="wechat-moment-images">
-          {moment.images.map((img, i) => (
-            <div key={i} className="wechat-moment-img-placeholder">{img}</div>
-          ))}
-        </div>
-      ) : null}
-      <div className="wechat-moment-time">{moment.time}</div>
-      {((moment.likes && moment.likes.length > 0) || (moment.comments && moment.comments.length > 0)) && (
-        <div className="wechat-moment-interactions">
-          {moment.likes && moment.likes.length > 0 && (
-            <div className="wechat-moment-likes">❤️ {moment.likes.join('，')}</div>
-          )}
-          {moment.comments && moment.comments.map((c, i) => (
-            <div key={i} className="wechat-moment-comment">
-              <span className="wechat-moment-comment-author">{c.author}：</span>{c.content}
-            </div>
-          ))}
+      {isMe && (
+        <div className="wc-avatar-circle" style={{ background: avatarBg }}>
+          {initial}
         </div>
       )}
     </div>
   );
 }
 
-function ScreenshotHelperOverlay({ helper }: { helper: WeChatScreenshotHelper }) {
+/* ─── Moment post ─── */
+function MomentPost({ moment }: { moment: WeChatMoment }) {
+  const initial = moment.author.charAt(0);
   return (
-    <div className="wechat-screenshot-overlay">
-      <div className="wechat-screenshot-title">⚡ 输入法AI截图帮回</div>
-      <div className="wechat-screenshot-analysis">
-        <div style={{ marginBottom: 4, fontWeight: 500, color: '#fff', fontSize: 11 }}>📸 截图识别</div>
-        <div>{helper.screenshot}</div>
-        <div style={{ marginTop: 6, fontWeight: 500, color: '#fff', fontSize: 11 }}>🔍 AI分析</div>
-        <div>{helper.analysis}</div>
-      </div>
-      <div className="wechat-screenshot-reply">
-        <div style={{ marginBottom: 4, fontWeight: 500, fontSize: 11 }}>✏️ 推荐回复</div>
-        {helper.generatedReply}
+    <div className="wc-moment-item">
+      <div className="wc-moment-avatar">{initial}</div>
+      <div className="wc-moment-content-col">
+        <div className="wc-moment-author">{moment.author}</div>
+        <div className="wc-moment-text">{moment.content}</div>
+        {moment.imageUrls && moment.imageUrls.length > 0 ? (
+          <div className="wc-moment-images">
+            {moment.imageUrls.map((url, i) => (
+              <img key={i} src={url} alt={`图片${i + 1}`} className="wc-moment-img" style={{ objectFit: 'cover' }} />
+            ))}
+          </div>
+        ) : moment.images && moment.images.length > 0 ? (
+          <div className="wc-moment-images">
+            {moment.images.map((img, i) => (
+              <div key={i} className="wc-moment-img-placeholder">{img}</div>
+            ))}
+          </div>
+        ) : null}
+        <div className="wc-moment-time">{moment.time}</div>
+        {((moment.likes && moment.likes.length > 0) || (moment.comments && moment.comments.length > 0)) && (
+          <div className="wc-moment-interactions">
+            {moment.likes && moment.likes.length > 0 && (
+              <div className="wc-moment-likes">❤️ {moment.likes.join('，')}</div>
+            )}
+            {moment.comments && moment.comments.map((c, i) => (
+              <div key={i} className="wc-moment-comment">
+                <span className="wc-moment-comment-author">{c.author}：</span>{c.content}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function WeChatInputBar() {
+/* ─── AI helper panel (slides up from bottom) ─── */
+function AIHelperPanel({
+  helper,
+  contactName,
+  onSend,
+  onDismiss,
+}: {
+  helper: WeChatScreenshotHelper;
+  contactName: string;
+  onSend: (text: string) => void;
+  onDismiss: () => void;
+}) {
+  const initial = contactName.charAt(0);
   return (
-    <div className="wechat-input-bar">
-      <span style={{ fontSize: 16 }}>🎤</span>
-      <div className="wechat-input-field">输入消息...</div>
-      <span style={{ fontSize: 16 }}>😊</span>
-      <span style={{ fontSize: 16 }}>＋</span>
+    <div className="wc-ai-helper">
+      {/* Header row */}
+      <div className="wc-ai-helper-header">
+        <span className="wc-ai-helper-title">✨ 截图给AI →</span>
+        <button className="wc-ai-helper-close" onClick={onDismiss}>✕</button>
+      </div>
+      {/* Customer row */}
+      <div className="wc-ai-helper-customer">
+        <div className="wc-ai-helper-avatar">{initial}</div>
+        <span className="wc-ai-helper-name">{contactName}</span>
+        <span className="wc-ai-badge">✨ AI建议</span>
+      </div>
+      {/* Analysis summary */}
+      {helper.analysis && (
+        <div className="wc-ai-helper-analysis">{helper.analysis}</div>
+      )}
+      {/* Reply text */}
+      <div className="wc-ai-helper-reply">{helper.generatedReply}</div>
+      {/* Send button */}
+      <button
+        className="wc-ai-helper-send"
+        onClick={() => onSend(helper.generatedReply)}
+      >
+        点击发送
+      </button>
     </div>
   );
 }
 
-export function WeChatSimulator({ currentView, chatMessages, moments, screenshotHelper, onSwitchView }: WeChatSimulatorProps) {
+/* ─── Input bar ─── */
+function WeChatInputBar({ onShowHelper }: { onShowHelper?: () => void }) {
+  return (
+    <div className="wc-input-bar">
+      <button className="wc-input-icon">🎤</button>
+      <div className="wc-input-field">输入消息...</div>
+      <button className="wc-input-icon">😊</button>
+      {onShowHelper && (
+        <button className="wc-ai-screenshot-btn" onClick={onShowHelper}>
+          ✨ 截图
+        </button>
+      )}
+      <button className="wc-input-icon">＋</button>
+    </div>
+  );
+}
+
+/* ─── Main component ─── */
+export function WeChatSimulator({
+  currentView,
+  chatMessages,
+  moments,
+  screenshotHelper,
+  onSwitchView,
+  onSendReply,
+  contactName,
+}: WeChatSimulatorProps) {
+  // Derive contact name dynamically from messages
+  const resolvedContactName = contactName || (() => {
+    const otherMsg = chatMessages.find((m) => m.sender !== 'xiaoli' && m.sender !== 'self');
+    return otherMsg?.senderName || '陈先生';
+  })();
+
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -157,43 +247,61 @@ export function WeChatSimulator({ currentView, chatMessages, moments, screenshot
     }
   }, [chatMessages]);
 
+  const handleSendReply = (text: string) => {
+    if (onSendReply) onSendReply(text);
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      <WeChatHeader
-        title={currentView === 'chat' ? '王哥' : '朋友圈'}
-        subtitle={currentView === 'chat' ? '在线' : undefined}
-      />
-      <WeChatNavTabs currentView={currentView} onSwitch={onSwitchView} />
+    <div className="wc-root">
+      <StatusBar />
 
       {currentView === 'chat' ? (
-        <div className="wechat-chat-area">
-          {chatMessages.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#999', fontSize: 12, marginTop: 40 }}>
-              暂无消息
-            </div>
-          )}
-          {chatMessages.map((msg, i) => (
-            <ChatBubble key={i} msg={msg} />
-          ))}
-          <div ref={chatEndRef} />
-        </div>
+        <>
+          <ChatHeader title={resolvedContactName} />
+          <div className="wc-chat-area">
+            {chatMessages.length === 0 && (
+              <div style={{ textAlign: 'center', color: '#999', fontSize: 12, marginTop: 40 }}>
+                暂无消息
+              </div>
+            )}
+            {chatMessages.map((msg, i) => (
+              <ChatBubble key={i} msg={msg} contactName={resolvedContactName} />
+            ))}
+            <div ref={chatEndRef} />
+          </div>
+        </>
       ) : (
-        <div className="wechat-moments-area">
-          {moments.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#999', fontSize: 12, marginTop: 40 }}>
-              暂无朋友圈动态
-            </div>
-          )}
-          {moments.map((m, i) => (
-            <MomentPost key={i} moment={m} />
-          ))}
-        </div>
+        <>
+          <MomentsHeader />
+          <div className="wc-moments-area">
+            {moments.length === 0 && (
+              <div style={{ textAlign: 'center', color: '#999', fontSize: 12, marginTop: 40 }}>
+                暂无朋友圈动态
+              </div>
+            )}
+            {moments.map((m, i) => (
+              <MomentPost key={i} moment={m} />
+            ))}
+          </div>
+        </>
       )}
 
-      <WeChatInputBar />
+      {/* Input bar (only in chat view) */}
+      {currentView === 'chat' && (
+        <WeChatInputBar />
+      )}
 
+      {/* Bottom tab bar */}
+      <WeChatTabBar current={currentView} onSwitch={onSwitchView} />
+
+      {/* AI Helper panel — slides up from bottom */}
       {screenshotHelper && screenshotHelper.visible && (
-        <ScreenshotHelperOverlay helper={screenshotHelper} />
+        <AIHelperPanel
+          helper={screenshotHelper}
+          contactName={resolvedContactName}
+          onSend={handleSendReply}
+          onDismiss={() => {/* dismissed via wechatEvent from scenario */}}
+        />
       )}
     </div>
   );

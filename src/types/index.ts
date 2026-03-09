@@ -30,7 +30,12 @@ export type MessageContentType =
   | 'field-gap-diagnosis'
   | 'field-product-plans'
   | 'field-commission'
-  | 'field-materials';
+  | 'field-materials'
+  | 'field-customer-plan'
+  | 'field-invitation'
+  | 'field-customer-archive'
+  | 'field-insurance-solution'
+  | 'field-sales-logic';
 
 export interface Message {
   id: string;
@@ -49,7 +54,8 @@ export interface QuickReply {
 }
 
 export interface WeChatChatMessage {
-  sender: 'wangge' | 'xiaoli';
+  sender: string;
+  senderName?: string;
   content: string;
   contentType?: 'text' | 'image' | 'file';
   timestamp?: string;
@@ -74,7 +80,7 @@ export interface WeChatScreenshotHelper {
 }
 
 export interface WeChatEvent {
-  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder';
+  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder' | 'switch-to-assistant';
   data: unknown;
 }
 
