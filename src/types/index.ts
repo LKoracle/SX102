@@ -37,7 +37,11 @@ export type MessageContentType =
   | 'field-insurance-solution'
   | 'field-sales-logic'
   | 'field-monthly-plan'
-  | 'field-outreach-scripts';
+  | 'field-outreach-scripts'
+  | 'field-interaction-heat'
+  | 'field-smart-recommend'
+  | 'field-customer-panorama'
+  | 'field-roleplay-customer';
 
 export interface Message {
   id: string;
@@ -84,6 +88,9 @@ export interface WeChatScreenshotHelper {
 export interface SmartKeyboardData {
   analysis: string;
   recommendedScript: string;
+  skipAnalyzing?: boolean;
+  headerTitle?: string;
+  analyzingText?: string;
 }
 
 export interface WeChatEvent {
@@ -104,6 +111,7 @@ export interface WeChatState {
   screenshotHelper: WeChatScreenshotHelper | null;
   smartKeyboard: SmartKeyboardData | null;
   showFloatBtn: boolean;
+  contactName?: string;
 }
 
 export interface ScenarioStep {

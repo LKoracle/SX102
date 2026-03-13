@@ -33,10 +33,10 @@ function StatusBar() {
 }
 
 /* ─── Chat header ─── */
-function ChatHeader({ title }: { title: string }) {
+function ChatHeader({ title, onBack }: { title: string; onBack?: () => void }) {
   return (
     <div className="wc-chat-header">
-      <button className="wc-back-btn">‹</button>
+      <button className="wc-back-btn" onClick={onBack}>‹</button>
       <div className="wc-chat-header-title">{title}</div>
       <button className="wc-more-btn">⋯</button>
     </div>
@@ -236,14 +236,20 @@ function SmartKeyboard({
   onSend: (text: string) => void;
   onDismiss: () => void;
 }) {
-  const [status, setStatus] = useState<'idle' | 'analyzing' | 'ready'>('idle');
+  const [status, setStatus] = useState<'idle' | 'analyzing' | 'ready'>(
+    data.skipAnalyzing ? 'ready' : 'idle'
+  );
 
   // Auto-start analyzing when component mounts if data is provided
   useEffect(() => {
+    if (data.skipAnalyzing) {
+      setStatus('ready');
+      return;
+    }
     setStatus('analyzing');
     const t = setTimeout(() => setStatus('ready'), 2000);
     return () => clearTimeout(t);
-  }, []);
+  }, [data.skipAnalyzing]);
 
   const screenshotBtnStyle: React.CSSProperties = {
     display: 'flex',
@@ -293,7 +299,7 @@ function SmartKeyboard({
           {status === 'analyzing' && (
             <div style={{ padding: '12px 14px 14px' }}>
               <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: 500, marginBottom: 10 }}>
-                🔍 AI正在分析截图中...
+                🔍 {data.analyzingText || 'AI正在分析截图中...'}
               </div>
               {/* Shimmer progress bar */}
               <div
@@ -341,9 +347,9 @@ function SmartKeyboard({
                   borderBottom: '1px solid rgba(255,255,255,0.08)',
                 }}
               >
-                <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>✨ AI识别结果</div>
+                <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{data.headerTitle || '✨ AI识别结果'}</div>
                 <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginTop: 3 }}>
-                  识别到: {data.analysis}
+                  {data.headerTitle ? data.analysis : `识别到: ${data.analysis}`}
                 </div>
               </div>
               {/* Script section */}
@@ -472,7 +478,7 @@ export function WeChatSimulator({
 
       {currentView === 'chat' ? (
         <>
-          <ChatHeader title={resolvedContactName} />
+          <ChatHeader title={resolvedContactName} onBack={onReturnToAssistant} />
           <div className="wc-chat-area">
             {chatMessages.length === 0 && (
               <div style={{ textAlign: 'center', color: '#999', fontSize: 12, marginTop: 40 }}>

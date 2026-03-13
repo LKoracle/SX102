@@ -5,6 +5,7 @@ import { InputBar } from './components/InputBar';
 import { QuickReplies } from './components/QuickReplies';
 import { TypingIndicator } from './components/TypingIndicator';
 import { WeChatSimulator } from './components/WeChatSimulator';
+import { WelcomePage } from './components/WelcomePage';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { fieldScenarios } from './data/fieldScenarios';
@@ -69,6 +70,8 @@ function StepIndicator({ current }: { current: number }) {
 }
 
 function App() {
+  const [showWelcome, setShowWelcome] = useState(true);
+
   const currentScenarios = useMemo(() => fieldScenarios, []);
   const chat = useChat(currentScenarios);
   const speech = useSpeech();
@@ -88,6 +91,7 @@ function App() {
     screenshotHelper: null,
     smartKeyboard: null,    // NEW
     showFloatBtn: false,    // NEW
+    contactName: undefined,
   });
   const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
 
@@ -160,26 +164,18 @@ function App() {
     );
     chat.registerWeChatEvent(handleWeChatEvents);
 
-    if (!startedRef.current) {
+    if (!showWelcome && !startedRef.current) {
       startedRef.current = true;
       const step = DEMO_STEPS[0];
+      // Start scenario immediately — no blank screen wait
+      chat.resetAndStartScenario(step.id);
+      // Narration plays in parallel
       if (autoSpeak && step.narration) {
-        let scenarioStarted = false;
-        const startScenario = () => {
-          if (!scenarioStarted) {
-            scenarioStarted = true;
-            chat.resetAndStartScenario(step.id);
-          }
-        };
-        speech.narrate(step.narration, startScenario);
-        // Fallback: if speech is blocked or hangs, start after 2.5s
-        setTimeout(startScenario, 2500);
-      } else {
-        chat.resetAndStartScenario(step.id);
+        speech.narrate(step.narration, () => {});
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [showWelcome]);
 
   useEffect(() => {
     chat.registerSpeak(
@@ -208,6 +204,70 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speech.isListening, speech.transcript]);
 
+  const wechatSendTimersRef = useRef<number[]>([]);
+  const fromMonthlyPlanRef = useRef(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { contactName, script } = (e as CustomEvent).detail as { contactName: string; script: string };
+
+      // Clear any pending timers from a previous send
+      wechatSendTimersRef.current.forEach(clearTimeout);
+      wechatSendTimersRef.current = [];
+
+      const now = new Date();
+      const sentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      // 1. Immediately: switch to WeChat, show the sent message
+      fromMonthlyPlanRef.current = true;
+      setWeChatState(prev => ({
+        ...prev,
+        currentView: 'chat',
+        contactName,
+        chatMessages: [{
+          sender: 'self',
+          content: script,
+          timestamp: sentTime,
+        }],
+        smartKeyboard: null,
+        showFloatBtn: true,
+      }));
+      setPhoneView('wechat');
+
+      // 2. After 1.5 s: add the contact's reply
+      const t1 = window.setTimeout(() => {
+        const replyMin = (now.getMinutes() + 3) % 60;
+        const replyTime = `${now.getHours().toString().padStart(2, '0')}:${replyMin.toString().padStart(2, '0')}`;
+        setWeChatState(prev => ({
+          ...prev,
+          chatMessages: [...prev.chatMessages, {
+            sender: 'contact',
+            senderName: contactName,
+            content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？',
+            timestamp: replyTime,
+          }],
+        }));
+      }, 1500);
+
+      // 3. After 2.8 s: show AI smart keyboard panel
+      const t2 = window.setTimeout(() => {
+        setWeChatState(prev => ({
+          ...prev,
+          smartKeyboard: {
+            analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
+            recommendedScript: `${contactName}，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！`,
+            skipAnalyzing: true,
+          },
+        }));
+      }, 2800);
+
+      wechatSendTimersRef.current = [t1, t2];
+    };
+
+    window.addEventListener('monthly-plan-send-wechat', handler);
+    return () => window.removeEventListener('monthly-plan-send-wechat', handler);
+  }, []);
+
   const advanceToNextStep = useCallback(
     (nextIndex: number) => {
       if (nextIndex >= DEMO_STEPS.length) return;
@@ -215,18 +275,11 @@ function App() {
       setActiveStepIndex(nextIndex);
       setPhoneView('assistant');
 
+      // Start scenario immediately — no blank screen wait
+      chat.resetAndStartScenario(step.id);
+      // Narration plays in parallel
       if (autoSpeak && step.narration) {
-        let scenarioStarted = false;
-        const startScenario = () => {
-          if (!scenarioStarted) {
-            scenarioStarted = true;
-            chat.resetAndStartScenario(step.id);
-          }
-        };
-        speech.narrate(step.narration, startScenario);
-        setTimeout(startScenario, 2500);
-      } else {
-        chat.resetAndStartScenario(step.id);
+        speech.narrate(step.narration, () => {});
       }
     },
     [autoSpeak, speech, chat]
@@ -254,8 +307,20 @@ function App() {
   );
 
   const handleReturnToAssistant = useCallback(() => {
+    const wasMonthlyPlanFlow = fromMonthlyPlanRef.current;
+    fromMonthlyPlanRef.current = false;
     setPhoneView('assistant');
-    setWeChatState(prev => ({ ...prev, showFloatBtn: false, smartKeyboard: null }));
+    setWeChatState(prev => ({ ...prev, showFloatBtn: false, smartKeyboard: null, contactName: undefined }));
+
+    if (wasMonthlyPlanFlow) {
+      setActiveStepIndex(1);
+      chat.resetAndStartScenario('field-customer-engagement', 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleStart = useCallback(() => {
+    setShowWelcome(false);
   }, []);
 
   return (
@@ -264,31 +329,35 @@ function App() {
       style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}
     >
       {/* Brand bar */}
-      <div className="demo-brand">
-        <span className="demo-brand-name">万能营销</span>
-        <span className="demo-brand-pro">PRO</span>
-        <div style={{ flex: 1 }} />
-        {/* Auto-speak toggle */}
-        <button
-          className="demo-speak-toggle"
-          onClick={() => {
-            setAutoSpeak((v) => {
-              if (v) speech.stopSpeaking();
-              return !v;
-            });
-          }}
-          title={autoSpeak ? '关闭语音' : '开启语音'}
-        >
-          {speech.isSpeaking ? '⏸ 停止' : autoSpeak ? '🔊 语音开' : '🔇 语音关'}
-        </button>
-      </div>
+      {!showWelcome && (
+        <div className="demo-brand">
+          <span className="demo-brand-name">万能营销</span>
+          <span className="demo-brand-pro">PRO</span>
+          <div style={{ flex: 1 }} />
+          <button
+            className="demo-speak-toggle"
+            onClick={() => {
+              setAutoSpeak((v) => {
+                if (v) speech.stopSpeaking();
+                return !v;
+              });
+            }}
+            title={autoSpeak ? '关闭语音' : '开启语音'}
+          >
+            {speech.isSpeaking ? '⏸ 停止' : autoSpeak ? '🔊 语音开' : '🔇 语音关'}
+          </button>
+        </div>
+      )}
 
       {/* Step indicator */}
-      <StepIndicator current={activeStepIndex} />
+      {!showWelcome && <StepIndicator current={activeStepIndex} />}
 
-      {/* Single phone — slides between AI and WeChat */}
+      {/* Phone frame */}
       <div className="demo-phone-frame">
         <div className="phone-notch" />
+        {showWelcome ? (
+          <WelcomePage onStart={handleStart} />
+        ) : (
         <div
           className="phone-slide-track"
           style={{ transform: phoneView === 'wechat' ? 'translateX(-50%)' : 'translateX(0)' }}
@@ -339,6 +408,7 @@ function App() {
               screenshotHelper={wechatState.screenshotHelper}
               smartKeyboard={wechatState.smartKeyboard}
               showFloatBtn={wechatState.showFloatBtn}
+              contactName={wechatState.contactName}
               onReturnToAssistant={handleReturnToAssistant}
               onSwitchView={(v) => setWeChatState((prev) => ({ ...prev, currentView: v }))}
               onSendReply={(text) => {
@@ -353,32 +423,16 @@ function App() {
                   }],
                   smartKeyboard: null,  // close smart keyboard after sending
                 }));
-                // Advance scenario - treat as quick reply
-                chat.handleQuickReply({ label: text, value: 'send-script' });
+                // Delay advancing the scenario so user sees the sent bubble first
+                window.setTimeout(() => {
+                  chat.handleQuickReply({ label: '发送话术', value: 'send-script' });
+                }, 2000);
               }}
             />
-            {/* Quick reply overlay in WeChat panel — so demo can advance even when WeChat is visible */}
-            {chat.quickReplies.length > 0 && !chat.isTyping && (
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 52, // above WeChat tab bar
-                  left: 0,
-                  right: 0,
-                  zIndex: 55,
-                  padding: '6px 10px 8px',
-                  background: 'linear-gradient(to top, rgba(237,237,237,0.98) 60%, transparent)',
-                  pointerEvents: 'auto',
-                }}
-              >
-                <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
-              </div>
-            )}
           </div>
         </div>
+        )}
       </div>
-
-      {/* Follow-up reminder popup */}
       {followUpReminder && (
         <div className="followup-popup-overlay" onClick={() => setFollowUpReminder(null)}>
           <div className="followup-popup" onClick={(e) => e.stopPropagation()}>

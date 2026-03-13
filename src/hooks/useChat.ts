@@ -271,7 +271,7 @@ export function useChat(activeScenarios: Scenario[]) {
   );
 
   const resetAndStartScenario = useCallback(
-    (scenarioId: string) => {
+    (scenarioId: string, startStep = 0) => {
       clearTimeouts();
       // Cancel any ongoing speech immediately so switching modules
       // doesn't cause overlapping audio during the 100ms state-reset gap.
@@ -290,7 +290,7 @@ export function useChat(activeScenarios: Scenario[]) {
       });
       // Use setTimeout to ensure state is reset before starting
       const t = window.setTimeout(() => {
-        playScenarioStep(scenarioId, 0);
+        playScenarioStep(scenarioId, startStep);
       }, 100);
       timeoutRefs.current.push(t);
     },

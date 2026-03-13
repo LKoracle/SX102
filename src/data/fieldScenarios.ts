@@ -477,20 +477,46 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '👋 王芳老师，**司庆季**开始了！AI助手结合当下司庆季营销节点，已为您智能盘点重点客户，共推荐 **20位** 重点客户。\n\n根据经验数据，同类型客户转化率接近 **10%**，提醒您尽快预约拜访！是否要为您添加至**4月经营计划**中？',
-            speechText: '王芳老师，司庆季开始了！结合当下司庆季营销节点，为您推荐20位重点客户，转化率接近10%。是否要为您添加至4月经营计划？',
+            content: '王老师，以下为您的客户全景大图。',
+            speechText: '王老师，以下为您的客户全景大图。',
           },
           {
-            type: 'field-customer-plan',
+            type: 'field-customer-panorama',
             content: '',
             data: {
-              title: '司庆季 · 4月重点经营客户',
-              totalCount: 20,
+              total: 7847,
+              lifeInsurance: 1231,
+              comprehensive: 855,
+              existing: 12,
+              prospect: 6027,
+            },
+          },
+          {
+            type: 'text',
+            content: '👋 王老师，结合当下司庆季营销节点，为您推荐 **20位** 重点客户，其中银行存款到期客户5位，旺财余额大于5万的客户3位，资产规模大于600万的客户10位。根据这些客户近半年和您的互动情况分析，**中高温客户有8位**，根据经验数据看同类型客户转化率接近10%，提醒您尽快邀约拜访直接进行产品推荐！另外 **12位** 低温客户，长久未联系，建议您根据平台提供的素材与客户通过微信互动。\n\n是否为您添加至**4月经营计划**中？',
+            speechText: '王老师，结合当下司庆季营销节点，为您推荐20位重点客户。中高温客户有8位，转化率接近10%，请尽快邀约拜访！另外12位低温客户，建议根据平台素材通过微信互动。是否添加至4月经营计划？',
+          },
+          {
+            type: 'field-interaction-heat',
+            content: '',
+            data: {
+              total: 27,
+              hot: 8,
+              watching: 7,
+              cold: 12,
+            },
+          },
+          {
+            type: 'field-smart-recommend',
+            content: '',
+            data: {
+              total: 27,
+              subtitle: '司庆季 · 4月重点经营客户',
               conversionRate: '~10%',
-              estimatedConversion: '2人',
+              estimatedDeal: '2人',
               segments: [
                 {
-                  type: '银行存款到期客户', count: 5, icon: '🏦', color: '#F59E0B', bg: '#FFFBEB',
+                  icon: '🏦', label: '银行存款到期客户', count: 5, color: '#F59E0B',
                   customers: [
                     { name: '陈先生', detail: '存款300万 · 本月到期' },
                     { name: '刘女士', detail: '存款150万 · 本月到期' },
@@ -500,7 +526,7 @@ export const fieldScenarios: Scenario[] = [
                   ],
                 },
                 {
-                  type: '旺财余额 > 5万', count: 3, icon: '💰', color: '#10B981', bg: '#ECFDF5',
+                  icon: '💰', label: '旺财余额 > 5万', count: 3, color: '#10B981',
                   customers: [
                     { name: '李先生', detail: '旺财余额 12万' },
                     { name: '孙女士', detail: '旺财余额 8万' },
@@ -508,7 +534,7 @@ export const fieldScenarios: Scenario[] = [
                   ],
                 },
                 {
-                  type: '资产规模 > 600W', count: 10, icon: '👑', color: '#7C3AED', bg: '#F5F3FF',
+                  icon: '👑', label: '资产规模 > 600W', count: 10, color: '#7C3AED',
                   customers: [
                     { name: '马总', detail: '资产约1200万' },
                     { name: '林女士', detail: '资产约720万' },
@@ -522,13 +548,30 @@ export const fieldScenarios: Scenario[] = [
                     { name: '李明', detail: '资产约640万' },
                   ],
                 },
+                {
+                  icon: '🔥', label: '中高温客户', count: 8, color: '#F97316',
+                  customers: [
+                    { name: '陈先生' }, { name: '王总' }, { name: '马总' },
+                    { name: '林女士' }, { name: '吴女士' }, { name: '郑总' },
+                    { name: '唐总' }, { name: '李先生' },
+                  ],
+                },
+                {
+                  icon: '❄️', label: '低温客户', count: 12, color: '#94A3B8',
+                  customers: [
+                    { name: '赵女士' }, { name: '孙女士' }, { name: '冯先生' },
+                    { name: '沈女士' }, { name: '韩先生' }, { name: '周先生' },
+                    { name: '张先生' }, { name: '刘女士' }, { name: '吴先生' },
+                    { name: '徐女士' }, { name: '曹先生' }, { name: '钱女士' },
+                  ],
+                },
               ],
-              aiNote: '以上客户均在近30天内有明确的资产管理需求信号，司庆季是切入的最佳时机。',
+              aiNote: '以上客户均在近30天内有明确的资产管理需求信号，司庆季是切入的最佳时机。低温客户建议优先通过朋友圈、问候消息加强互动频次。',
             },
           },
         ],
         quickReplies: [
-          { label: '除了李明之外都添加，并加入3年前购买财富产品的客户', value: 'add-custom-plan' },
+          { label: '好的，除了李明之外的客户都帮我添加进去，再帮我把三年前购买财富产品交费到期客户也加进去', value: 'add-custom-plan' },
         ],
       },
       {
@@ -621,9 +664,9 @@ export const fieldScenarios: Scenario[] = [
               estimatedConversion: '2-3人',
               estimatedIncome: '约5万元',
               topContacts: [
-                { rank: 1, name: '陈先生', detail: '存款300万 · 本月到期 · 主动咨询意向强' },
-                { rank: 2, name: '王总', detail: '存款500万 · 本月到期' },
-                { rank: 3, name: '唐总', detail: '资产2000万 · 高净值重点' },
+                { rank: 1, name: '陈先生', detail: '存款300万 · 本月到期 · 主动咨询意向强', script: '陈先生，司庆季来了！之前聊到您的300万存款这个月就到期了，我特意为您准备了一套保本增值方案，比银行利率高不少，方便这两天见面聊聊吗？' },
+                { rank: 2, name: '王总', detail: '存款500万 · 本月到期', script: '王总您好！您那笔500万存款本月到期，正好赶上平安司庆季，我为您匹配了一套高收益专属方案，有空给您详细汇报一下？' },
+                { rank: 3, name: '唐总', detail: '资产2000万 · 高净值重点', script: '唐总，司庆季特别为高净值客户推出了一套综合资产保障方案，兼顾收益与传承，非常适合您目前的资产规模，方便安排一次专属沙龙吗？' },
               ],
               aiNote: 'AI已为27位客户分别匹配专属沟通话术与司庆季触客内容，可一键发送至微信',
             },
@@ -954,45 +997,95 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **方案已发送给陈先生**\n\n📩 **陈先生回复：**\n"王芳，你这个方案思路很清晰，我再考虑一下，下周给你答复。"\n\n🎯 **总结：**\n在万能营销助手的帮助下，从**司庆季客群盘点** → **触客微信互动** → **活动邀约** → **需求分析** → **方案定制**，客户经营和促成转化效率**明显提升**！\n\n💰 **本次潜在收入：16,880元**',
-            speechText: '方案已发送，陈先生表示下周给答复。在万能营销的帮助下，客户经营效率明显提升，本次潜在收入16880元。',
+            content: '✅ **方案已发送给陈先生**\n\n请关注陈先生的微信回复，及时跟进。',
+            speechText: '方案已发送给陈先生，请关注微信回复。',
             wechatEvents: [
+              {
+                type: 'set-chat-messages',
+                data: [
+                  { sender: 'self', content: '陈先生，根据您的情况我为您定制了这份方案，请查收👇', timestamp: '14:30' },
+                  { sender: 'self', content: '[文件] 陈先生专属保险方案_平安盛盈.pdf', contentType: 'file', timestamp: '14:30' },
+                  { sender: 'chensheng', senderName: '陈先生', content: '这个保险还是太贵了，我家人也不同意。', timestamp: '14:35' },
+                ],
+              },
               { type: 'switch-view', data: 'chat' },
               {
-                type: 'add-chat',
-                data: { sender: 'xiaoli', content: '陈先生，根据您的情况我为您定制了这份方案，请查收👇', timestamp: '14:30' },
+                type: 'show-smart-keyboard',
+                data: {
+                  headerTitle: '💡 AI异议应对建议',
+                  analyzingText: 'AI正在分析客户异议...',
+                  analysis: '价格异议 + 家人反对，建议从性价比和家庭价值切入化解',
+                  recommendedScript: '陈先生，我理解您的顾虑。其实年交20万折合每天仅需500多元，而一旦发生风险最高可获500万保障，杠杆非常划算。至于家人方面，这款产品的居家养老服务本就是为全家设计的，不妨邀请家人一起了解一下，让他们也参与这个决定？',
+                  skipAnalyzing: false,
+                },
               },
-              {
-                type: 'add-chat',
-                data: { sender: 'xiaoli', content: '[文件] 陈先生专属保险方案_平安盛盈.pdf', contentType: 'file', timestamp: '14:30' },
-              },
-              {
-                type: 'add-chat',
-                data: { sender: 'chensheng', senderName: '陈先生', content: '王芳，你这个方案思路很清晰，我再考虑一下，下周给你答复。', timestamp: '14:45' },
-              },
-              { type: 'switch-to-assistant', data: null },
+              { type: 'show-float-btn', data: null },
+            ],
+          },
+        ],
+        quickReplies: [],
+      },
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '✅ **应对话术已发送！**\n\n陈先生的价格异议和家人反对已通过专业话术有效回应。\n\n🎯 **总结：**\n在万能营销助手的帮助下，从**司庆季客群盘点** → **触客微信互动** → **活动邀约** → **需求分析** → **方案定制** → **异议处理**，客户经营和促成转化效率**明显提升**！\n\n💰 **本次潜在收入：16,880元**\n\n建议接下来安排线下见面，邀请家人一同参与，进一步推进签约。',
+            speechText: '应对话术已发送。建议安排线下见面，邀请家人一同了解，进一步推进签约。本次潜在收入16880元。',
+            wechatEvents: [
               {
                 type: 'show-followup-reminder',
                 data: {
                   title: 'AI自动跟进提醒已设置',
                   schedule: [
-                    { date: '📅 3天后（周四）', action: '主动询问陈先生的考虑进展' },
-                    { date: '📅 5天后（周六）', action: '若未回复，发送居家养老服务案例' },
-                    { date: '📅 7天后（下周一）', action: '提议约定线下需求分析面谈' },
+                    { date: '📅 3天后（周四）', action: '主动询问陈先生家人是否有时间线下会谈' },
+                    { date: '📅 5天后（周六）', action: '若未回复，发送居家养老服务实际案例' },
+                    { date: '📅 7天后（下周一）', action: '提议约定线下面谈，邀请家人同行' },
                   ],
-                  summary: '方案定制完成，陈先生已进入决策阶段。保持适度跟进，预计下周可推进至签约环节。',
+                  summary: '异议已有效化解，陈先生进入决策阶段。趁热打铁安排线下见面，预计本周可推进至签约环节。',
                 },
               },
             ],
           },
         ],
         quickReplies: [
+          { label: '🎙️ 下午我要去拜访客户陈诚沟通【平安添盈·居家养老】，我们两个演练一下吧', value: 'start-roleplay' },
         ],
+      },
+      // Step 3: AI 模拟客户提出异议
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '好的，王老师！我来模拟客户**陈诚**，您来应对。开始演练👇',
+            speechText: '好的，我来模拟客户陈诚，您来应对，开始演练。',
+          },
+          {
+            type: 'field-roleplay-customer',
+            content: '',
+            data: {
+              customerName: '陈诚',
+              customerContent: '王芳，你给我推荐的【平安添盈·居家养老】方案挺好，但我觉得这个方案太贵了。',
+              hint: '请用您的异议处理话术回应👇',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '我很理解您的想法，在我没有接触到保险之前我也是这样认为的。保险其实是花小钱办大事，用每年20万的投入，换取最高500万的风险保障，关键时刻能救急。您看，您现在每年在旅游、餐饮上的花费加起来可能也不少，但保险是真正能保障家人未来的投入，值！', value: 'roleplay-response' },
+        ],
+      },
+      // Step 4: 演练完成
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '🎉 **演练完成！表现优秀！**\n\n✅ **话术评估：**\n• **共情切入** — "我理解您的想法"，建立信任感 ✓\n• **重塑认知** — 用具体数字说明杠杆价值 ✓\n• **生活类比** — 对比日常消费引发共鸣 ✓\n• **价值收尾** — 强调家人保障的终极意义 ✓\n\n💡 **小建议：** 可以加上一句"陈先生，您觉得家人的安心值多少？"，引导客户自问自答，促成效果更强。\n\n💪 祝下午拜访顺利，加油！',
+            speechText: '演练完成，表现优秀！话术逻辑清晰，共情、重塑认知、生活类比三步到位。祝下午拜访顺利！',
+          },
+        ],
+        quickReplies: [],
       },
     ],
   },
-
-  // ==================== 功能⑨ 讲解素材生成 ====================
   {
     id: 'field-presentation-gen',
     name: '讲解素材生成',
