@@ -656,6 +656,11 @@ export const fieldScenarios: Scenario[] = [
             },
           },
           {
+            type: 'text',
+            content: '好的。已按您的要求查找到3名财富产品到期客户、为您生成4月经营计划，并匹配了沟通话术及针对性触客内容。',
+            speechText: '好的。已按您的要求查找到3名财富产品到期客户、为您生成4月经营计划，并匹配了沟通话术及针对性触客内容。',
+          },
+          {
             type: 'field-monthly-plan',
             content: '',
             speechText: '4月经营计划已生成，27位重点客户，优先拜访陈先生。AI已为每位客户匹配专属沟通话术和司庆季触客内容。',
