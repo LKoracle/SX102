@@ -41,6 +41,8 @@ import FieldInteractionHeatCard from './cards/FieldInteractionHeatCard';
 import FieldSmartRecommendCard from './cards/FieldSmartRecommendCard';
 import FieldCustomerPanoramaCard from './cards/FieldCustomerPanoramaCard';
 import FieldRoleplayCustomerCard from './cards/FieldRoleplayCustomerCard';
+import FieldHealthConsultCard from './cards/FieldHealthConsultCard';
+import FieldVisitPrepCard from './cards/FieldVisitPrepCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -211,6 +213,10 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldSalesLogicCard data={message.data as Record<string, unknown>} />;
       case 'field-monthly-plan':
         return <FieldMonthlyPlanCard data={message.data as any} />;
+      case 'field-health-consult':
+        return <FieldHealthConsultCard data={message.data as any} />;
+      case 'field-visit-prep':
+        return <FieldVisitPrepCard data={message.data as any} />;
       case 'field-outreach-scripts':
         return <FieldOutreachScriptsCard data={message.data as any} />;
       case 'field-interaction-heat':

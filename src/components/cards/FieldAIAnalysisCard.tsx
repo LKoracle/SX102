@@ -8,10 +8,16 @@ interface AnalysisItem {
   color?: string;
 }
 
+interface ProfileTag {
+  icon: string;
+  label: string;
+}
+
 interface AnalysisData {
   incomingMessage: string;
   sender: string;
   time?: string;
+  profile?: ProfileTag[];
   analysis: AnalysisItem[];
 }
 
@@ -43,6 +49,27 @@ export function FieldAIAnalysisCard({ data }: FieldAIAnalysisCardProps) {
           </div>
           <p className="text-[11px] text-[#333] leading-[1.6]">{d.incomingMessage}</p>
         </div>
+
+        {/* Customer profile tags */}
+        {d.profile && d.profile.length > 0 && (
+          <div className="rounded-[12px] px-2.5 py-2" style={{ background: '#FFF7ED', border: '1px solid #FED7AA' }}>
+            <div className="flex items-center gap-1 mb-1.5">
+              <span className="text-[9px] font-semibold" style={{ color: '#C2410C' }}>👤 客户画像</span>
+              <span className="text-[8px]" style={{ color: '#9A3412' }}>· AI综合画像与对话记录生成分析</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {d.profile.map((tag, i) => (
+                <span
+                  key={i}
+                  className="text-[9px] font-medium px-1.5 py-0.5 rounded-full"
+                  style={{ background: '#FFEDD5', color: '#9A3412' }}
+                >
+                  {tag.icon} {tag.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Analysis items */}
         <div className="space-y-1.5">

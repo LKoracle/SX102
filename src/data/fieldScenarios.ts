@@ -676,6 +676,38 @@ export const fieldScenarios: Scenario[] = [
               aiNote: 'AI已为27位客户分别匹配专属沟通话术与司庆季触客内容，可一键发送至微信',
             },
           },
+          {
+            type: 'text',
+            content: '另外，今天也为您准备了 3 条健康养老资讯，内容贴近客户关注点，适合发到朋友圈做日常维系，感兴趣的话可以一键分享 👇',
+            speechText: '另外，今天也为您准备了3条健康养老资讯，内容贴近客户关注点，适合发到朋友圈做日常维系。',
+          },
+          {
+            type: 'field-health-consult',
+            content: '',
+            speechText: '为您推荐今日健康养老资讯，可一键发到朋友圈提升专业形象。',
+            data: {
+              items: [
+                {
+                  id: 1,
+                  tag: '健康养生',
+                  title: '60岁后如何科学补钙？权威指南来了',
+                  summary: '🦴 研究显示，60岁以上人群每日需补充1200mg钙质。除牛奶外，豆腐、深色蔬菜同样是优质钙源。建议结合维生素D补充，户外散步20分钟即可促进吸收，有效预防骨质疏松。',
+                },
+                {
+                  id: 2,
+                  tag: '养老规划',
+                  title: '提前规划养老金，退休生活更从容',
+                  summary: '📊 数据显示，退休后维持现有生活质量，每月所需费用约为在职收入的70%-80%。通过年金险+商业医疗险的组合配置，可有效填补社保缺口，确保养老无忧。',
+                },
+                {
+                  id: 3,
+                  tag: '长寿秘诀',
+                  title: '百岁老人的共同习惯：这3点值得学习',
+                  summary: '🌟 研究百位百岁老人发现：①规律作息（22点前入睡）；②坚持低强度运动（每日步行6000步）；③保持社交与学习兴趣。好的生活习惯配合充足的健康保障，才能真正安享晚年。',
+                },
+              ],
+            },
+          },
         ],
         quickReplies: [
           { label: '查看匹配沟通话术与触客内容', value: 'view-outreach-scripts' },
@@ -767,6 +799,13 @@ export const fieldScenarios: Scenario[] = [
               incomingMessage: '好的，正好最近也在想这些，你什么时候方便详细聊聊？',
               sender: '陈先生',
               time: '刚刚',
+              profile: [
+                { icon: '💼', label: '企业中层管理' },
+                { icon: '👨‍👩‍👧‍�', label: '家有老小' },
+                { icon: '📈', label: '偏好理财' },
+                { icon: '💰', label: '存款300万到期' },
+                { icon: '🏠', label: '关注资产传承' },
+              ],
               analysis: [
                 { label: '客户状态', value: '意向明确，主动推进' },
                 { label: '互动质量', value: '高意向，回复积极', color: '#10B981' },
@@ -856,8 +895,8 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '🎉 **活动顺利举办！**\n\n陈先生全程参与，对居家养老方向非常感兴趣。\n\n🎤 **请用语音输入**告诉我活动中收集到的信息，我来帮您快速更新客户档案。',
-            speechText: '活动顺利举办！请点击下方按钮，用语音告诉我陈先生在活动中分享的信息，我来帮您更新客户档案。',
+            content: '🎉 **活动反馈来了！**\n\n陈先生参加完活动心情不错，结束后主动找我聊，说讲座内容很实用，正好和他最近在考虑的问题对上了，开始向我咨询资产配置的事。\n\n🎤 **请用语音输入**告诉我陈先生在活动中聊到的关键信息，我来帮您快速更新客户档案。',
+            speechText: '活动效果很好！陈先生参加后主动来问资产配置的事，请用语音告诉我活动中收集到的信息，我来帮您更新客户档案。',
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
               { type: 'hide-float-btn', data: null },
@@ -866,7 +905,7 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [
           {
-            label: '🎤 陈先生反馈：45岁，企业中层，有老有小，近年一直在想怎么把存款用起来，对居家养老服务很感兴趣',
+            label: '🎤 我的客户陈诚开小公司创业的，45岁有2个孩子，3月银行定存到期30万，请更新客户档案',
             value: 'voice-input-archive',
           },
         ],
@@ -905,28 +944,72 @@ export const fieldScenarios: Scenario[] = [
     ],
   },
 
-  // ==================== 功能⑫ 访/邀+转：陈先生专属保险方案 ====================
+  // ==================== 功能⑫ 访/邀+转：陈诚专属保险方案 ====================
   {
     id: 'field-chen-solution',
     name: '产品方案定制',
     icon: '🏆',
     description: '司庆方案',
     steps: [
+      // Step 1: 代理人请求访前分析 → AI输出访前准备方案卡片
       {
         aiMessages: [
           {
+            role: 'user',
             type: 'text',
-            content: '💬 **【人】** 帮我给客户陈先生定制一份保险方案。\n\n🤖 **AI分析中...**\n已调取陈先生客户档案，正在进行深度需求分析...',
-            speechText: '收到指令，正在为陈先生进行需求分析和保险方案定制。',
+            content: '我的客户陈诚开小公司创业的，45岁有2个孩子，3月银行定存到期30万，请帮我做一个他的拜访前分析',
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
             ],
           },
           {
+            type: 'text',
+            content: '好的，经分析客户陈诚的客户画像，已为您生成拜访前准备方案，包括核心需求挖掘、拜访策略、沟通要点等内容，请查看 👇',
+            speechText: '收到，已分析陈诚的客户画像，为您生成拜访前准备方案，包括核心需求和拜访策略。',
+          },
+          {
+            type: 'field-visit-prep',
+            content: '',
+            speechText: '访前方案已生成，建议从定存到期切入，围绕财富配置和养老规划展开需求挖掘。',
+            data: {
+              customerName: '陈诚',
+              age: 45,
+              occupation: '小企业主',
+              tags: ['小企业主', '45岁', '有2个孩子', '定存30万到期', '关注资产配置'],
+              coreNeeds: [
+                { icon: '💰', title: '定存到期再配置', desc: '3月定存30万到期，有主动配置意愿，是切入最佳时机' },
+                { icon: '🏢', title: '企业经营风险保障', desc: '创业者缺乏稳定收入保障，需防范经营风险对家庭冲击' },
+                { icon: '👨‍👩‍👧‍👦', title: '子女教育与传承', desc: '2个孩子，教育金储备和财富传承是中长期核心诉求' },
+                { icon: '🌿', title: '养老规划提前布局', desc: '45岁是养老规划关键期，趁早锁定长期复利收益' },
+              ],
+              strategy: [
+                { step: 1, label: '开场共鸣', tip: '从定存到期切入，询问他对这笔钱的打算，建立共同话题' },
+                { step: 2, label: '需求挖掘', tip: '围绕"创业者的钱如何更安全增值"展开，探讨传承和养老' },
+                { step: 3, label: '方案呈现', tip: '针对财富缺口和养老缺口，推荐储蓄型+年金险组合方案' },
+                { step: 4, label: '促成建议', tip: '借助司庆季节点稀缺性，建议尽快锁定方案' },
+              ],
+              openingScript: '陈总，您好！之前聊到您3月有笔定存到期，这段时间有想好怎么打算吗？我最近正好帮几个类似情况的客户做了资产配置方案，效果不错，今天带过来给您参考一下。',
+            },
+          },
+        ],
+        quickReplies: [
+          { label: '好的，请帮我进一步分析陈诚保障情况，并定制一份产品方案', value: 'make-solution' },
+        ],
+      },
+      // Step 2: 代理人要求定制产品方案 → AI输出分析文字 + 保险方案卡片
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '经检测，客户陈诚今年45岁，家有老小，属于社会中坚客群，面临**资产配置失衡、养老储备不足**的风险，重点需求是保财富、保养老。\n\n再通过整合客户内外部保险数据分析，测出陈诚存在财富缺口160万、养老缺口180万，根据客户需求及保险缺口，优先推荐司庆季主推方案 **【平安添盈·居家养老】**：通过配置金尊分红司庆，年交保费20万，6年交，现金持续增值和享受分红收益，同时可享居家养老服务。建议您按如下销售逻辑进行方案讲解……',
+            speechText: '已完成陈诚保障情况分析，存在财富缺口160万和养老缺口180万，优先推荐平安添盈居家养老方案，年交20万，6年交。',
+            wechatEvents: [],
+          },
+          {
             type: 'field-insurance-solution',
             content: '',
             data: {
-              customerName: '陈先生',
+              customerName: '陈诚',
               age: 45,
               customerGroup: '社会中坚客群',
               riskWarnings: ['资产配置失衡', '养老储备不足'],
@@ -934,7 +1017,7 @@ export const fieldScenarios: Scenario[] = [
                 { type: '财富缺口', amount: '160万', icon: '💼', color: '#F59E0B' },
                 { type: '养老缺口', amount: '180万', icon: '🏠', color: '#7C3AED' },
               ],
-              productName: '平安盛盈·居家养老',
+              productName: '平安添盈·居家养老',
               subProduct: '金尊分红 · 司庆版',
               annualPremium: '20万',
               paymentYears: '6年',
@@ -964,7 +1047,7 @@ export const fieldScenarios: Scenario[] = [
                 {
                   step: 1,
                   title: '需求共鸣',
-                  script: '陈先生，您45岁正是家庭责任最重的阶段，上有父母、下有子女，自己还是家庭的顶梁柱。这个阶段资产保值增值和养老规划是最关键的两件事，您认同吗？',
+                  script: '陈总，您45岁正是家庭责任最重的阶段，上有老人、下有孩子，自己还是公司的顶梁柱。这个阶段资产保值增值和养老规划是最关键的两件事，您认同吗？',
                   tip: '先建立共识，让客户点头认可',
                 },
                 {
@@ -976,7 +1059,7 @@ export const fieldScenarios: Scenario[] = [
                 {
                   step: 3,
                   title: '方案呈现',
-                  script: '这款平安盛盈·居家养老，年交20万、交6年，可以同时解决这两个缺口：现金持续增值，享受分红收益，还配套专业的居家养老服务，一举三得。',
+                  script: '这款平安添盈·居家养老，年交20万、交6年，可以同时解决这两个缺口：现金持续增值，享受分红收益，还配套专业的居家养老服务，一举三得。',
                   tip: '方案讲解要简洁，突出三大核心价值',
                 },
                 {
@@ -995,22 +1078,22 @@ export const fieldScenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '发送方案给陈先生', value: 'send-solution' },
+          { label: '发送方案给陈诚', value: 'send-solution' },
         ],
       },
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **方案已发送给陈先生**\n\n请关注陈先生的微信回复，及时跟进。',
-            speechText: '方案已发送给陈先生，请关注微信回复。',
+            content: '✅ **方案已发送给陈诚**\n\n请关注陈诚的微信回复，及时跟进。',
+            speechText: '方案已发送给陈诚，请关注微信回复。',
             wechatEvents: [
               {
                 type: 'set-chat-messages',
                 data: [
-                  { sender: 'self', content: '陈先生，根据您的情况我为您定制了这份方案，请查收👇', timestamp: '14:30' },
-                  { sender: 'self', content: '[文件] 陈先生专属保险方案_平安盛盈.pdf', contentType: 'file', timestamp: '14:30' },
-                  { sender: 'chensheng', senderName: '陈先生', content: '这个保险还是太贵了，我家人也不同意。', timestamp: '14:35' },
+                  { sender: 'self', content: '陈总，根据您的情况我为您定制了这份方案，请查收👇', timestamp: '14:30' },
+                  { sender: 'self', content: '[文件] 陈诚专属保险方案_平安添盈.pdf', contentType: 'file', timestamp: '14:30' },
+                  { sender: 'chensheng', senderName: '陈诚', content: '这个保险还是太贵了，我家人也不同意。', timestamp: '14:35' },
                 ],
               },
               { type: 'switch-view', data: 'chat' },
@@ -1020,7 +1103,7 @@ export const fieldScenarios: Scenario[] = [
                   headerTitle: '💡 AI异议应对建议',
                   analyzingText: 'AI正在分析客户异议...',
                   analysis: '价格异议 + 家人反对，建议从性价比和家庭价值切入化解',
-                  recommendedScript: '陈先生，我理解您的顾虑。其实年交20万折合每天仅需500多元，而一旦发生风险最高可获500万保障，杠杆非常划算。至于家人方面，这款产品的居家养老服务本就是为全家设计的，不妨邀请家人一起了解一下，让他们也参与这个决定？',
+                  recommendedScript: '陈总，我理解您的顾虑。其实年交20万折合每天仅需500多元，而一旦发生风险最高可获500万保障，杠杆非常划算。至于家人方面，这款产品的居家养老服务本就是为全家设计的，不妨邀请家人一起了解一下，让他们也参与这个决定？',
                   skipAnalyzing: false,
                 },
               },

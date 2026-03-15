@@ -116,6 +116,7 @@ export interface WeChatState {
 
 export interface ScenarioStep {
   aiMessages: Array<{
+    role?: 'user' | 'ai';
     type: MessageContentType;
     content: string;
     speechText?: string;

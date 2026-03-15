@@ -109,7 +109,7 @@ export function useChat(activeScenarios: Scenario[]) {
               ...prev.messages,
               {
                 id: generateId(),
-                role: 'ai' as const,
+                role: (msg.role ?? 'ai') as 'ai' | 'user',
                 type: msg.type,
                 content: msg.content,
                 speechText: msg.speechText,
