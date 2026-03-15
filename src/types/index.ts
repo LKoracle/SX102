@@ -41,7 +41,9 @@ export type MessageContentType =
   | 'field-interaction-heat'
   | 'field-smart-recommend'
   | 'field-customer-panorama'
-  | 'field-roleplay-customer';
+  | 'field-roleplay-customer'
+  | 'field-health-consult'
+  | 'field-visit-prep';
 
 export interface Message {
   id: string;
