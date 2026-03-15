@@ -677,11 +677,6 @@ export const fieldScenarios: Scenario[] = [
             },
           },
           {
-            type: 'text',
-            content: '另外，今天也为您准备了 3 条健康养老资讯，内容贴近客户关注点，适合发到朋友圈做日常维系，感兴趣的话可以一键分享 👇',
-            speechText: '另外，今天也为您准备了3条健康养老资讯，内容贴近客户关注点，适合发到朋友圈做日常维系。',
-          },
-          {
             type: 'field-health-consult',
             content: '',
             speechText: '为您推荐今日健康养老资讯，可一键发到朋友圈提升专业形象。',
