@@ -27,7 +27,7 @@ interface FieldVisitPrepCardProps {
 export default function FieldVisitPrepCard({ data }: FieldVisitPrepCardProps) {
   const d = data as unknown as VisitPrepData;
 
-  const tags = d.tags || ['小企业主', '50岁', '有2个孩子', '定存30万到期', '关注资产配置'];
+  const tags = d.tags || ['企业中层', '50岁', '有2个孩子', '定存30万到期', '关注资产配置'];
   const coreNeeds = d.coreNeeds || [
     { icon: '💰', title: '定存到期再配置', desc: '30万定存本月到期，有主动配置意愿，是切入最佳时机' },
     { icon: '🏢', title: '企业经营风险保障', desc: '创业者缺乏稳定收入，需防范经营风险对家庭的冲击' },
@@ -60,7 +60,7 @@ export default function FieldVisitPrepCard({ data }: FieldVisitPrepCardProps) {
           </div>
           <div className="text-right">
             <div className="text-[#93C5FD] text-[10px] font-semibold">
-              {d.age || 50}岁 · {d.occupation || '小企业主'}
+              {d.age || 50}岁 · {d.occupation || '企业中层'}
             </div>
           </div>
         </div>

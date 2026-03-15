@@ -900,7 +900,7 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [
           {
-            label: '🎤 我的客户陈诚开小公司创业的，45岁有2个孩子，3月银行定存到期30万，请更新客户档案',
+            label: '🎤 我的客户陈诚是企业中层，45岁有2个孩子，3月银行定存到期30万，请更新客户档案',
             value: 'voice-input-archive',
           },
         ],
@@ -952,7 +952,7 @@ export const fieldScenarios: Scenario[] = [
           {
             role: 'user',
             type: 'text',
-            content: '我的客户陈诚开小公司创业的，45岁有2个孩子，3月银行定存到期30万，请帮我做一个他的拜访前分析',
+            content: '我的客户陈诚是企业中层，45岁有2个孩子，3月银行定存到期30万，请帮我做一个他的拜访前分析',
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
             ],
@@ -969,8 +969,8 @@ export const fieldScenarios: Scenario[] = [
             data: {
               customerName: '陈诚',
               age: 45,
-              occupation: '小企业主',
-              tags: ['小企业主', '45岁', '有2个孩子', '定存30万到期', '关注资产配置'],
+              occupation: '企业中层',
+              tags: ['企业中层', '45岁', '有2个孩子', '定存30万到期', '关注资产配置'],
               coreNeeds: [
                 { icon: '💰', title: '定存到期再配置', desc: '3月定存30万到期，有主动配置意愿，是切入最佳时机' },
                 { icon: '🏢', title: '企业经营风险保障', desc: '创业者缺乏稳定收入保障，需防范经营风险对家庭冲击' },
