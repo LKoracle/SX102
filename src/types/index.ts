@@ -93,6 +93,13 @@ export interface SmartKeyboardData {
   skipAnalyzing?: boolean;
   headerTitle?: string;
   analyzingText?: string;
+  waitForTrigger?: boolean;
+  resources?: Array<{
+    icon: string;
+    title: string;
+    tag: string;
+    description: string;
+  }>;
 }
 
 export interface WeChatEvent {

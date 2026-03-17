@@ -237,19 +237,19 @@ function SmartKeyboard({
   onDismiss: () => void;
 }) {
   const [status, setStatus] = useState<'idle' | 'analyzing' | 'ready'>(
-    data.skipAnalyzing ? 'ready' : 'idle'
+    data.skipAnalyzing || data.waitForTrigger ? 'ready' : 'idle'
   );
 
   // Auto-start analyzing when component mounts if data is provided
   useEffect(() => {
-    if (data.skipAnalyzing) {
+    if (data.skipAnalyzing || data.waitForTrigger) {
       setStatus('ready');
       return;
     }
     setStatus('analyzing');
     const t = setTimeout(() => setStatus('ready'), 2000);
     return () => clearTimeout(t);
-  }, [data.skipAnalyzing]);
+  }, [data.skipAnalyzing, data.waitForTrigger]);
 
   const screenshotBtnStyle: React.CSSProperties = {
     display: 'flex',
@@ -352,6 +352,46 @@ function SmartKeyboard({
                   {data.headerTitle ? data.analysis : `识别到: ${data.analysis}`}
                 </div>
               </div>
+
+              {/* Resources section - show when waitForTrigger is true and resources exist */}
+              {data.waitForTrigger && data.resources && data.resources.length > 0 && (
+                <div style={{ padding: '10px 14px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginBottom: 8 }}>📚 推荐素材</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {data.resources.map((resource, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '8px 10px',
+                          background: 'rgba(255,255,255,0.08)',
+                          borderRadius: 8,
+                        }}
+                      >
+                        <span style={{ fontSize: 16 }}>{resource.icon}</span>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ color: '#fff', fontSize: 12, fontWeight: 500 }}>{resource.title}</div>
+                          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 10 }}>{resource.description}</div>
+                        </div>
+                        <span
+                          style={{
+                            fontSize: 9,
+                            padding: '2px 6px',
+                            background: 'rgba(59,130,246,0.3)',
+                            color: '#fff',
+                            borderRadius: 4,
+                          }}
+                        >
+                          {resource.tag}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Script section */}
               <div style={{ padding: '10px 14px 14px' }}>
                 <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginBottom: 6 }}>💬 推荐话术</div>
