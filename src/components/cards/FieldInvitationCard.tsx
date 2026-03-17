@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 interface InvitationData {
   recipientName?: string;
   eventName?: string;
@@ -15,6 +17,21 @@ interface FieldInvitationCardProps {
 
 export function FieldInvitationCard({ data }: FieldInvitationCardProps) {
   const d = (data as unknown as InvitationData) || {};
+  const [sent, setSent] = useState(false);
+
+  const handleSend = () => {
+    if (sent) return;
+    setSent(true);
+    window.dispatchEvent(new CustomEvent('invitation-send-wechat', {
+      detail: {
+        contactName: d.recipientName || '陈先生',
+        inviteCopy: d.inviteCopy || '',
+        eventName: d.eventName || '财富管理讲座活动',
+        eventDate: d.eventDate || '4月15日（周六）14:00',
+        eventLocation: d.eventLocation || '深圳平安金融中心18楼 精英厅',
+      },
+    }));
+  };
 
   return (
     <div className="rounded-[20px] overflow-hidden shadow-sm border border-gray-100">
@@ -123,6 +140,31 @@ export function FieldInvitationCard({ data }: FieldInvitationCardProps) {
             ✓ {tag}
           </span>
         ))}
+      </div>
+
+      {/* Send button */}
+      <div className="px-3 pb-3 pt-1 bg-white">
+        <button
+          onClick={handleSend}
+          disabled={sent}
+          style={{
+            width: '100%',
+            padding: '10px 0',
+            borderRadius: 12,
+            border: 'none',
+            fontSize: 14,
+            fontWeight: 700,
+            cursor: sent ? 'default' : 'pointer',
+            background: sent
+              ? '#E2E8F0'
+              : 'linear-gradient(135deg, #1D4ED8, #7C3AED)',
+            color: sent ? '#94A3B8' : '#fff',
+            transition: 'all 0.2s',
+            letterSpacing: '0.05em',
+          }}
+        >
+          {sent ? '✅ 已发送' : '一键发送至微信'}
+        </button>
       </div>
     </div>
   );

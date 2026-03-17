@@ -206,6 +206,7 @@ function App() {
 
   const wechatSendTimersRef = useRef<number[]>([]);
   const fromMonthlyPlanRef = useRef(false);
+  const fromInvitationRef = useRef(false);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -268,6 +269,73 @@ function App() {
     return () => window.removeEventListener('monthly-plan-send-wechat', handler);
   }, []);
 
+  // Handle invitation card "一键发送至微信" button
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { contactName, inviteCopy, eventName, eventDate, eventLocation } = (e as CustomEvent).detail as {
+        contactName: string; inviteCopy: string; eventName: string; eventDate: string; eventLocation: string;
+      };
+
+      // Clear any pending timers
+      wechatSendTimersRef.current.forEach(clearTimeout);
+      wechatSendTimersRef.current = [];
+
+      // 1. Immediately: switch to WeChat, show the sent messages
+      fromInvitationRef.current = true;
+      setWeChatState(prev => ({
+        ...prev,
+        currentView: 'chat',
+        contactName,
+        chatMessages: [
+          {
+            sender: 'self',
+            content: inviteCopy,
+            timestamp: '10:22',
+          },
+          {
+            sender: 'self',
+            content: `[活动邀请] ${eventName} · ${eventDate} · ${eventLocation}`,
+            contentType: 'file',
+            timestamp: '10:22',
+          },
+        ],
+        smartKeyboard: null,
+        showFloatBtn: true,
+      }));
+      setPhoneView('wechat');
+
+      // 2. After 1.5s: add the contact's reply
+      const t1 = window.setTimeout(() => {
+        setWeChatState(prev => ({
+          ...prev,
+          chatMessages: [...prev.chatMessages, {
+            sender: 'contact',
+            senderName: contactName,
+            content: '好啊，周六下午我有空，到时候见！',
+            timestamp: '10:25',
+          }],
+        }));
+      }, 1500);
+
+      // 3. After 2.8s: show AI smart keyboard panel
+      const t2 = window.setTimeout(() => {
+        setWeChatState(prev => ({
+          ...prev,
+          smartKeyboard: {
+            analysis: '客户同意参加活动，情绪积极，适合确认细节并表达期待',
+            recommendedScript: `太棒了！我到时候提前给您发位置，到了直接找我。讲座结束后咱们单独聊聊您的具体情况，我已经结合您的需求准备了一些方案思路。`,
+            skipAnalyzing: true,
+          },
+        }));
+      }, 2800);
+
+      wechatSendTimersRef.current = [t1, t2];
+    };
+
+    window.addEventListener('invitation-send-wechat', handler);
+    return () => window.removeEventListener('invitation-send-wechat', handler);
+  }, []);
+
   const advanceToNextStep = useCallback(
     (nextIndex: number) => {
       if (nextIndex >= DEMO_STEPS.length) return;
@@ -308,13 +376,18 @@ function App() {
 
   const handleReturnToAssistant = useCallback(() => {
     const wasMonthlyPlanFlow = fromMonthlyPlanRef.current;
+    const wasInvitationFlow = fromInvitationRef.current;
     fromMonthlyPlanRef.current = false;
+    fromInvitationRef.current = false;
     setPhoneView('assistant');
     setWeChatState(prev => ({ ...prev, showFloatBtn: false, smartKeyboard: null, contactName: undefined }));
 
     if (wasMonthlyPlanFlow) {
       setActiveStepIndex(1);
       chat.resetAndStartScenario('field-customer-engagement', 1);
+    } else if (wasInvitationFlow) {
+      // After invitation WeChat interaction, advance to step 4 (activity feedback)
+      chat.resetAndStartScenario('field-customer-engagement', 4);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -423,10 +496,21 @@ function App() {
                   }],
                   smartKeyboard: null,  // close smart keyboard after sending
                 }));
-                // Delay advancing the scenario so user sees the sent bubble first
-                window.setTimeout(() => {
-                  chat.handleQuickReply({ label: '发送话术', value: 'send-script' });
-                }, 2000);
+
+                if (fromInvitationRef.current) {
+                  // Invitation flow: return to assistant and start step 4 (activity feedback)
+                  window.setTimeout(() => {
+                    fromInvitationRef.current = false;
+                    setPhoneView('assistant');
+                    setWeChatState(prev => ({ ...prev, showFloatBtn: false, smartKeyboard: null, contactName: undefined }));
+                    chat.resetAndStartScenario('field-customer-engagement', 4);
+                  }, 2000);
+                } else {
+                  // Normal flow: advance the scenario
+                  window.setTimeout(() => {
+                    chat.handleQuickReply({ label: '发送话术', value: 'send-script' });
+                  }, 2000);
+                }
               }}
             />
           </div>

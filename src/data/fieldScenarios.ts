@@ -848,30 +848,26 @@ export const fieldScenarios: Scenario[] = [
             wechatEvents: [
               { type: 'switch-view', data: 'chat' },
               {
-                type: 'add-chat',
-                data: {
-                  sender: 'xiaoli',
-                  content: '陈先生，本周六下午我们有个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？',
-                  timestamp: '10:22',
-                },
-              },
-              {
-                type: 'add-chat',
-                data: {
-                  sender: 'xiaoli',
-                  content: '[活动邀请] 财富管理讲座 · 4月15日（周六）14:00 · 平安金融中心18楼',
-                  contentType: 'file',
-                  timestamp: '10:22',
-                },
-              },
-              {
-                type: 'add-chat',
-                data: {
-                  sender: 'chensheng',
-                  senderName: '陈先生',
-                  content: '好啊，周六下午我有空，到时候见！',
-                  timestamp: '10:25',
-                },
+                type: 'set-chat-messages',
+                data: [
+                  {
+                    sender: 'xiaoli',
+                    content: '陈先生，本周六下午我们有个专题讲座，专门讲「资产保值增值+居家养老规划」，嘉宾都是顶尖专家。我给您留了一个名额，您来不来？',
+                    timestamp: '10:22',
+                  },
+                  {
+                    sender: 'xiaoli',
+                    content: '[活动邀请] 财富管理讲座 · 4月15日（周六）14:00 · 平安金融中心18楼',
+                    contentType: 'file',
+                    timestamp: '10:22',
+                  },
+                  {
+                    sender: 'chensheng',
+                    senderName: '陈先生',
+                    content: '好啊，周六下午我有空，到时候见！',
+                    timestamp: '10:25',
+                  },
+                ],
               },
               {
                 type: 'show-smart-keyboard',
