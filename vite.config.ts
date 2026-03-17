@@ -1,11 +1,10 @@
+
+
+// vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  base: '/myproject/',
-  plugins: [react(), tailwindcss()],
-  server: {
-    allowedHosts: true,
-  },
+  plugins: [react()],
+  base: '/SX102/',  // <--- 关键！一定要加上这一行，且前后都有斜杠
 })
